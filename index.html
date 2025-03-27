@@ -4,217 +4,154 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FREE4ALLRIDERS | Classic Black Flame Hoodie</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary: #f77bff; /* Vibrant pink */
-            --secondary: #d800ff; /* Deep purple-pink */
-            --dark: #000000; /* Pure black */
-            --light: #ffffff; /* Pure white */
-            --accent: #f77bff;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
+            --primary: #f77bff;
+            --secondary: #d800ff;
+            --dark: #000000;
+            --light: #ffffff;
         }
         
         body {
             background-color: var(--dark);
             color: var(--light);
-            overflow-x: hidden;
-        }
-
-        /* Smooth shapes */
-        .rounded-xl {
-            border-radius: 30px;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
         }
         
-        .rounded-full {
-            border-radius: 9999px;
-        }
-
-        /* 3D Model Container */
-        .model-container {
+        .model-viewer-container {
             width: 100%;
             height: 70vh;
-            margin: 2rem 0;
+            margin: 2rem auto;
             position: relative;
+            border-radius: 30px;
             overflow: hidden;
             border: 2px solid var(--primary);
-            border-radius: 30px;
-            background: 
-                radial-gradient(circle at center, 
-                    rgba(215, 0, 255, 0.1) 0%, 
-                    rgba(0, 0, 0, 0.8) 70%);
+            background: radial-gradient(circle, rgba(215,0,255,0.1) 0%, rgba(0,0,0,0.8) 70%);
         }
-
-        /* New Particle Animation */
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* Glowing Button */
-        .glow-button {
-            display: inline-block;
-            padding: 1rem 2rem;
+        
+        #ar-button {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
             background: var(--primary);
             color: white;
             border: none;
             border-radius: 30px;
-            font-weight: 600;
-            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
             box-shadow: 0 0 20px var(--primary);
-            transition: all 0.3s ease;
-            animation: pulse-glow 2s infinite;
+            animation: pulse 2s infinite;
         }
-
-        @keyframes pulse-glow {
+        
+        @keyframes pulse {
             0%, 100% { box-shadow: 0 0 20px var(--primary); }
             50% { box-shadow: 0 0 40px var(--secondary); }
         }
-
-        /* Floating animation for model */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+        
+        #fallback-viewer {
+            width: 100%;
+            height: 100%;
+            display: none;
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Particle Animation Background -->
-    <div id="particles-js"></div>
-
-    <!-- 3D Model Viewer -->
     <section style="padding: 4rem 10%; text-align: center;">
         <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--primary);">CLASSIC BLACK FLAME HOODIE</h2>
-        <p style="max-width: 800px; margin: 0 auto 2rem; font-size: 1.1rem;">
-            Our signature hoodie with flame detailing. Designed for riders who make history.
-        </p>
         
-        <div class="model-container">
-            <!-- USDZ Model with Quick Look -->
-            <a href="Free4allriders/Classic_Black_Flame_Hoodie.usdz" rel="ar" style="display: block; width: 100%; height: 100%;">
-                <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
-                     alt="Black Flame Hoodie" 
-                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 28px;">
-                <div style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center;">
-                    <div class="glow-button">VIEW IN 3D</div>
-                </div>
-            </a>
+        <div class="model-viewer-container">
+            <!-- Preview Image -->
+            <img id="preview-image" src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
+                 alt="Black Flame Hoodie" 
+                 style="width: 100%; height: 100%; object-fit: cover;">
+            
+            <!-- AR Button -->
+            <button id="ar-button">VIEW IN 3D</button>
+            
+            <!-- Fallback Three.js Viewer -->
+            <div id="fallback-viewer"></div>
         </div>
-
+        
         <p style="margin-top: 2rem; font-style: italic; color: var(--secondary);">
-            "EVERY TRICK HAS A HISTORY" - Rotate and zoom with your fingers
+            "EVERY TRICK HAS A HISTORY"
         </p>
     </section>
 
-    <!-- Particle.js Library -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- Three.js for fallback -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
     
     <script>
-        // Particle Animation Config
-        particlesJS("particles-js", {
-            "particles": {
-                "number": {
-                    "value": 80,
-                    "density": {
-                        "enable": true,
-                        "value_area": 800
+        const arButton = document.getElementById('ar-button');
+        const previewImage = document.getElementById('preview-image');
+        const fallbackViewer = document.getElementById('fallback-viewer');
+        
+        // Check if USDZ is supported (iOS 12+)
+        function isUSDZSupported() {
+            return /iPhone|iPad|iPod/i.test(navigator.userAgent) && 
+                   /OS (12|13|14|15|16|17)_/i.test(navigator.userAgent);
+        }
+        
+        // Initialize Three.js fallback
+        function initFallbackViewer() {
+            fallbackViewer.style.display = 'block';
+            previewImage.style.display = 'none';
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, fallbackViewer.clientWidth / fallbackViewer.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(fallbackViewer.clientWidth, fallbackViewer.clientHeight);
+            fallbackViewer.appendChild(renderer.domElement);
+            
+            // Lighting
+            const light = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(light);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(0, 1, 1);
+            scene.add(directionalLight);
+            
+            // Load fallback GLB model (replace with your actual GLB file)
+            new THREE.GLTFLoader().load(
+                'assets/models/hoodie.glb',
+                function(gltf) {
+                    scene.add(gltf.scene);
+                    camera.position.z = 3;
+                    
+                    function animate() {
+                        requestAnimationFrame(animate);
+                        renderer.render(scene, camera);
                     }
+                    animate();
                 },
-                "color": {
-                    "value": ["#f77bff", "#d800ff"]
-                },
-                "shape": {
-                    "type": "circle",
-                    "stroke": {
-                        "width": 0,
-                        "color": "#000000"
-                    }
-                },
-                "opacity": {
-                    "value": 0.5,
-                    "random": true,
-                    "anim": {
-                        "enable": true,
-                        "speed": 1,
-                        "opacity_min": 0.1,
-                        "sync": false
-                    }
-                },
-                "size": {
-                    "value": 3,
-                    "random": true,
-                    "anim": {
-                        "enable": true,
-                        "speed": 2,
-                        "size_min": 0.1,
-                        "sync": false
-                    }
-                },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 150,
-                    "color": "#f77bff",
-                    "opacity": 0.2,
-                    "width": 1
-                },
-                "move": {
-                    "enable": true,
-                    "speed": 1,
-                    "direction": "none",
-                    "random": true,
-                    "straight": false,
-                    "out_mode": "out",
-                    "bounce": false,
-                    "attract": {
-                        "enable": true,
-                        "rotateX": 600,
-                        "rotateY": 1200
-                    }
+                undefined,
+                function(error) {
+                    console.error('Error loading model:', error);
+                    fallbackViewer.innerHTML = '<p style="color:white;padding-top:40%;">3D model could not be loaded</p>';
                 }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": {
-                        "enable": true,
-                        "mode": "grab"
-                    },
-                    "onclick": {
-                        "enable": true,
-                        "mode": "push"
-                    },
-                    "resize": true
-                },
-                "modes": {
-                    "grab": {
-                        "distance": 140,
-                        "line_linked": {
-                            "opacity": 0.5
-                        }
-                    },
-                    "push": {
-                        "particles_nb": 4
-                    }
-                }
-            },
-            "retina_detect": true
+            );
+        }
+        
+        // Button click handler
+        arButton.addEventListener('click', function() {
+            if (isUSDZSupported()) {
+                // For iOS devices - trigger Quick Look
+                window.location.href = 'Free4allriders/Classic_Black_Flame_Hoodie.usdz';
+            } else {
+                // For other devices - show Three.js fallback
+                initFallbackViewer();
+                arButton.style.display = 'none';
+            }
         });
-
-        // Add floating animation to model container
-        const modelContainer = document.querySelector('.model-container');
-        modelContainer.style.animation = 'float 6s ease-in-out infinite';
+        
+        // Hide AR button if not iOS
+        if (!isUSDZSupported()) {
+            arButton.textContent = 'VIEW 3D MODEL';
+        }
     </script>
 </body>
 </html>
