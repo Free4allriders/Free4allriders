@@ -309,15 +309,77 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Header with background image -->
-    <div class="header-image">
-        <div class="header-overlay"></div>
-        <div style="text-align: center; width: 100%; padding: 0 5%; z-index: 1;">
-            <h1 style="font-size: 72px; margin-bottom: 20px; font-weight: 600; color: white;">SKI FREESTYLE<br>REDEFINED</h1>
-            <p style="font-size: 18px; max-width: 600px; margin: 0 auto 40px; color: white;">Premium ski clothing designed for extreme performance and style</p>
-            <a href="#products" class="btn-magnetic">Explore Collection</a>
-        </div>
+    
+ 
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+  <style>
+    .header-image {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: url('tu-imagen.jpg') no-repeat center center/cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+    }
+
+    .header-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.8) 100%);
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1;
+      padding: 0 5%;
+    }
+
+    h1 {
+      font-size: 72px;
+      font-family: 'Bangers', sans-serif;
+      text-shadow: 4px 4px 0px black, 6px 6px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    p {
+      font-size: 18px;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+
+    .btn-magnetic {
+      display: inline-block;
+      padding: 15px 30px;
+      background: #ff00ff;
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 5px;
+      box-shadow: 0 0 10px #ff00ff, 0 0 40px #ff00ff;
+      transition: 0.3s;
+    }
+
+    .btn-magnetic:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #ff00ff, 0 0 60px #ff00ff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header-image">
+    <div class="header-overlay"></div>
+    <div class="header-content">
+      <h1>SKI FREESTYLE<br>REDEFINED</h1>
+      <p>Premium ski clothing designed for extreme performance and style</p>
+        <a href="#products" class="btn-magnetic">Explore Collection</a>
     </div>
+  </div>
+
 
     <!-- Rolex-inspired header -->
     <header id="main-header">
