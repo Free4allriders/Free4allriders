@@ -7,28 +7,41 @@
     <link rel="icon" type="image/png" href="logo-imatge.PNG">
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <style>
-        /* Header Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
         header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(0,0,0,0.8);
+            background-color: #121212;
             padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #333;
         }
         
-        .logo-container img {
-            height: 50px;
+        .logo {
+            height: 40px;
         }
         
         nav a {
-            color: white;
+            color: #fff;
             text-decoration: none;
-            margin: 0 15px;
+            margin-left: 20px;
             font-weight: 500;
             transition: color 0.3s;
         }
@@ -37,141 +50,174 @@
             color: #4a90e2;
         }
         
-        /* Hero Section with Header Image */
-        .hero {
-            width: 100%;
-            height: 60vh;
-            background-image: url('Head-imatge.PNG');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            margin-top: 70px;
-        }
-        
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.4);
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            color: white;
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
             padding: 0 20px;
         }
         
-        /* Main Content Styles */
-        body {
-            background-color: #121212;
-            color: white;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            min-height: 100vh;
+        /* Tab System */
+        .tab-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 10px;
         }
         
-        main {
+        .tabs {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 50px 20px;
+            width: 200%;
+            transition: transform 0.5s ease;
         }
         
-        .card {
-            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 5px 5px 15px #0a0a0a, -5px -5px 15px #2a2a2a;
-            text-align: center;
-            max-width: 400px;
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-            animation: fadeIn 1s ease-in-out;
-            margin: 20px;
+        .tab {
+            width: 50%;
+            padding: 20px;
+            display: flex;
+            gap: 40px;
         }
         
-        .card:hover {
-            transform: scale(1.05);
-            box-shadow: 10px 10px 25px #0a0a0a, -10px -10px 25px #2a2a2a;
+        /* Image Section */
+        .image-section {
+            flex: 1;
         }
         
-        .image {
+        .product-image {
             width: 100%;
             border-radius: 10px;
-            margin-bottom: 15px;
-            transition: transform 0.3s ease-in-out;
-        }
-        
-        .card:hover .image {
-            transform: scale(1.05);
-        }
-        
-        .title {
-            font-size: 1.8em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        .description {
-            font-size: 1em;
-            color: #ccc;
-            margin-bottom: 15px;
-        }
-        
-        .price {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #4a90e2;
-            margin: 15px 0;
-        }
-        
-        .sizes {
-            font-size: 1em;
-            margin: 15px 0;
-        }
-        
-        .button {
-            display: inline-block;
-            margin: 10px 5px;
-            padding: 12px 25px;
-            background-color: #4a90e2;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-        }
-        
-        .button:hover {
-            background-color: #357ac9;
-            transform: scale(1.05);
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         
         model-viewer {
             width: 100%;
-            height: 400px;
+            height: 500px;
             background-color: #1e1e1e;
             border-radius: 10px;
-            margin-top: 20px;
         }
         
-        /* Footer Styles */
+        /* Details Section */
+        .details-section {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #4a90e2;
+        }
+        
+        .product-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .product-description {
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #ccc;
+        }
+        
+        .size-selector {
+            margin: 25px 0;
+        }
+        
+        .size-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .size-option {
+            padding: 8px 15px;
+            border: 1px solid #4a90e2;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .size-option:hover, .size-option.selected {
+            background-color: #4a90e2;
+            color: white;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #4a90e2;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #357ac9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #333;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #444;
+            transform: translateY(-2px);
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .tab-btn {
+            padding: 10px 30px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background-color: #4a90e2;
+        }
+        
+        .tab-btn:first-child {
+            border-radius: 5px 0 0 5px;
+        }
+        
+        .tab-btn:last-child {
+            border-radius: 0 5px 5px 0;
+        }
+        
+        /* Footer */
         footer {
-            background-color: #0a0a0a;
+            background-color: #121212;
             padding: 30px 5%;
             text-align: center;
+            margin-top: 50px;
+            border-top: 1px solid #333;
+        }
+        
+        .footer-logo {
+            height: 30px;
+            margin-bottom: 20px;
         }
         
         .social-links {
@@ -179,97 +225,231 @@
         }
         
         .social-links a {
-            color: white;
+            color: #fff;
             margin: 0 10px;
-            font-size: 1.5em;
-            transition: color 0.3s;
-        }
-        
-        .social-links a:hover {
-            color: #4a90e2;
+            font-size: 1.2rem;
         }
         
         .copyright {
             color: #666;
-            font-size: 0.9em;
+            font-size: 0.9rem;
+        }
+        
+        /* Swipe Indicators */
+        .swipe-indicator {
+            text-align: center;
+            margin: 20px 0;
+            color: #666;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .tab {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            model-viewer {
+                height: 300px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header with Logo -->
+    <!-- Header -->
     <header>
-        <div class="logo-container">
-            <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS Logo">
-        </div>
+        <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="logo">
         <nav>
-            <a href="#product">Producto</a>
-            <a href="#features">Características</a>
-            <a href="#contact">Contacto</a>
+            <a href="#">Inicio</a>
+            <a href="#">Productos</a>
+            <a href="#">Contacto</a>
         </nav>
     </header>
     
-    <!-- Hero Section with Header Image -->
-    <section class="hero">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1>CHAQUETA ÉPICA</h1>
-            <p>Diseño audaz para los que no siguen las reglas</p>
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="showTab(0)">Vista Normal</button>
+            <button class="tab-btn" onclick="showTab(1)">Vista 3D</button>
         </div>
-    </section>
-    
-    <!-- Main Product Card -->
-    <main id="product">
-        <div class="card">
-            <img src="Jaket.PNG" alt="Chaqueta Épica" class="image">
-            <div class="title">Chaqueta Épica</div>
-            <p class="description">Esta chaqueta de cuero negro con detalles plateados en los hombros y mangas es perfecta para un look audaz y moderno. Confeccionada con materiales de alta calidad, ofrece comodidad y resistencia para cualquier ocasión.</p>
-            <div class="price">$129.99</div>
-            <div class="sizes">Tallas disponibles: S, M, L, XL</div>
-            <button class="button" onclick="showDetails()">Ver más</button>
-            <button class="button" onclick="buyNow()">Comprar</button>
-            <button class="button" onclick="toggle3D()">Ver en 3D</button>
-            <div id="modelContainer" style="display:none;">
-                <model-viewer src="hoodie.glb" alt="Vista 3D de la Chaqueta" auto-rotate camera-controls></model-viewer>
+        
+        <div class="swipe-indicator">← Desliza para cambiar de vista →</div>
+        
+        <!-- Tab Container -->
+        <div class="tab-container" id="tabContainer">
+            <div class="tabs" id="tabs">
+                <!-- Normal View Tab -->
+                <div class="tab">
+                    <div class="image-section">
+                        <img src="Jaket.PNG" alt="Chaqueta Épica" class="product-image">
+                    </div>
+                    
+                    <div class="details-section">
+                        <h1 class="product-title">Chaqueta Épica</h1>
+                        <div class="product-price">$129.99</div>
+                        
+                        <p class="product-description">
+                            Esta chaqueta de cuero negro con detalles plateados en los hombros y mangas es perfecta para un look audaz y moderno. 
+                            Confeccionada con materiales de alta calidad, ofrece comodidad y resistencia para cualquier ocasión.
+                        </p>
+                        
+                        <div class="size-selector">
+                            <h3>Tallas disponibles:</h3>
+                            <div class="size-options">
+                                <span class="size-option">S</span>
+                                <span class="size-option selected">M</span>
+                                <span class="size-option">L</span>
+                                <span class="size-option">XL</span>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary">Añadir al carrito</button>
+                            <button class="btn btn-secondary">Comprar ahora</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 3D View Tab -->
+                <div class="tab">
+                    <div class="image-section">
+                        <model-viewer src="hoodie.glb" alt="Vista 3D de la Chaqueta" auto-rotate camera-controls></model-viewer>
+                    </div>
+                    
+                    <div class="details-section">
+                        <h1 class="product-title">Chaqueta Épica (3D)</h1>
+                        <div class="product-price">$129.99</div>
+                        
+                        <p class="product-description">
+                            Explora nuestra chaqueta en 3D. Gira, acerca y observa cada detalle de este diseño premium.
+                            <br><br>
+                            <strong>Instrucciones:</strong>
+                            <br>- Haz clic y arrastra para rotar
+                            <br>- Rueda del mouse para acercar/alejar
+                            <br>- Doble clic para resetear vista
+                        </p>
+                        
+                        <div class="size-selector">
+                            <h3>Tallas disponibles:</h3>
+                            <div class="size-options">
+                                <span class="size-option">S</span>
+                                <span class="size-option selected">M</span>
+                                <span class="size-option">L</span>
+                                <span class="size-option">XL</span>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary">Añadir al carrito</button>
+                            <button class="btn btn-secondary">Comprar ahora</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </main>
+    </div>
     
     <!-- Footer -->
-    <footer id="contact">
-        <div class="logo-container">
-            <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS Logo" style="height: 40px;">
-        </div>
+    <footer>
+        <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="footer-logo">
         <div class="social-links">
             <a href="#"><i class="fab fa-instagram"></i></a>
             <a href="#"><i class="fab fa-facebook"></i></a>
             <a href="#"><i class="fab fa-twitter"></i></a>
             <a href="#"><i class="fab fa-tiktok"></i></a>
         </div>
-        <p class="copyright">&copy; 2023 FREE4ALLRIDERS. Todos los derechos reservados.</p>
+        <p class="copyright">© 2023 FREE4ALLRIDERS. Todos los derechos reservados.</p>
     </footer>
-
+    
     <script>
-        function showDetails() {
-            alert("La chaqueta Épica combina estilo y funcionalidad, ideal para quienes buscan destacar con un diseño exclusivo.");
+        // Tab System
+        function showTab(tabIndex) {
+            const tabs = document.getElementById('tabs');
+            tabs.style.transform = `translateX(-${tabIndex * 50}%)`;
+            
+            // Update active button
+            document.querySelectorAll('.tab-btn').forEach((btn, index) => {
+                if(index === tabIndex) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
         }
         
-        function buyNow() {
-            alert("¡Gracias por tu compra! Procesando pedido...");
-        }
-        
-        function toggle3D() {
-            let modelContainer = document.getElementById("modelContainer");
-            modelContainer.style.display = modelContainer.style.display === "none" ? "block" : "none";
-        }
-        
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+        // Size selection
+        document.querySelectorAll('.size-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                document.querySelectorAll('.size-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked option (in both tabs)
+                const tabs = document.querySelectorAll('.tab');
+                tabs.forEach(tab => {
+                    const options = tab.querySelectorAll('.size-option');
+                    options[Array.from(this.parentElement.children).indexOf(this)].classList.add('selected');
                 });
             });
+        });
+        
+        // Button functionality
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
+                alert(`Chaqueta talla ${selectedSize} añadida al carrito`);
+            });
+        });
+        
+        document.querySelectorAll('.btn-secondary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
+                alert(`Compra realizada: Chaqueta talla ${selectedSize}. ¡Gracias!`);
+            });
+        });
+        
+        // Touch swipe functionality
+        const tabContainer = document.getElementById('tabContainer');
+        let startX = 0;
+        let isDragging = false;
+        
+        tabContainer.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+        });
+        
+        tabContainer.addEventListener('touchmove', (e) => {
+            if(!isDragging) return;
+            e.preventDefault();
+        });
+        
+        tabContainer.addEventListener('touchend', (e) => {
+            if(!isDragging) return;
+            
+            const endX = e.changedTouches[0].clientX;
+            const diffX = startX - endX;
+            
+            if(Math.abs(diffX) > 50) { // Minimum swipe distance
+                if(diffX > 0) {
+                    // Swipe left - show 3D view
+                    showTab(1);
+                } else {
+                    // Swipe right - show normal view
+                    showTab(0);
+                }
+            }
+            
+            isDragging = false;
         });
     </script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
