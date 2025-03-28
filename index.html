@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FREE4ALLRIDERS | Ski Clothing & Freestyle</title>
     <link rel="icon" type="image/png" href="Head-imatge.PNG">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
@@ -346,23 +347,48 @@
         </div>
     </div>
 
-    <!-- 3D Model Section -->
-    <section id="model" class="model-section">
-        <span class="section-title">3D PREVIEW</span>
-        <h2 class="section-heading">Interactive Product Experience</h2>
-        <p class="section-description">
-            Rotate and explore our latest ski jacket design in 3D
-        </p>
+<!-- 3D Model Section -->
+    
+<section id="model" class="model-section">
+    <span class="section-title">3D PREVIEW</span>
+    <h2 class="section-heading">Interactive Product Experience</h2>
+    <p class="section-description">
+        Rotate and explore our latest ski jacket design in 3D
+    </p>
+    
+    <model-viewer 
+        src="hoodie.glb" 
+        alt="FREE4ALLRIDERS Hoodie 3D Model"
+        camera-controls
+        auto-rotate
+        auto-rotate-delay="1000"
+        shadow-intensity="1"
+        exposure="1.2"
+        environment-image="neutral"
+        style="width: 100%; height: 500px; margin: 0 auto;">
         
-        <model-viewer 
-            src="path/to/your-model.glb" 
-            alt="FREE4ALLRIDERS Ski Jacket 3D Model"
-            camera-controls
-            auto-rotate
-            shadow-intensity="1">
-        </model-viewer>
-    </section>
-
+        <!-- Loading progress bar -->
+        <div class="progress-bar" slot="progress-bar">
+            <div class="update-bar" style="background-color: var(--electric);"></div>
+        </div>
+        
+        <!-- AR button for mobile -->
+        <button slot="ar-button" style="background-color: var(--electric); color: white; border-radius: 20px; padding: 12px 24px; border: none; cursor: pointer;">
+            View in AR
+        </button>
+        
+        <!-- Error message if WebGL not supported -->
+        <div slot="error" style="color: white; background: rgba(255,0,0,0.5); padding: 20px; border-radius: 8px;">
+            3D viewer not supported in your browser. Try Chrome or Edge.
+        </div>
+    </model-viewer>
+    
+    <div style="margin-top: 20px;">
+        <p style="color: var(--neon-cyan); font-size: 14px;">
+            Drag to rotate • Scroll to zoom • Click/touch to interact
+        </p>
+    </div>
+</section>
     <!-- Products section -->
     <section id="products" class="product-showcase">
         <span class="section-title">OUR COLLECTION</span>
