@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personaje Épico</title>
+    <title>Chaqueta Épica</title>
     <style>
         body {
             background-color: #121212;
@@ -21,25 +21,28 @@
             border-radius: 15px;
             box-shadow: 5px 5px 15px #0a0a0a, -5px -5px 15px #2a2a2a;
             text-align: center;
-            max-width: 300px;
-            transition: transform 0.3s ease-in-out;
+            max-width: 350px;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
         .card:hover {
+            transform: scale(1.1);
+            box-shadow: 10px 10px 25px #0a0a0a, -10px -10px 25px #2a2a2a;
+        }
+        .image {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover .image {
             transform: scale(1.05);
         }
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid #4a90e2;
-            margin-bottom: 15px;
-        }
         .title {
-            font-size: 1.5em;
+            font-size: 1.8em;
             font-weight: bold;
         }
         .description {
-            font-size: 0.9em;
+            font-size: 1em;
             color: #ccc;
         }
         .button {
@@ -55,21 +58,21 @@
         }
         .button:hover {
             background-color: #357ac9;
-            transform: scale(1.1);
+            transform: scale(1.1) rotate(-3deg);
         }
     </style>
 </head>
 <body>
     <div class="card">
-        <img src="https://via.placeholder.com/150" alt="Personaje" class="avatar">
-        <div class="title">Personaje Épico</div>
-        <p class="description">Este personaje lleva una elegante chaqueta de cuero negro con detalles en plateado. Sus pantalones ajustados están diseñados para la máxima movilidad, y sus botas reforzadas le dan un aire de determinación y estilo futurista.</p>
+        <img src="https://via.placeholder.com/300x400" alt="Chaqueta Épica" class="image">
+        <div class="title">Chaqueta Épica</div>
+        <p class="description">Esta chaqueta de cuero negro con detalles plateados en los hombros y mangas es perfecta para un look audaz y moderno. Confeccionada con materiales de alta calidad, ofrece comodidad y resistencia para cualquier ocasión.</p>
         <button class="button" onclick="showDetails()">Ver más</button>
     </div>
 
     <script>
         function showDetails() {
-            alert("Este personaje es un cazador de élite con una historia llena de aventuras y secretos.");
+            alert("La chaqueta Épica combina estilo y funcionalidad, ideal para quienes buscan destacar con un diseño exclusivo.");
         }
     </script>
 </body>
