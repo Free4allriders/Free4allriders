@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personaje Épico</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 5px 5px 15px #0a0a0a, -5px -5px 15px #2a2a2a;
+            text-align: center;
+            max-width: 300px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #4a90e2;
+            margin-bottom: 15px;
+        }
+        .title {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .description {
+            font-size: 0.9em;
+            color: #ccc;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .button:hover {
+            background-color: #357ac9;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="https://via.placeholder.com/150" alt="Personaje" class="avatar">
+        <div class="title">Personaje Épico</div>
+        <p class="description">Este personaje lleva una elegante chaqueta de cuero negro con detalles en plateado. Sus pantalones ajustados están diseñados para la máxima movilidad, y sus botas reforzadas le dan un aire de determinación y estilo futurista.</p>
+        <button class="button" onclick="showDetails()">Ver más</button>
+    </div>
+
+    <script>
+        function showDetails() {
+            alert("Este personaje es un cazador de élite con una historia llena de aventuras y secretos.");
+        }
+    </script>
+</body>
+</html>
