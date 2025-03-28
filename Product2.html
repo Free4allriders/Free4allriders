@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaqueta Épica | FREE4ALLRIDERS</title>
+    <title>Mountain Tech Pants | FREE4ALLRIDERS</title>
     <link rel="icon" type="image/png" href="Head-imatge.PNG">
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --neon-pink: #ff00ff;
@@ -108,11 +109,17 @@
             box-shadow: var(--glow-effect);
         }
         
-        /* Botón Switch */
-        .switch-btn {
+        /* Botones de imagen */
+        .image-buttons {
             position: absolute;
             bottom: 20px;
             right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        .img-btn {
             padding: 8px 15px;
             background-color: var(--neon-purple);
             color: var(--white);
@@ -122,13 +129,62 @@
             font-weight: bold;
             box-shadow: 0 0 10px var(--neon-pink);
             transition: all 0.3s;
-            z-index: 10;
         }
         
-        .switch-btn:hover {
+        .img-btn:hover {
             background-color: var(--neon-pink);
             transform: translateY(-2px);
             box-shadow: 0 0 15px var(--neon-pink);
+        }
+        
+        /* Modal para más fotos */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow: auto;
+        }
+        
+        .modal-content {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: var(--neon-pink);
+            font-size: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close-modal:hover {
+            transform: rotate(90deg);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .gallery-img {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--neon-purple);
+            transition: transform 0.3s;
+            max-height: 70vh;
+            object-fit: contain;
         }
         
         model-viewer {
@@ -386,9 +442,13 @@
                 display: none;
             }
             
-            .switch-btn {
+            .image-buttons {
                 bottom: 10px;
                 right: 10px;
+                flex-direction: column;
+            }
+            
+            .img-btn {
                 padding: 6px 12px;
                 font-size: 0.8rem;
             }
@@ -422,17 +482,20 @@
                 <!-- Vista Normal -->
                 <div class="tab">
                     <div class="image-section">
-                        <img src="Hoodie-white.jpeg" alt="Chaqueta Épica" class="product-image" id="hoodieImage">
-                        <button class="switch-btn" id="switchBtn">SWITCH</button>
+                        <img src="product2.jpg" alt="Mountain Tech Pants" class="product-image" id="productImage">
+                        <div class="image-buttons">
+                            <button class="img-btn" id="switchBtn">SWITCH</button>
+                            <button class="img-btn" id="morePhotosBtn">MORE PHOTOS</button>
+                        </div>
                     </div>
                     
                     <div class="details-section">
-                        <h1 class="product-title">CHAQUETA ÉPICA</h1>
-                        <div class="product-price">$129.99</div>
+                        <h1 class="product-title">MOUNTAIN TECH PANTS</h1>
+                        <div class="product-price">$149.99</div>
                         
                         <p class="product-description">
-                            Esta chaqueta de cuero negro con detalles en neón rosado y morado redefine el streetwear. 
-                            Con materiales resistentes y diseño futurista, es perfecta para destacar en la noche urbana.
+                            Pantalones técnicos para montaña con tecnología de aislamiento térmico y máxima movilidad.
+                            Diseñados para condiciones extremas con materiales resistentes al agua y al viento.
                         </p>
                         
                         <div class="size-selector">
@@ -455,15 +518,15 @@
                 <!-- Vista 3D -->
                 <div class="tab">
                     <div class="image-section">
-                        <model-viewer src="hoodie.glb" alt="Vista 3D de la Chaqueta" auto-rotate camera-controls></model-viewer>
+                        <model-viewer src="pants-model.glb" alt="Vista 3D de los pantalones" auto-rotate camera-controls></model-viewer>
                     </div>
                     
                     <div class="details-section">
                         <h1 class="product-title">MODO 3D ACTIVADO</h1>
-                        <div class="product-price">$129.99</div>
+                        <div class="product-price">$149.99</div>
                         
                         <p class="product-description">
-                            Explora cada detalle de nuestra chaqueta futurista en 360°.
+                            Explora cada detalle de nuestros pantalones técnicos en 360°.
                             <br><br>
                             <strong>CONTROLES:</strong>
                             <br>Arrastra para rotar
@@ -486,6 +549,19 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para más fotos -->
+    <div id="photosModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2 style="color: var(--neon-pink); text-align: center; margin-bottom: 20px;">GALERÍA DEL PRODUCTO</h2>
+            
+            <div class="gallery-grid">
+                <img src="Familly.jpeg" alt="Modelo frontal con los pantalones" class="gallery-img">
+                <img src="Back.jpeg" alt="Vista trasera de los pantalones" class="gallery-img">
             </div>
         </div>
     </div>
@@ -521,12 +597,10 @@
         // Selección de Tallas
         document.querySelectorAll('.size-option').forEach(option => {
             option.addEventListener('click', function() {
-                // Remover selección en todas las opciones (ambas pestañas)
                 document.querySelectorAll('.size-option').forEach(opt => {
                     opt.classList.remove('selected');
                 });
                 
-                // Agregar selección a la opción clickeada (en ambas pestañas)
                 const tabs = document.querySelectorAll('.tab');
                 tabs.forEach(tab => {
                     const options = tab.querySelectorAll('.size-option');
@@ -539,7 +613,7 @@
         document.querySelectorAll('.btn-primary').forEach(btn => {
             btn.addEventListener('click', function() {
                 const selectedSize = document.querySelector('.size-option.selected').textContent;
-                alert(`Chaqueta talla ${selectedSize} añadida al carrito`);
+                alert(`Pantalones talla ${selectedSize} añadidos al carrito`);
             });
         });
         
@@ -571,12 +645,10 @@
             const endX = e.changedTouches[0].clientX;
             const diffX = startX - endX;
             
-            if(Math.abs(diffX) > 50) { // Sensibilidad del deslizamiento
+            if(Math.abs(diffX) > 50) {
                 if(diffX > 0) {
-                    // Deslizamiento izquierda - mostrar 3D
                     showTab(1);
                 } else {
-                    // Deslizamiento derecha - mostrar normal
                     showTab(0);
                 }
             }
@@ -584,27 +656,52 @@
             isDragging = false;
         });
         
+        // Función para cambiar entre imágenes (SWITCH)
+        const switchBtn = document.getElementById('switchBtn');
+        const productImage = document.getElementById('productImage');
+        let isMainImage = true;
+        
+        // Cambia estas rutas por tus imágenes alternativas para Producto 2
+        const mainImage = 'product2.jpg';
+        const altImage = 'product2-alt.jpg';  // Asegúrate de tener esta imagen
+        
+        switchBtn.addEventListener('click', function() {
+            if(isMainImage) {
+                productImage.src = altImage;
+                productImage.alt = 'Vista alternativa de Mountain Tech Pants';
+            } else {
+                productImage.src = mainImage;
+                productImage.alt = 'Mountain Tech Pants';
+            }
+            isMainImage = !isMainImage;
+        });
+        
+        // Modal para más fotos
+        const morePhotosBtn = document.getElementById('morePhotosBtn');
+        const photosModal = document.getElementById('photosModal');
+        const closeModal = document.getElementById('closeModal');
+        
+        morePhotosBtn.addEventListener('click', function() {
+            photosModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeModal.addEventListener('click', function() {
+            photosModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        window.addEventListener('click', function(event) {
+            if (event.target === photosModal) {
+                photosModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
         // Efecto de carga
         document.addEventListener('DOMContentLoaded', () => {
             document.body.style.opacity = '1';
         });
-        
-        // Función para cambiar entre imágenes
-        const switchBtn = document.getElementById('switchBtn');
-        const hoodieImage = document.getElementById('hoodieImage');
-        let isWhiteHoodie = true;
-        
-        switchBtn.addEventListener('click', function() {
-            if(isWhiteHoodie) {
-                hoodieImage.src = 'Hoodie-black.jpeg';
-                hoodieImage.alt = 'Suadera blanca';
-            } else {
-                hoodieImage.src = 'Hoodie-white.jpeg';
-                hoodieImage.alt = 'Suadera negra';
-            }
-            isWhiteHoodie = !isWhiteHoodie;
-        });
     </script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
