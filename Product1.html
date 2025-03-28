@@ -3,80 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaqueta Épica</title>
+    <title>Chaqueta Épica | FREE4ALLRIDERS</title>
+    <link rel="icon" type="image/png" href="logo-imatge.PNG">
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <style>
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(0,0,0,0.8);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo-container img {
+            height: 50px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #4a90e2;
+        }
+        
+        /* Hero Section with Header Image */
+        .hero {
+            width: 100%;
+            height: 60vh;
+            background-image: url('Head-imatge.PNG');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-top: 70px;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+        
+        /* Main Content Styles */
         body {
             background-color: #121212;
             color: white;
             font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        main {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
+            padding: 50px 20px;
         }
+        
         .card {
             background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
-            padding: 20px;
+            padding: 30px;
             border-radius: 15px;
             box-shadow: 5px 5px 15px #0a0a0a, -5px -5px 15px #2a2a2a;
             text-align: center;
-            max-width: 350px;
+            max-width: 400px;
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
             animation: fadeIn 1s ease-in-out;
+            margin: 20px;
         }
+        
         .card:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
             box-shadow: 10px 10px 25px #0a0a0a, -10px -10px 25px #2a2a2a;
         }
+        
         .image {
             width: 100%;
             border-radius: 10px;
             margin-bottom: 15px;
             transition: transform 0.3s ease-in-out;
         }
+        
         .card:hover .image {
             transform: scale(1.05);
         }
+        
         .title {
             font-size: 1.8em;
             font-weight: bold;
+            margin-bottom: 10px;
         }
+        
         .description {
             font-size: 1em;
             color: #ccc;
+            margin-bottom: 15px;
         }
+        
         .price {
             font-size: 1.5em;
             font-weight: bold;
             color: #4a90e2;
-            margin: 10px 0;
+            margin: 15px 0;
         }
+        
         .sizes {
             font-size: 1em;
-            margin: 10px 0;
+            margin: 15px 0;
         }
+        
         .button {
             display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
+            margin: 10px 5px;
+            padding: 12px 25px;
             background-color: #4a90e2;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
+            font-weight: bold;
         }
+        
         .button:hover {
             background-color: #357ac9;
-            transform: scale(1.1) rotate(-3deg);
+            transform: scale(1.05);
         }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
         model-viewer {
             width: 100%;
             height: 400px;
@@ -84,34 +166,112 @@
             border-radius: 10px;
             margin-top: 20px;
         }
+        
+        /* Footer Styles */
+        footer {
+            background-color: #0a0a0a;
+            padding: 30px 5%;
+            text-align: center;
+        }
+        
+        .social-links {
+            margin: 20px 0;
+        }
+        
+        .social-links a {
+            color: white;
+            margin: 0 10px;
+            font-size: 1.5em;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: #4a90e2;
+        }
+        
+        .copyright {
+            color: #666;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <img src="Jaket.PNG" alt="Chaqueta Épica" class="image">
-        <div class="title">Chaqueta Épica</div>
-        <p class="description">Esta chaqueta de cuero negro con detalles plateados en los hombros y mangas es perfecta para un look audaz y moderno. Confeccionada con materiales de alta calidad, ofrece comodidad y resistencia para cualquier ocasión.</p>
-        <div class="price">$129.99</div>
-        <div class="sizes">Tallas disponibles: S, M, L, XL</div>
-        <button class="button" onclick="showDetails()">Ver más</button>
-        <button class="button" onclick="buyNow()">Comprar</button>
-        <button class="button" onclick="toggle3D()">Ver en 3D</button>
-        <div id="modelContainer" style="display:none;">
-            <model-viewer src="hoodie.glb" alt="Vista 3D de la Chaqueta" auto-rotate camera-controls></model-viewer>
+    <!-- Header with Logo -->
+    <header>
+        <div class="logo-container">
+            <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS Logo">
         </div>
-    </div>
+        <nav>
+            <a href="#product">Producto</a>
+            <a href="#features">Características</a>
+            <a href="#contact">Contacto</a>
+        </nav>
+    </header>
+    
+    <!-- Hero Section with Header Image -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>CHAQUETA ÉPICA</h1>
+            <p>Diseño audaz para los que no siguen las reglas</p>
+        </div>
+    </section>
+    
+    <!-- Main Product Card -->
+    <main id="product">
+        <div class="card">
+            <img src="Jaket.PNG" alt="Chaqueta Épica" class="image">
+            <div class="title">Chaqueta Épica</div>
+            <p class="description">Esta chaqueta de cuero negro con detalles plateados en los hombros y mangas es perfecta para un look audaz y moderno. Confeccionada con materiales de alta calidad, ofrece comodidad y resistencia para cualquier ocasión.</p>
+            <div class="price">$129.99</div>
+            <div class="sizes">Tallas disponibles: S, M, L, XL</div>
+            <button class="button" onclick="showDetails()">Ver más</button>
+            <button class="button" onclick="buyNow()">Comprar</button>
+            <button class="button" onclick="toggle3D()">Ver en 3D</button>
+            <div id="modelContainer" style="display:none;">
+                <model-viewer src="hoodie.glb" alt="Vista 3D de la Chaqueta" auto-rotate camera-controls></model-viewer>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="logo-container">
+            <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS Logo" style="height: 40px;">
+        </div>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <p class="copyright">&copy; 2023 FREE4ALLRIDERS. Todos los derechos reservados.</p>
+    </footer>
 
     <script>
         function showDetails() {
             alert("La chaqueta Épica combina estilo y funcionalidad, ideal para quienes buscan destacar con un diseño exclusivo.");
         }
+        
         function buyNow() {
             alert("¡Gracias por tu compra! Procesando pedido...");
         }
+        
         function toggle3D() {
             let modelContainer = document.getElementById("modelContainer");
             modelContainer.style.display = modelContainer.style.display === "none" ? "block" : "none";
         }
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
     </script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
