@@ -6,6 +6,8 @@
     <title>FREE4ALLRIDERS | Ski Clothing & Freestyle</title>
     <link rel="icon" type="image/png" href="Head-imatge.PNG">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Graduate&family=Rubik+Mono+One&display=swap" rel="stylesheet">
     <style>
         :root {
             --electric: #f77bff;
@@ -15,6 +17,46 @@
             --silver: #f5f5f7;
             --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
             --ease-in-out: cubic-bezier(0.83, 0, 0.17, 1);
+        }
+
+        /* Paint Drops Animation */
+        .paint-drops {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .paint-drop {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--electric);
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            opacity: 0;
+            animation: drop 4s infinite;
+        }
+
+        @keyframes drop {
+            0% {
+                transform: translateY(-100px) rotate(-45deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(-45deg) scale(1.2);
+                opacity: 0;
+            }
         }
 
         /* Apple-like smooth scroll */
@@ -33,24 +75,58 @@
 
         /* Header with background image */
         .header-image {
+            position: relative;
             width: 100%;
             height: 100vh;
-            background-image: url('bkg.PNG');
-            background-size: cover;
-            background-position: center;
+            background: url('bkg.PNG') no-repeat center center/cover;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+            text-align: center;
+            color: white;
+            animation: bgPulse 5s infinite alternate;
         }
 
         .header-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.3);
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.8) 100%);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            padding: 0 5%;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-family: 'Rubik Mono One', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: white;
+            text-shadow: 
+                3px 3px 0 var(--deep-purple),
+                6px 6px 0 var(--neon-cyan),
+                9px 9px 0 black;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+            opacity: 0;
+            animation: graffitiFadeIn 1.5s ease-out forwards;
+        }
+
+        .hero h1::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--electric);
+            transform: skewX(-15deg);
+            box-shadow: 0 0 15px var(--electric);
         }
 
         /* Rolex-inspired header */
@@ -109,32 +185,31 @@
             width: 100%;
         }
 
-        /* USDZ Viewer Container */
-        .usdz-viewer {
-            width: 100%;
-            max-width: 800px;
-            height: 500px;
-            margin: 40px auto;
-            background: white;
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-
-        .usdz-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         /* Product showcase section */
         .product-showcase {
             padding: 100px 5%;
             text-align: center;
+        }
+
+        .section-title {
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: var(--electric);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .section-heading {
+            font-size: 40px;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .section-description {
+            max-width: 700px;
+            margin: 0 auto 50px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.8;
         }
 
         .product-grid {
@@ -150,11 +225,13 @@
             overflow: hidden;
             transition: all 0.4s var(--ease-out);
             border: 1px solid rgba(247,123,255,0.1);
+            opacity: 0;
+            transform: translateY(30px);
         }
 
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(247,123,255,0.1);
+        .product-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .product-image {
@@ -184,7 +261,7 @@
             position: relative;
             overflow: hidden;
             border-radius: 12px;
-            height: 300px;
+            height: 500px;
         }
 
         .gallery-image {
@@ -219,10 +296,16 @@
             width: auto;
             opacity: 0.7;
             transition: opacity 0.3s ease;
+            filter: invert(1); /* Invert colors for sponsor logos */
         }
 
         .sponsor-logo:hover {
             opacity: 1;
+        }
+
+        /* Special style for sponsor2 */
+        .sponsor-logo[alt="Sponsor 2"] {
+            filter: invert(0) hue-rotate(180deg) brightness(1.2);
         }
 
         /* Magnetic button effect */
@@ -237,10 +320,12 @@
             position: relative;
             overflow: hidden;
             transition: transform 0.3s var(--ease-out);
+            box-shadow: 0 0 15px var(--electric), 0 0 60px var(--electric);
         }
 
         .btn-magnetic:hover {
             transform: scale(1.05);
+            box-shadow: 0 0 30px var(--electric), 0 0 80px var(--electric);
         }
 
         /* Footer */
@@ -278,8 +363,24 @@
             50% { transform: translateY(-20px); }
         }
 
-        .floating {
-            animation: float 6s var(--ease-in-out) infinite;
+        @keyframes graffitiFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes bgPulse {
+            0% {
+                filter: brightness(1);
+            }
+            100% {
+                filter: brightness(1.1);
+            }
         }
 
         /* Responsive adjustments */
@@ -298,146 +399,34 @@
             }
             
             .hero h1 {
-                font-size: 48px;
+                font-size: 2.5rem;
+                text-shadow: 
+                    2px 2px 0 var(--deep-purple),
+                    4px 4px 0 var(--neon-cyan),
+                    6px 6px 0 black;
             }
             
-            .usdz-viewer {
-                height: 300px;
+            .gallery-item {
+                height: 350px;
             }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    
- 
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <!-- Paint Drops Animation -->
+    <div class="paint-drops" id="paintDrops"></div>
 
-    .header-image {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      background: url('tu-imagen.jpg') no-repeat center center/cover;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: white;
-      animation: bgPulse 5s infinite alternate;
-    }
-
-    .header-overlay {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.8) 100%);
-    }
-
-    .header-content {
-      position: relative;
-      z-index: 1;
-      padding: 0 5%;
-    }
-
-    h1 {
-      font-size: 68px;
-      font-family: 'Press Start 2P', sans-serif;
-      text-transform: uppercase;
-      text-shadow: 5px 5px 0px black, 8px 8px 20px rgba(255, 0, 255, 0.8);
-      position: relative;
-      display: inline-block;
-      opacity: 0;
-      animation: graffitiFadeIn 1.5s ease-out forwards;
-    }
-
-    /* Graffiti underline effect */
-    h1::after {
-      content: '';
-      width: 100%;
-      height: 10px;
-      background: #ff00ff;
-      position: absolute;
-      left: 0;
-      bottom: -10px;
-      box-shadow: 0 0 10px #ff00ff, 0 0 30px #ff00ff;
-    }
-
-    p {
-      font-size: 18px;
-      max-width: 600px;
-      margin: 20px auto;
-      color: rgba(255, 255, 255, 0.9);
-      opacity: 0;
-      animation: fadeIn 1.5s ease-out 0.8s forwards;
-    }
-
-    .btn-magnetic {
-      display: inline-block;
-      padding: 15px 30px;
-      background: #ff00ff;
-      color: white;
-      font-size: 20px;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 8px;
-      box-shadow: 0 0 15px #ff00ff, 0 0 60px #ff00ff;
-      transition: transform 0.3s ease-out;
-      position: relative;
-    }
-
-    .btn-magnetic:hover {
-      transform: scale(1.1) translateX(5px);
-      box-shadow: 0 0 30px #ff00ff, 0 0 80px #ff00ff;
-    }
-
-    /* Animations */
-    @keyframes graffitiFadeIn {
-      0% {
-        opacity: 0;
-        transform: translateY(20px) scale(0.8);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-
-    @keyframes bgPulse {
-      0% {
-        filter: brightness(1);
-      }
-      100% {
-        filter: brightness(1.1);
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <div class="header-image">
-    <div class="header-overlay"></div>
-    <div class="header-content">
-      <h1>SKI FREESTYLE<br>REDEFINED</h1>
-      <p>Premium ski clothing designed for extreme performance and style</p>
-      <a href="#products" class="btn-magnetic">Explore Collection</a>
+    <!-- Hero Section -->
+    <div class="header-image">
+        <div class="header-overlay"></div>
+        <div class="header-content">
+            <div class="hero">
+                <h1>SKI FREESTYLE<br>REDEFINED</h1>
+                <p>Premium ski clothing designed for extreme performance and style</p>
+                <a href="#products" class="btn-magnetic">Explore Collection</a>
+            </div>
+        </div>
     </div>
-  </div>
-
 
     <!-- Rolex-inspired header -->
     <header id="main-header">
@@ -452,147 +441,69 @@
         </nav>
     </header>
 
-    <!-- USDZ 3D Model Section -->
-   
-
     <!-- Products section -->
     <section id="products" class="product-showcase">
-        <h2 style="font-size: 14px; letter-spacing: 2px; color: var(--electric); margin-bottom: 20px;">OUR COLLECTION</h2>
-        <h3 style="font-size: 40px; margin-bottom: 30px; line-height: 1.2;">Engineered for the Mountains</h3>
-        <p style="max-width: 700px; margin: 0 auto 50px; color: rgba(255,255,255,0.8); line-height: 1.8;">
+        <span class="section-title">OUR COLLECTION</span>
+        <h2 class="section-heading">Engineered for the Mountains</h2>
+        <p class="section-description">
             Our ski clothing combines advanced thermal regulation with unrestricted mobility, tested in extreme conditions by our professional riders.
         </p>
         
         <div class="product-grid">
             <!-- Product 1 -->
-            <div class="product-card" style="opacity: 0; transform: translateY(30px); animation: fadeIn 1s var(--ease-out) 0.2s forwards;">
-                <img src="Jaket.PNG" alt="Black Flame Hoodie" class="product-image">
+            <div class="product-card">
+                <img src="Jaket.PNG" alt="New Jacket" class="product-image">
                 <div class="product-info">
                     <h4>New Jacket</h4>
-                    <p style="color: rgba(255,255,255,0.7); margin: 10px 0 20px;">Premium insulated ski Jacket</p>
-                    <a href="Product1.html" class="btn-magnetic" style="display: inline-block; padding: 10px 25px; font-size: 14px;">3D View</a>
+                    <p>Premium insulated ski Jacket</p>
+                    <a href="Product1.html" class="btn-magnetic">3D View</a>
                 </div>
             </div>
             
             <!-- Product 2 -->
-            <div class="product-card" style="opacity: 0; transform: translateY(30px); animation: fadeIn 1s var(--ease-out) 0.4s forwards;">
+            <div class="product-card">
                 <img src="product2.jpg" alt="Mountain Tech Pants" class="product-image">
                 <div class="product-info">
                     <h4>Mountain Tech Pants</h4>
-                    <p style="color: rgba(255,255,255,0.7); margin: 10px 0 20px;">Riders Hodie</p>
-                    <a href="Product1.html" class="btn-magnetic" style="display: inline-block; padding: 10px 25px; font-size: 14px;">View Details</a>
+                    <p>Riders Hodie</p>
+                    <a href="Product1.html" class="btn-magnetic">View Details</a>
                 </div>
             </div>
         </div>
     </section>
 
-   <!-- Action Gallery -->
-<section id="gallery" class="action-gallery">
-    <style>
-    /* Action gallery improvements */
-    .action-gallery {
-        padding: 100px 5%;
-        background: rgba(0,0,0,0.3);
-        position: relative;
-    }
-
-    .gallery-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .gallery-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-        margin-top: 40px;
-    }
-
-    .gallery-item {
-        position: relative;
-        overflow: hidden;
-        border-radius: 16px;
-        height: 400px; /* Increased height for better display */
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        transition: all 0.4s var(--ease-out);
-    }
-
-    .gallery-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(247,123,255,0.2);
-    }
-
-    .gallery-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.6s var(--ease-out);
-    }
-
-    .gallery-item:hover .gallery-image {
-        transform: scale(1.05);
-    }
-
-    /* Add overlay effect on hover */
-    .gallery-item::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 50%);
-        opacity: 0;
-        transition: opacity 0.4s var(--ease-out);
-    }
-
-    .gallery-item:hover::after {
-        opacity: 1;
-    }
-
-    /* Responsive adjustments for gallery */
-    @media (max-width: 768px) {
-        .gallery-grid {
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-        
-        .gallery-item {
-            height: 300px;
-        }
-    }
-</style>
-    <div class="gallery-container">
-        <span class="section-title">IN ACTION</span>
-        <h2 class="section-heading">Pushing the Limits</h2>
-        <p class="section-description">
-            Our team testing the gear where it matters most - on the mountain.
-        </p>
-        
-        <div class="gallery-grid">
-            <!-- Mountain photo -->
-            <div class="gallery-item">
-                <img src="Mountain.jpeg" alt="Mountain Landscape" class="gallery-image">
-            </div>
+    <!-- Action Gallery -->
+    <section id="gallery" class="action-gallery">
+        <div class="gallery-container">
+            <span class="section-title">IN ACTION</span>
+            <h2 class="section-heading">Pushing the Limits</h2>
+            <p class="section-description">
+                Our team testing the gear where it matters most - on the mountain.
+            </p>
             
-            <!-- Action shot 1 -->
-            <div class="gallery-item">
-                <img src="Trick1.jpeg" alt="Ski Trick 1" class="gallery-image">
-            </div>
-            
-            <!-- Action shot 2 -->
-            <div class="gallery-item">
-                <img src="Trick2.jpeg" alt="Ski Trick 2" class="gallery-image">
+            <div class="gallery-grid">
+                <!-- Mountain photo -->
+                <div class="gallery-item">
+                    <img src="Mountain.jpeg" alt="Mountain Landscape" class="gallery-image">
+                </div>
+                
+                <!-- Action shot 1 -->
+                <div class="gallery-item">
+                    <img src="Trick1.jpeg" alt="Ski Trick 1" class="gallery-image">
+                </div>
+                
+                <!-- Action shot 2 -->
+                <div class="gallery-item">
+                    <img src="Trick2.jpeg" alt="Ski Trick 2" class="gallery-image">
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <!-- Sponsors section -->
     <section class="sponsors">
-        <h2 style="font-size: 14px; letter-spacing: 2px; color: var(--electric); margin-bottom: 20px;">OUR PARTNERS</h2>
-        <h3 style="font-size: 40px; margin-bottom: 30px; line-height: 1.2;">Trusted By The Best</h3>
+        <span class="section-title">OUR PARTNERS</span>
+        <h2 class="section-heading">Trusted By The Best</h2>
         
         <div class="sponsors-grid">
             <!-- Replace with actual sponsor logos -->
@@ -622,6 +533,33 @@
     </footer>
 
     <script>
+        // Paint drops animation
+        function createPaintDrops() {
+            const container = document.getElementById('paintDrops');
+            const colors = ['#f77bff', '#d800ff', '#00f7ff', '#ff00aa'];
+            
+            for (let i = 0; i < 30; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'paint-drop';
+                
+                // Random properties
+                const size = Math.random() * 15 + 5;
+                const left = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 3 + 2;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                drop.style.width = `${size}px`;
+                drop.style.height = `${size}px`;
+                drop.style.left = `${left}%`;
+                drop.style.animationDelay = `${delay}s`;
+                drop.style.animationDuration = `${duration}s`;
+                drop.style.background = color;
+                
+                container.appendChild(drop);
+            }
+        }
+
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('main-header');
@@ -633,17 +571,18 @@
         });
         
         // Animate elements on scroll
-        window.addEventListener('load', function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            createPaintDrops();
+            
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.style.opacity = 1;
-                        entry.target.style.transform = 'translateY(0)';
+                        entry.target.classList.add('visible');
                     }
                 });
             }, { threshold: 0.1 });
             
-            document.querySelectorAll('.product-card, .gallery-item').forEach(el => {
+            document.querySelectorAll('.product-card').forEach(el => {
                 observer.observe(el);
             });
         });
