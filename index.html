@@ -3,155 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FREE4ALLRIDERS | Classic Black Flame Hoodie</title>
+    <title>FREE4ALLRIDERS | Premium Ski Apparel</title>
     <style>
         :root {
             --primary: #f77bff;
             --secondary: #d800ff;
-            --dark: #000000;
+            --dark: #0a0a0a;
             --light: #ffffff;
         }
         
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
         body {
             background-color: var(--dark);
             color: var(--light);
-            font-family: 'Montserrat', sans-serif;
-            margin: 0;
-            padding: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
-        
-        .model-viewer-container {
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Professional navigation */
+        nav {
+            position: fixed;
             width: 100%;
-            height: 70vh;
-            margin: 2rem auto;
+            padding: 1.5rem 5%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
             position: relative;
-            border-radius: 30px;
-            overflow: hidden;
-            border: 2px solid var(--primary);
-            background: radial-gradient(circle, rgba(215,0,255,0.1) 0%, rgba(0,0,0,0.8) 70%);
+            padding: 0.5rem 0;
         }
-        
-        #ar-button {
+
+        .nav-links a::after {
+            content: '';
             position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 24px;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
             background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10;
-            box-shadow: 0 0 20px var(--primary);
-            animation: pulse 2s infinite;
+            transition: width 0.3s ease;
         }
-        
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 20px var(--primary); }
-            50% { box-shadow: 0 0 40px var(--secondary); }
-        }
-        
-        #fallback-viewer {
+
+        .nav-links a:hover::after {
             width: 100%;
-            height: 100%;
-            display: none;
+        }
+
+        /* Hero section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5%;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease-out forwards;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease-out 0.2s forwards;
+        }
+
+        /* Product showcase */
+        .product-showcase {
+            padding: 8rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .product-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 3D Viewer Section */
+        .model-section {
+            padding: 8rem 5%;
+            text-align: center;
+        }
+
+        .model-container {
+            max-width: 800px;
+            height: 600px;
+            margin: 2rem auto;
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 5%;
+            background: rgba(10, 10, 10, 0.95);
+            text-align: center;
+            margin-top: 8rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-    <section style="padding: 4rem 10%; text-align: center;">
-        <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--primary);">CLASSIC BLACK FLAME HOODIE</h2>
-        
-        <div class="model-viewer-container">
-            <!-- Preview Image -->
-            <img id="preview-image" src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
-                 alt="Black Flame Hoodie" 
-                 style="width: 100%; height: 100%; object-fit: cover;">
-            
-            <!-- AR Button -->
-            <button id="ar-button">VIEW IN 3D</button>
-            
-            <!-- Fallback Three.js Viewer -->
-            <div id="fallback-viewer"></div>
+    <!-- Navigation -->
+    <nav>
+        <h2 style="color: var(--primary);">FREE4ALLRIDERS</h2>
+        <div class="nav-links">
+            <a href="#collection">Collection</a>
+            <a href="#technology">Technology</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
         </div>
-        
-        <p style="margin-top: 2rem; font-style: italic; color: var(--secondary);">
-            "EVERY TRICK HAS A HISTORY"
-        </p>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Precision Crafted Performance</h1>
+            <p>Elevate your mountain experience with technically advanced apparel designed for freestyle perfection.</p>
+            <div class="model-container">
+                <!-- Insert your 3D viewer code here -->
+            </div>
+        </div>
     </section>
 
-    <!-- Three.js for fallback -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
-    
+    <!-- Product Showcase -->
+    <section class="product-showcase">
+        <h2 style="font-size: 2.5rem; margin-bottom: 2rem; color: var(--primary);">THE COLLECTION</h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <h3>Black Flame Hoodie</h3>
+                <p>Signature thermal-regulating fabric</p>
+                <p style="color: var(--primary); margin-top: 1rem;">$349</p>
+            </div>
+            <div class="product-card">
+                <h3>Pro Performance Jacket</h3>
+                <p>Weather-resistant technical shell</p>
+                <p style="color: var(--primary); margin-top: 1rem;">$499</p>
+            </div>
+            <div class="product-card">
+                <h3>Hybrid Training Pants</h3>
+                <p>4-way stretch mobility</p>
+                <p style="color: var(--primary); margin-top: 1rem;">$279</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section class="product-showcase">
+        <h2 style="font-size: 2.5rem; margin-bottom: 2rem; color: var(--primary);">TECH SPECS</h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <h3>Thermal Regulation</h3>
+                <p>Advanced moisture-wicking technology</p>
+            </div>
+            <div class="product-card">
+                <h3>Mobility Engineering</h3>
+                <p>Strategic articulation points</p>
+            </div>
+            <div class="product-card">
+                <h3>Weather Defense</h3>
+                <p>20k waterproof rating</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p style="color: var(--secondary); margin-bottom: 1rem;">"EVERY TRICK HAS A HISTORY"</p>
+        <p>&copy; 2023 FREE4ALLRIDERS. All rights reserved.</p>
+    </footer>
+
     <script>
-        const arButton = document.getElementById('ar-button');
-        const previewImage = document.getElementById('preview-image');
-        const fallbackViewer = document.getElementById('fallback-viewer');
-        
-        // Check if USDZ is supported (iOS 12+)
-        function isUSDZSupported() {
-            return /iPhone|iPad|iPod/i.test(navigator.userAgent) && 
-                   /OS (12|13|14|15|16|17)_/i.test(navigator.userAgent);
-        }
-        
-        // Initialize Three.js fallback
-        function initFallbackViewer() {
-            fallbackViewer.style.display = 'block';
-            previewImage.style.display = 'none';
-            
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, fallbackViewer.clientWidth / fallbackViewer.clientHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(fallbackViewer.clientWidth, fallbackViewer.clientHeight);
-            fallbackViewer.appendChild(renderer.domElement);
-            
-            // Lighting
-            const light = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(light);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(0, 1, 1);
-            scene.add(directionalLight);
-            
-            // Load fallback GLB model (replace with your actual GLB file)
-            new THREE.GLTFLoader().load(
-                'assets/models/hoodie.glb',
-                function(gltf) {
-                    scene.add(gltf.scene);
-                    camera.position.z = 3;
-                    
-                    function animate() {
-                        requestAnimationFrame(animate);
-                        renderer.render(scene, camera);
-                    }
-                    animate();
-                },
-                undefined,
-                function(error) {
-                    console.error('Error loading model:', error);
-                    fallbackViewer.innerHTML = '<p style="color:white;padding-top:40%;">3D model could not be loaded</p>';
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
                 }
-            );
-        }
-        
-        // Button click handler
-        arButton.addEventListener('click', function() {
-            if (isUSDZSupported()) {
-                // For iOS devices - trigger Quick Look
-                window.location.href = 'Classic_Black_Flame_Hoodie.usdz';
-            } else {
-                // For other devices - show Three.js fallback
-                initFallbackViewer();
-                arButton.style.display = 'none';
-            }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.product-card').forEach((card) => {
+            observer.observe(card);
         });
-        
-        // Hide AR button if not iOS
-        if (!isUSDZSupported()) {
-            arButton.textContent = 'VIEW 3D MODEL';
-        }
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
     </script>
 </body>
 </html>
