@@ -98,6 +98,7 @@
         /* Sección de Imagen */
         .image-section {
             flex: 1;
+            position: relative;
         }
         
         .product-image {
@@ -105,6 +106,29 @@
             border-radius: 10px;
             border: 1px solid var(--neon-pink);
             box-shadow: var(--glow-effect);
+        }
+        
+        /* Botón Switch */
+        .switch-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: var(--neon-purple);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--neon-pink);
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        
+        .switch-btn:hover {
+            background-color: var(--neon-pink);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--neon-pink);
         }
         
         model-viewer {
@@ -361,6 +385,13 @@
             nav {
                 display: none;
             }
+            
+            .switch-btn {
+                bottom: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -391,7 +422,8 @@
                 <!-- Vista Normal -->
                 <div class="tab">
                     <div class="image-section">
-                        <img src="Hoodie-white.jpeg" alt="Chaqueta Épica" class="product-image">
+                        <img src="Hoodie-white.jpeg" alt="Chaqueta Épica" class="product-image" id="hoodieImage">
+                        <button class="switch-btn" id="switchBtn">SWITCH</button>
                     </div>
                     
                     <div class="details-section">
@@ -555,6 +587,22 @@
         // Efecto de carga
         document.addEventListener('DOMContentLoaded', () => {
             document.body.style.opacity = '1';
+        });
+        
+        // Función para cambiar entre imágenes
+        const switchBtn = document.getElementById('switchBtn');
+        const hoodieImage = document.getElementById('hoodieImage');
+        let isWhiteHoodie = true;
+        
+        switchBtn.addEventListener('click', function() {
+            if(isWhiteHoodie) {
+                hoodieImage.src = 'hoodie-black.jpeg';
+                hoodieImage.alt = 'Chaqueta Negra Épica';
+            } else {
+                hoodieImage.src = 'Hoodie-white.jpeg';
+                hoodieImage.alt = 'Chaqueta Blanca Épica';
+            }
+            isWhiteHoodie = !isWhiteHoodie;
         });
     </script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
