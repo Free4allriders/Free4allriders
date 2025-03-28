@@ -1,1 +1,109 @@
-kkks
+:root {
+    --electric: #f77bff;
+    --deep-purple: #d800ff;
+    --neon-cyan: #00f7ff;
+    --carbon: #0a0a0a;
+    --silver: #f5f5f7;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.83, 0, 0.17, 1);
+}
+
+/* Apple-like smooth scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--carbon);
+    color: var(--silver);
+    overflow-x: hidden;
+}
+
+/* Rolex-inspired header */
+header {
+    position: fixed;
+    width: 100%;
+    padding: 25px 5%;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10,10,10,0.9);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s var(--ease-out);
+}
+
+header.scrolled {
+    padding: 15px 5%;
+    border-bottom: 1px solid rgba(247,123,255,0.1);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.brand-logo {
+    height: 40px;
+    width: auto;
+}
+
+/* Apple-style navigation */
+.nav-link {
+    color: var(--silver);
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding: 5px 0;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background: var(--electric);
+    transition: width 0.4s var(--ease-out);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Hero section with animated gradient */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a001a 100%);
+    background-size: 200% 200%;
+    animation: gradientFlow 12s ease infinite;
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Product showcase section */
+.product-showcase {
+    padding: 100px 5%;
+    text-align: center;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40
