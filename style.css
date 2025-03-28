@@ -1,3 +1,30 @@
+/* Add this to your existing CSS */
+.brand-logo {
+    height: 60px; /* Increased from 40px */
+    width: auto;
+    transition: all 0.3s ease;
+}
+
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(rgba(10,10,10,0.7), rgba(10,10,10,0.7)), 
+                url('../images/hero-bg.jpg') no-repeat center center;
+    background-size: cover;
+    color: white;
+    text-align: center;
+}
+
+/* Add this media query for responsive logo */
+@media (max-width: 768px) {
+    .brand-logo {
+        height: 50px;
+    }
+}
 :root {
     --electric: #f77bff;
     --deep-purple: #d800ff;
@@ -107,3 +134,4 @@ header.scrolled {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 40
+
