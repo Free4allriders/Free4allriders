@@ -1,1 +1,562 @@
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaqueta Épica | FREE4ALLRIDERS</title>
+    <link rel="icon" type="image/png" href="Head-imatge.PNG">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-purple: #9d00ff;
+            --dark-purple: #4b0082;
+            --black: #000000;
+            --white: #ffffff;
+            --glow-effect: 0 0 10px rgba(157, 0, 255, 0.7), 
+                          0 0 20px rgba(255, 0, 255, 0.5);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+        
+        /* Header Estilo Neon */
+        header {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--neon-purple);
+            backdrop-filter: blur(5px);
+        }
+        
+        .logo {
+            height: 40px;
+            filter: drop-shadow(var(--glow-effect));
+        }
+        
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+        
+        nav a:hover {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        /* Contenedor Principal */
+        .main-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+        }
+        
+        /* Sistema de Pestañas */
+        .tab-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 10px;
+            border: 1px solid var(--neon-purple);
+            box-shadow: var(--glow-effect);
+        }
+        
+        .tabs {
+            display: flex;
+            width: 200%;
+            transition: transform 0.5s ease;
+        }
+        
+        .tab {
+            width: 50%;
+            padding: 20px;
+            display: flex;
+            gap: 40px;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        
+        /* Sección de Imagen */
+        .image-section {
+            flex: 1;
+        }
+        
+        .product-image {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid var(--neon-pink);
+            box-shadow: var(--glow-effect);
+        }
+        
+        model-viewer {
+            width: 100%;
+            height: 500px;
+            background-color: var(--black);
+            border-radius: 10px;
+            border: 1px solid var(--neon-purple);
+            --poster-color: transparent;
+        }
+        
+        /* Sección de Detalles */
+        .details-section {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        .product-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: var(--neon-purple);
+        }
+        
+        .product-description {
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #ccc;
+        }
+        
+        .size-selector {
+            margin: 25px 0;
+        }
+        
+        .size-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .size-option {
+            padding: 8px 15px;
+            border: 1px solid var(--neon-purple);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--white);
+            background-color: transparent;
+        }
+        
+        .size-option:hover {
+            background-color: var(--neon-purple);
+            box-shadow: var(--glow-effect);
+        }
+        
+        .size-option.selected {
+            background-color: var(--neon-pink);
+            border-color: var(--neon-pink);
+            box-shadow: var(--glow-effect);
+        }
+        
+        /* Ghost Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: transparent;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--neon-pink);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                      transparent, 
+                      rgba(255, 0, 255, 0.2), 
+                      transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover {
+            background-color: rgba(157, 0, 255, 0.2);
+            box-shadow: var(--glow-effect);
+            transform: translateY(-3px);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+        }
+        
+        .btn-secondary {
+            border-color: var(--neon-purple);
+            color: var(--neon-purple);
+        }
+        
+        /* Navegación de Pestañas */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .tab-btn {
+            padding: 10px 30px;
+            background-color: transparent;
+            color: var(--white);
+            border: 1px solid var(--neon-purple);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                      transparent, 
+                      rgba(157, 0, 255, 0.3), 
+                      transparent);
+            transition: 0.5s;
+        }
+        
+        .tab-btn:hover {
+            background-color: rgba(157, 0, 255, 0.1);
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.5);
+        }
+        
+        .tab-btn:hover::before {
+            left: 100%;
+        }
+        
+        .tab-btn.active {
+            background-color: var(--neon-purple);
+            box-shadow: var(--glow-effect);
+            border-color: var(--neon-pink);
+        }
+        
+        .tab-btn:first-child {
+            border-radius: 5px 0 0 5px;
+        }
+        
+        .tab-btn:last-child {
+            border-radius: 0 5px 5px 0;
+        }
+        
+        /* Indicador de Deslizamiento */
+        .swipe-indicator {
+            text-align: center;
+            margin: 20px 0;
+            color: var(--neon-purple);
+            text-shadow: 0 0 5px var(--neon-pink);
+            font-size: 0.9rem;
+        }
+        
+        /* Footer Neon */
+        footer {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 30px 5%;
+            text-align: center;
+            margin-top: 50px;
+            border-top: 1px solid var(--neon-purple);
+        }
+        
+        .footer-logo {
+            height: 30px;
+            margin-bottom: 20px;
+            filter: drop-shadow(var(--glow-effect));
+        }
+        
+        .social-links {
+            margin: 20px 0;
+        }
+        
+        .social-links a {
+            color: var(--white);
+            margin: 0 10px;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        .copyright {
+            color: var(--neon-purple);
+            font-size: 0.9rem;
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+        
+        /* Efecto de Carga */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .main-container {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .tab {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            model-viewer {
+                height: 300px;
+            }
+            
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Estilo Cyberpunk -->
+    <header>
+        <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="logo">
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="index.html#products">Colección</a>
+            <a href="Contact.html">Contacto</a>
+        </nav>
+    </header>
+    
+    <!-- Contenedor Principal -->
+    <div class="main-container">
+        <!-- Navegación de Pestañas -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="showTab(0)">VISTA CLÁSICA</button>
+            <button class="tab-btn" onclick="showTab(1)">EXPERIENCIA 3D</button>
+        </div>
+        
+        <div class="swipe-indicator">← Desliza para cambiar entre vistas →</div>
+        
+        <!-- Contenedor de Pestañas -->
+        <div class="tab-container" id="tabContainer">
+            <div class="tabs" id="tabs">
+                <!-- Vista Normal -->
+                <div class="tab">
+                    <div class="image-section">
+                        <img src="Hoodie-white.jpeg" alt="Chaqueta Épica" class="product-image">
+                    </div>
+                    
+                    <div class="details-section">
+                        <h1 class="product-title">CHAQUETA ÉPICA</h1>
+                        <div class="product-price">$129.99</div>
+                        
+                        <p class="product-description">
+                            Esta chaqueta de cuero negro con detalles en neón rosado y morado redefine el streetwear. 
+                            Con materiales resistentes y diseño futurista, es perfecta para destacar en la noche urbana.
+                        </p>
+                        
+                        <div class="size-selector">
+                            <h3>TALLAS DISPONIBLES:</h3>
+                            <div class="size-options">
+                                <span class="size-option">S</span>
+                                <span class="size-option selected">M</span>
+                                <span class="size-option">L</span>
+                                <span class="size-option">XL</span>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary">AÑADIR AL CARRITO</button>
+                            <button class="btn btn-secondary">COMPRAR AHORA</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vista 3D -->
+                <div class="tab">
+                    <div class="image-section">
+                        <model-viewer src="hoodie.glb" alt="Vista 3D de la Chaqueta" auto-rotate camera-controls></model-viewer>
+                    </div>
+                    
+                    <div class="details-section">
+                        <h1 class="product-title">MODO 3D ACTIVADO</h1>
+                        <div class="product-price">$129.99</div>
+                        
+                        <p class="product-description">
+                            Explora cada detalle de nuestra chaqueta futurista en 360°.
+                            <br><br>
+                            <strong>CONTROLES:</strong>
+                            <br>Arrastra para rotar
+                            <br>Doble clic para resetear
+                        </p>
+                        
+                        <div class="size-selector">
+                            <h3>TALLAS DISPONIBLES:</h3>
+                            <div class="size-options">
+                                <span class="size-option">S</span>
+                                <span class="size-option selected">M</span>
+                                <span class="size-option">L</span>
+                                <span class="size-option">XL</span>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary">AÑADIR AL CARRITO</button>
+                            <button class="btn btn-secondary">COMPRAR AHORA</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Neon -->
+    <footer>
+        <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="footer-logo">
+        <div class="social-links">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <p class="copyright">© 2023 FREE4ALLRIDERS | CYBER COLLECTION</p>
+    </footer>
+    
+    <script>
+        // Sistema de Pestañas
+        function showTab(tabIndex) {
+            const tabs = document.getElementById('tabs');
+            tabs.style.transform = `translateX(-${tabIndex * 50}%)`;
+            
+            // Actualizar botón activo
+            document.querySelectorAll('.tab-btn').forEach((btn, index) => {
+                if(index === tabIndex) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        // Selección de Tallas
+        document.querySelectorAll('.size-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remover selección en todas las opciones (ambas pestañas)
+                document.querySelectorAll('.size-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Agregar selección a la opción clickeada (en ambas pestañas)
+                const tabs = document.querySelectorAll('.tab');
+                tabs.forEach(tab => {
+                    const options = tab.querySelectorAll('.size-option');
+                    options[Array.from(this.parentElement.children).indexOf(this)].classList.add('selected');
+                });
+            });
+        });
+        
+        // Funcionalidad de Botones
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
+                alert(`Chaqueta talla ${selectedSize} añadida al carrito`);
+            });
+        });
+        
+        document.querySelectorAll('.btn-secondary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
+                alert(`Compra realizada! Talla ${selectedSize}. Gracias por elegirnos!`);
+            });
+        });
+        
+        // Deslizamiento con Touch
+        const tabContainer = document.getElementById('tabContainer');
+        let startX = 0;
+        let isDragging = false;
+        
+        tabContainer.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+        });
+        
+        tabContainer.addEventListener('touchmove', (e) => {
+            if(!isDragging) return;
+            e.preventDefault();
+        });
+        
+        tabContainer.addEventListener('touchend', (e) => {
+            if(!isDragging) return;
+            
+            const endX = e.changedTouches[0].clientX;
+            const diffX = startX - endX;
+            
+            if(Math.abs(diffX) > 50) { // Sensibilidad del deslizamiento
+                if(diffX > 0) {
+                    // Deslizamiento izquierda - mostrar 3D
+                    showTab(1);
+                } else {
+                    // Deslizamiento derecha - mostrar normal
+                    showTab(0);
+                }
+            }
+            
+            isDragging = false;
+        });
+        
+        // Efecto de carga
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.style.opacity = '1';
+        });
+    </script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>
