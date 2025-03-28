@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chaqueta Épica</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <style>
         body {
             background-color: #121212;
@@ -14,6 +15,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            flex-direction: column;
         }
         .card {
             background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
@@ -23,6 +25,7 @@
             text-align: center;
             max-width: 350px;
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            animation: fadeIn 1s ease-in-out;
         }
         .card:hover {
             transform: scale(1.1);
@@ -70,17 +73,32 @@
             background-color: #357ac9;
             transform: scale(1.1) rotate(-3deg);
         }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        model-viewer {
+            width: 100%;
+            height: 400px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        <img src="https://via.placeholder.com/300x400" alt="Chaqueta Épica" class="image">
+        <img src="Jaket.PNG" alt="Chaqueta Épica" class="image">
         <div class="title">Chaqueta Épica</div>
         <p class="description">Esta chaqueta de cuero negro con detalles plateados en los hombros y mangas es perfecta para un look audaz y moderno. Confeccionada con materiales de alta calidad, ofrece comodidad y resistencia para cualquier ocasión.</p>
         <div class="price">$129.99</div>
         <div class="sizes">Tallas disponibles: S, M, L, XL</div>
         <button class="button" onclick="showDetails()">Ver más</button>
         <button class="button" onclick="buyNow()">Comprar</button>
+        <button class="button" onclick="toggle3D()">Ver en 3D</button>
+        <div id="modelContainer" style="display:none;">
+            <model-viewer src="hoodie.glb" alt="Vista 3D de la Chaqueta" auto-rotate camera-controls></model-viewer>
+        </div>
     </div>
 
     <script>
@@ -89,6 +107,10 @@
         }
         function buyNow() {
             alert("¡Gracias por tu compra! Procesando pedido...");
+        }
+        function toggle3D() {
+            let modelContainer = document.getElementById("modelContainer");
+            modelContainer.style.display = modelContainer.style.display === "none" ? "block" : "none";
         }
     </script>
 </body>
