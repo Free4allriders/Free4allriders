@@ -3,213 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FREE4ALLRIDERS | Premium Ski Apparel</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>FREE4ALLRIDERS | Black Flame Hoodie</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #f77bff;
-            --secondary: #d800ff;
-            --dark: #0a0a0a;
-            --light: #ffffff;
-            --ease: cubic-bezier(0.23, 1, 0.32, 1);
+            --electric: #f77bff;
+            --deep-purple: #d800ff;
+            --neon-cyan: #00f7ff;
+            --carbon: #0a0a0a;
+            --silver: #f5f5f7;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in-out: cubic-bezier(0.83, 0, 0.17, 1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+        /* Apple-like smooth scroll */
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--dark);
-            color: var(--light);
-            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--carbon);
+            color: var(--silver);
             overflow-x: hidden;
         }
 
-        /* Header */
+        /* Rolex-inspired header */
         header {
             position: fixed;
             width: 100%;
-            padding: 1.5rem 5%;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(12px);
+            padding: 25px 5%;
             z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(247, 123, 255, 0.1);
+            background: rgba(10,10,10,0.9);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s var(--ease-out);
         }
 
-        /* 3D Model Containers */
-        .model-container {
-            width: 100%;
-            height: 500px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            margin: 2rem 0;
+        header.scrolled {
+            padding: 15px 5%;
+            border-bottom: 1px solid rgba(247,123,255,0.1);
+        }
+
+        /* Apple-style navigation */
+        .nav-link {
+            color: var(--silver);
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 14px;
+            letter-spacing: 0.5px;
             position: relative;
+            padding: 5px 0;
         }
 
-        /* Product Grid */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 4rem 5%;
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: 0;
+            left: 0;
+            background: var(--electric);
+            transition: width 0.4s var(--ease-out);
         }
 
-        .product-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            transition: transform 0.3s var(--ease);
-        }
-
-        .product-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .product-image {
+        .nav-link:hover::after {
             width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 12px;
+        }
+
+        /* Hero section with animated gradient */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a001a 100%);
+            background-size: 200% 200%;
+            animation: gradientFlow 12s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 3D Viewer Container - Apple-like */
+        .viewer-container {
+            width: 100%;
+            max-width: 800px;
+            height: 70vh;
+            margin: 0 auto;
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        /* Rolex-inspired product details */
+        .product-details {
+            padding: 100px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 60px;
+            align-items: center;
+        }
+
+        /* Apple-style feature cards */
+        .feature-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 40px;
+            transition: all 0.4s var(--ease-out);
+            border: 1px solid rgba(247,123,255,0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(247,123,255,0.05);
+            box-shadow: 0 15px 35px rgba(247,123,255,0.1);
+        }
+
+        /* Magnetic button effect */
+        .btn-magnetic {
+            display: inline-block;
+            padding: 15px 35px;
+            background: var(--electric);
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s var(--ease-out);
+        }
+
+        .btn-magnetic:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-magnetic::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .btn-magnetic:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        /* 3D viewer controls */
+        .viewer-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s var(--ease-out);
+        }
+
+        .control-btn:hover {
+            background: var(--electric);
+            transform: scale(1.1);
+        }
+
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .floating {
+            animation: float 6s var(--ease-in-out) infinite;
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1 style="color: var(--primary)">FREE4ALLRIDERS</h1>
+    <!-- Rolex-inspired header -->
+    <header id="main-header">
+        <div style="font-size: 24px; font-weight: 600; color: var(--electric);">FREE4ALLRIDERS</div>
         <nav>
-            <a href="#products" style="color: white; text-decoration: none; margin-left: 2rem;">Products</a>
-            <a href="#tech" style="color: white; text-decoration: none; margin-left: 2rem;">Technology</a>
-            <a href="#about" style="color: white; text-decoration: none; margin-left: 2rem;">About</a>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#gallery" class="nav-link">Gallery</a>
+            <a href="#specs" class="nav-link">Tech Specs</a>
+            <a href="#story" class="nav-link">Our Story</a>
         </nav>
     </header>
 
-    <main style="padding-top: 100px;">
-        <!-- Hero Section -->
-        <section style="padding: 8rem 5%; text-align: center;">
-            <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem;">Not just riders</h2>
-            <div class="model-container" id="hero-model">
-                <!-- 3D Hero Model will be inserted here -->
-            </div>
-        </section>
-
-        <!-- Featured Products -->
-        <section id="products" style="padding: 4rem 5%;">
-            <h2 style="font-size: 2rem; margin-bottom: 2rem; color: var(--primary)">Featured Collection</h2>
-            <div class="product-grid">
-                <!-- Ski Jacket -->
-                <div class="product-card">
-                    <div class="model-container" id="jacket-model" style="height: 300px;"></div>
-                    <h3 style="margin: 1rem 0;">Black Flame Ski Jacket</h3>
-                    <p style="color: var(--primary)">$449</p>
-                    <img src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
-                         alt="Ski Jacket" 
-                         class="product-image">
-                </div>
-
-                <!-- Ski Pants -->
-                <div class="product-card">
-                    <div class="model-container" id="pants-model" style="height: 300px;"></div>
-                    <h3 style="margin: 1rem 0;">Pro Flex Ski Pants</h3>
-                    <p style="color: var(--primary)">$299</p>
-                    <img src="https://images.unsplash.com/photo-1520250497591-112f408f6a1f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
-                         alt="Ski Pants" 
-                         class="product-image">
-                </div>
-
-                <!-- Thermal Sweater -->
-                <div class="product-card">
-                    <div class="model-container" id="sweater-model" style="height: 300px;"></div>
-                    <h3 style="margin: 1rem 0;">Thermal Pro Sweater</h3>
-                    <p style="color: var(--primary)">$189</p>
-                    <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80" 
-                         alt="Thermal Sweater" 
-                         class="product-image">
+    <!-- Hero section with 3D viewer -->
+    <section class="hero">
+        <div style="text-align: center; width: 100%; padding: 0 5%;">
+            <h1 style="font-size: 72px; margin-bottom: 20px; font-weight: 600; opacity: 0; transform: translateY(30px); animation: fadeIn 1s var(--ease-out) 0.2s forwards;">Black Flame Hoodie</h1>
+            <p style="font-size: 18px; max-width: 600px; margin: 0 auto 40px; opacity: 0; transform: translateY(30px); animation: fadeIn 1s var(--ease-out) 0.4s forwards;">Precision-engineered for extreme performance</p>
+            
+            <div class="viewer-container floating" style="opacity: 0; transform: translateY(30px); animation: fadeIn 1s var(--ease-out) 0.6s forwards;">
+                <div id="hoodie-viewer" style="width: 100%; height: 100%;"></div>
+                <div class="viewer-controls">
+                    <div class="control-btn" id="rotate-btn"><i class="fas fa-rotate" style="color: white;"></i></div>
+                    <div class="control-btn" id="zoom-btn"><i class="fas fa-search" style="color: white;"></i></div>
+                    <div class="control-btn" id="info-btn"><i class="fas fa-info" style="color: white;"></i></div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Technology Section -->
-        <section id="tech" style="padding: 8rem 5%; background: rgba(255,255,255,0.03);">
-            <h2 style="font-size: 2rem; margin-bottom: 2rem; color: var(--primary)">Our Technology</h2>
-            <div class="product-grid">
-                <div class="product-card">
-                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80" 
-                         alt="Fabric Technology" 
-                         class="product-image">
-                    <h3 style="margin: 1rem 0;">Advanced Thermal Regulation</h3>
-                    <p>Smart fabric technology adapts to body temperature</p>
+    <!-- Product details section -->
+    <section id="features" class="product-details">
+        <div>
+            <h2 style="font-size: 14px; letter-spacing: 2px; color: var(--electric); margin-bottom: 20px;">TECHNOLOGY</h2>
+            <h3 style="font-size: 40px; margin-bottom: 30px; line-height: 1.2;">Engineered for the extremes</h3>
+            <p style="line-height: 1.8; margin-bottom: 40px; color: rgba(255,255,255,0.8);">
+                The Black Flame Hoodie combines advanced thermal regulation with unrestricted mobility, featuring our patented fabric technology tested in -40°C conditions.
+            </p>
+            <a href="#specs" class="btn-magnetic">Technical Specs</a>
+        </div>
+        <div style="display: grid; gap: 20px;">
+            <div class="feature-card">
+                <div style="width: 50px; height: 50px; background: rgba(247,123,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                    <i class="fas fa-snowflake" style="color: var(--electric); font-size: 20px;"></i>
                 </div>
-                
-                <div class="product-card">
-                    <img src="https://images.unsplash.com/photo-1519664824562-b4bc73f9795a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80" 
-                         alt="Mobility Design" 
-                         class="product-image">
-                    <h3 style="margin: 1rem 0;">Enhanced Mobility</h3>
-                    <p>Strategic articulation points for full range of motion</p>
-                </div>
+                <h4 style="font-size: 20px; margin-bottom: 15px;">Thermal Regulation</h4>
+                <p style="color: rgba(255,255,255,0.7);">Smart fabric adapts to body temperature and external conditions</p>
             </div>
-        </section>
-    </main>
+            <div class="feature-card">
+                <div style="width: 50px; height: 50px; background: rgba(247,123,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                    <i class="fas fa-tshirt" style="color: var(--electric); font-size: 20px;"></i>
+                </div>
+                <h4 style="font-size: 20px; margin-bottom: 15px;">Enhanced Mobility</h4>
+                <p style="color: rgba(255,255,255,0.7);">Strategic articulation points for complete freedom of movement</p>
+            </div>
+        </div>
+    </section>
 
-    <footer style="padding: 4rem 5%; text-align: center; border-top: 1px solid rgba(247,123,255,0.1);">
-        <p style="color: var(--secondary); margin-bottom: 1rem;">"EVERY TRICK HAS A HISTORY"</p>
-        <p>© 2023 FREE4ALLRIDERS. All rights reserved.</p>
-    </footer>
-
-    <!-- Three.js Library -->
+    <!-- Three.js Implementation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.min.js"></script>
     
     <script>
-        // Initialize 3D Models
-        function init3DViewer(modelPath, containerId) {
-            const container = document.getElementById(containerId);
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
+        // Initialize 3D viewer
+        let scene, camera, renderer, hoodie, controls;
+        let isRotating = false;
+        let rotationSpeed = 0.005;
+        
+        function init3DViewer() {
+            const container = document.getElementById('hoodie-viewer');
             
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = null;
+            
+            // Camera
+            camera = new THREE.PerspectiveCamera(
+                75, 
+                container.clientWidth / container.clientHeight, 
+                0.1, 
+                1000
+            );
+            camera.position.z = 3;
+            
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ 
+                antialias: true,
+                alpha: true
+            });
             renderer.setSize(container.clientWidth, container.clientHeight);
             container.appendChild(renderer.domElement);
-
+            
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(0, 1, 1);
-            scene.add(directionalLight);
-
-            // Load model
+            
+            const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight1.position.set(1, 1, 1);
+            scene.add(directionalLight1);
+            
+            const directionalLight2 = new THREE.DirectionalLight(0xf77bff, 0.3);
+            directionalLight2.position.set(-1, -1, -1);
+            scene.add(directionalLight2);
+            
+            // Load hoodie model
             const loader = new THREE.GLTFLoader();
-            loader.load(modelPath, (gltf) => {
-                scene.add(gltf.scene);
-                camera.position.z = 3;
-                
-                // Animation loop
-                function animate() {
-                    requestAnimationFrame(animate);
-                    renderer.render(scene, camera);
+            loader.load(
+                'hoodie.glb',
+                function(gltf) {
+                    hoodie = gltf.scene;
+                    scene.add(hoodie);
+                    
+                    // Center model
+                    const box = new THREE.Box3().setFromObject(hoodie);
+                    const center = box.getCenter(new THREE.Vector3());
+                    hoodie.position.sub(center);
+                    
+                    // Start animation
+                    animate();
+                },
+                undefined,
+                function(error) {
+                    console.error('Error loading model:', error);
+                    container.innerHTML = `
+                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white; text-align:center;">
+                            <p>3D model failed to load</p>
+                            <p>Please try on a different device</p>
+                        </div>`;
                 }
-                animate();
-            });
-
+            );
+            
             // Controls
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.minDistance = 2;
+            controls.maxDistance = 6;
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+            
+            // Control buttons
+            document.getElementById('rotate-btn').addEventListener('click', function() {
+                isRotating = !isRotating;
+                this.style.background = isRotating ? 'var(--electric)' : 'rgba(255,255,255,0.1)';
+            });
+            
+            document.getElementById('zoom-btn').addEventListener('click', function() {
+                camera.position.z = camera.position.z > 3 ? 2 : 5;
+            });
         }
-
-        // Initialize all 3D models
-        window.addEventListener('load', () => {
-            init3DViewer('models/jacket.glb', 'jacket-model');
-            init3DViewer('models/pants.glb', 'pants-model');
-            init3DViewer('models/sweater.glb', 'sweater-model');
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            if (isRotating && hoodie) {
+                hoodie.rotation.y += rotationSpeed;
+            }
+            
+            if (controls) {
+                controls.update();
+            }
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Initialize when page loads
+        window.addEventListener('load', function() {
+            init3DViewer();
+            
+            // Animate elements on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.feature-card').forEach(card => {
+                observer.observe(card);
+            });
         });
     </script>
 </body>
