@@ -311,8 +311,14 @@
 <body>
     
  
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     .header-image {
       position: relative;
       width: 100%;
@@ -323,6 +329,7 @@
       justify-content: center;
       text-align: center;
       color: white;
+      animation: bgPulse 5s infinite alternate;
     }
 
     .header-overlay {
@@ -339,15 +346,35 @@
     }
 
     h1 {
-      font-size: 72px;
-      font-family: 'Bangers', sans-serif;
-      text-shadow: 4px 4px 0px black, 6px 6px 5px rgba(0, 0, 0, 0.5);
+      font-size: 68px;
+      font-family: 'Press Start 2P', sans-serif;
+      text-transform: uppercase;
+      text-shadow: 5px 5px 0px black, 8px 8px 20px rgba(255, 0, 255, 0.8);
+      position: relative;
+      display: inline-block;
+      opacity: 0;
+      animation: graffitiFadeIn 1.5s ease-out forwards;
+    }
+
+    /* Graffiti underline effect */
+    h1::after {
+      content: '';
+      width: 100%;
+      height: 10px;
+      background: #ff00ff;
+      position: absolute;
+      left: 0;
+      bottom: -10px;
+      box-shadow: 0 0 10px #ff00ff, 0 0 30px #ff00ff;
     }
 
     p {
       font-size: 18px;
       max-width: 600px;
       margin: 20px auto;
+      color: rgba(255, 255, 255, 0.9);
+      opacity: 0;
+      animation: fadeIn 1.5s ease-out 0.8s forwards;
     }
 
     .btn-magnetic {
@@ -358,14 +385,45 @@
       font-size: 20px;
       font-weight: bold;
       text-decoration: none;
-      border-radius: 5px;
-      box-shadow: 0 0 10px #ff00ff, 0 0 40px #ff00ff;
-      transition: 0.3s;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #ff00ff, 0 0 60px #ff00ff;
+      transition: transform 0.3s ease-out;
+      position: relative;
     }
 
     .btn-magnetic:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 20px #ff00ff, 0 0 60px #ff00ff;
+      transform: scale(1.1) translateX(5px);
+      box-shadow: 0 0 30px #ff00ff, 0 0 80px #ff00ff;
+    }
+
+    /* Animations */
+    @keyframes graffitiFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes bgPulse {
+      0% {
+        filter: brightness(1);
+      }
+      100% {
+        filter: brightness(1.1);
+      }
     }
   </style>
 </head>
@@ -376,7 +434,7 @@
     <div class="header-content">
       <h1>SKI FREESTYLE<br>REDEFINED</h1>
       <p>Premium ski clothing designed for extreme performance and style</p>
-        <a href="#products" class="btn-magnetic">Explore Collection</a>
+      <a href="#products" class="btn-magnetic">Explore Collection</a>
     </div>
   </div>
 
