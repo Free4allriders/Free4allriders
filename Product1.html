@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="Head-imatge.PNG">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chaqueta Épica</title>
     <style>
@@ -46,6 +45,16 @@
             font-size: 1em;
             color: #ccc;
         }
+        .price {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4a90e2;
+            margin: 10px 0;
+        }
+        .sizes {
+            font-size: 1em;
+            margin: 10px 0;
+        }
         .button {
             display: inline-block;
             margin-top: 15px;
@@ -68,12 +77,18 @@
         <img src="https://via.placeholder.com/300x400" alt="Chaqueta Épica" class="image">
         <div class="title">Chaqueta Épica</div>
         <p class="description">Esta chaqueta de cuero negro con detalles plateados en los hombros y mangas es perfecta para un look audaz y moderno. Confeccionada con materiales de alta calidad, ofrece comodidad y resistencia para cualquier ocasión.</p>
+        <div class="price">$129.99</div>
+        <div class="sizes">Tallas disponibles: S, M, L, XL</div>
         <button class="button" onclick="showDetails()">Ver más</button>
+        <button class="button" onclick="buyNow()">Comprar</button>
     </div>
 
     <script>
         function showDetails() {
             alert("La chaqueta Épica combina estilo y funcionalidad, ideal para quienes buscan destacar con un diseño exclusivo.");
+        }
+        function buyNow() {
+            alert("¡Gracias por tu compra! Procesando pedido...");
         }
     </script>
 </body>
