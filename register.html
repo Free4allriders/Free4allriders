@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | FREE4ALLRIDERS</title>
+    <link rel="icon" type="image/png" href="Head-imatge.PNG">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-purple: #9d00ff;
+            --dark-purple: #4b0082;
+            --black: #000000;
+            --white: #ffffff;
+            --glow-effect: 0 0 10px rgba(157, 0, 255, 0.7), 
+                          0 0 20px rgba(255, 0, 255, 0.5);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--neon-purple);
+            backdrop-filter: blur(5px);
+        }
+        
+        .logo {
+            height: 40px;
+            filter: drop-shadow(var(--glow-effect));
+        }
+        
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+        
+        nav a:hover {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        /* Main Container */
+        .register-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .register-box {
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--neon-purple);
+            border-radius: 10px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: var(--glow-effect);
+            text-align: center;
+        }
+        
+        .register-title {
+            color: var(--neon-pink);
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        .register-form input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--neon-purple);
+            border-radius: 5px;
+            color: var(--white);
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .register-form input:focus {
+            outline: none;
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        .register-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--neon-purple);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        
+        .register-btn:hover {
+            background-color: var(--neon-pink);
+            box-shadow: var(--glow-effect);
+            transform: translateY(-2px);
+        }
+        
+        .register-options {
+            margin-top: 25px;
+            color: #ccc;
+        }
+        
+        .register-options a {
+            color: var(--neon-purple);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .register-options a:hover {
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+        
+        .error-message {
+            color: #ff5555;
+            margin-bottom: 20px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+        
+        .success-message {
+            color: #55ff55;
+            margin-bottom: 20px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 20px 5%;
+            text-align: center;
+            border-top: 1px solid var(--neon-purple);
+        }
+        
+        .footer-logo {
+            height: 30px;
+            margin-bottom: 15px;
+            filter: drop-shadow(var(--glow-effect));
+        }
+        
+        .social-links {
+            margin: 15px 0;
+        }
+        
+        .social-links a {
+            color: var(--white);
+            margin: 0 10px;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        .copyright {
+            color: var(--neon-purple);
+            font-size: 0.9rem;
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .register-box {
+                padding: 30px 20px;
+            }
+            
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="logo">
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="index.html#products">Colección</a>
+            <a href="Contact.html">Contacto</a>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="register-container">
+        <div class="register-box">
+            <h1 class="register-title">CREAR CUENTA</h1>
+            
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+            
+            <form class="register-form" id="registerForm">
+                <input type="email" id="registerEmail" placeholder="Correo electrónico" required>
+                <input type="password" id="registerPassword" placeholder="Contraseña (mínimo 6 caracteres)" required>
+                <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" required>
+                <button type="submit" class="register-btn">REGISTRARSE</button>
+            </form>
+            
+            <div class="register-options">
+                <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="footer-logo">
+        <div class="social-links">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <p class="copyright">© 2023 FREE4ALLRIDERS | CYBER COLLECTION</p>
+    </footer>
+    
+    <script>
+        // Firebase Configuration (REPLACE WITH YOUR CONFIG)
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
+    authDomain: "free4allriders-51c5e.firebaseapp.com",
+    projectId: "free4allriders-51c5e",
+    storageBucket: "free4allriders-51c5e.firebasestorage.app",
+    messagingSenderId: "1082764494980",
+    appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
+    measurementId: "G-7KEGQPK3P0"
+  };
+
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        
+        // DOM Elements
+        const registerForm = document.getElementById('registerForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        
+        // Form Submission
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Clear messages
+            errorMessage.textContent = '';
+            successMessage.textContent = '';
+            
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Las contraseñas no coinciden';
+                return;
+            }
+            
+            // Validate password length
+            if (password.length < 6) {
+                errorMessage.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                return;
+            }
+            
+            // Create user with Firebase Auth
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Registration successful
+                    successMessage.textContent = '¡Registro exitoso! Redirigiendo...';
+                    registerForm.reset();
+                    
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 2000);
+                })
+                .catch((error) => {
+                    // Handle errors
+                    errorMessage.textContent = getErrorMessage(error.code);
+                });
+        });
+        
+        // Error message translator
+        function getErrorMessage(errorCode) {
+            switch(errorCode) {
+                case 'auth/email-already-in-use':
+                    return 'Este correo ya está registrado';
+                case 'auth/invalid-email':
+                    return 'Correo electrónico no válido';
+                case 'auth/operation-not-allowed':
+                    return 'Operación no permitida';
+                case 'auth/weak-password':
+                    return 'La contraseña es demasiado débil';
+                default:
+                    return 'Error al registrar. Por favor intenta nuevamente.';
+            }
+        }
+        
+        // Check if user is already logged in
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in, redirect to home
+                window.location.href = "index.html";
+            }
+        });
+    </script>
+</body>
+</html>
