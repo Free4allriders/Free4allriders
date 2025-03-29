@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <style>
         :root {
             --electric: #f77bff;
@@ -18,6 +20,7 @@
             --carbon: #0a0a0a;
             --silver: #f5f5f7;
             --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --glow-effect: 0 0 10px rgba(247, 123, 255, 0.7);
         }
 
         html {
@@ -32,29 +35,139 @@
             color: var(--silver);
             overflow-x: hidden;
         }
+
         /* Header with zoomed-out background image */
-.header-image {
-    width: 100%;
-    height: 100vh;
-    background-image: url('bkg1.PNG');
-    background-size: 85% auto;  /* Zoomed out (smaller percentage = more zoomed out) */
-    background-position: center center; /* Perfectly centered */
-    background-repeat: no-repeat;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-}
+        .header-image {
+            width: 100%;
+            height: 100vh;
+            background-image: url('bkg1.PNG');
+            background-size: 85% auto;
+            background-position: center center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-/* Optional overlay for better text readability */
-.header-overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.3); /* Dark overlay */
-}
+        /* Auth Modal Styles */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
 
+        .auth-container {
+            position: relative;
+            background: rgba(10,10,10,0.95);
+            border: 1px solid var(--electric);
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            margin: 100px auto;
+            padding: 40px;
+            box-shadow: var(--glow-effect);
+            animation: fadeIn 0.4s var(--ease-out);
+        }
+
+        .close-auth {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: var(--electric);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-auth:hover {
+            transform: rotate(90deg);
+        }
+
+        .auth-title {
+            color: var(--electric);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--deep-purple);
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: var(--electric);
+            box-shadow: var(--glow-effect);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--electric);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 0 15px rgba(247,123,255,0.3);
+        }
+
+        .auth-btn:hover {
+            background: var(--deep-purple);
+            box-shadow: 0 0 25px rgba(247,123,255,0.5);
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .auth-switch a {
+            color: var(--neon-cyan);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .auth-switch a:hover {
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .auth-error {
+            color: #ff5555;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        /* Header overlay */
+        .header-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+        }
 
         /* Hero Section */
         .header-image {
@@ -75,8 +188,8 @@
             letter-spacing: 2px;
             color:white;
             text-shadow: 
-                3px 3px 0 var(--deep-white),
-                6px 6px 0 var(--neon-white);
+                3px 3px 0 var(--deep-purple),
+                6px 6px 0 var(--neon-cyan);
             margin-bottom: 1.5rem;
         }
 
@@ -343,15 +456,55 @@
             .gallery-item {
                 height: 350px;
             }
+            
+            .auth-container {
+                padding: 30px 20px;
+                margin: 50px auto;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
+    <!-- Auth Modals -->
+    <div id="loginModal" class="auth-modal">
+        <div class="auth-container">
+            <span class="close-auth" id="closeLogin">&times;</span>
+            <h2 class="auth-title">INICIAR SESIÓN</h2>
+            <div id="loginError" class="auth-error"></div>
+            <form class="auth-form" id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
+                <input type="password" id="loginPassword" placeholder="Contraseña" required>
+                <button type="submit" class="auth-btn">ENTRAR</button>
+            </form>
+            <div class="auth-switch">
+                ¿No tienes cuenta? <a href="#" id="showRegister">Regístrate</a>
+            </div>
+        </div>
+    </div>
 
+    <div id="registerModal" class="auth-modal">
+        <div class="auth-container">
+            <span class="close-auth" id="closeRegister">&times;</span>
+            <h2 class="auth-title">REGISTRARSE</h2>
+            <div id="registerError" class="auth-error"></div>
+            <form class="auth-form" id="registerForm">
+                <input type="email" id="registerEmail" placeholder="Correo electrónico" required>
+                <input type="password" id="registerPassword" placeholder="Contraseña (mínimo 6 caracteres)" required>
+                <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" required>
+                <button type="submit" class="auth-btn">CREAR CUENTA</button>
+            </form>
+            <div class="auth-switch">
+                ¿Ya tienes cuenta? <a href="#" id="showLogin">Inicia sesión</a>
+            </div>
+        </div>
+    </div>
 
-
-    
-    <!-- Rolex-inspired header -->
+    <!-- Header -->
     <header id="main-header">
         <div class="logo-container">
             <img src="logo-imatge1.PNG" alt="FREE4ALLRIDERS Logo" class="brand-logo">
@@ -361,10 +514,11 @@
             <a href="#model" class="nav-link">3D Model</a>
             <a href="#gallery" class="nav-link">Action Gallery</a>
             <a href="#contact" class="nav-link">Contact</a>
+            <a href="#" id="authLink" class="nav-link">Login</a>
         </nav>
     </header>
 
-   !-- Hero Section -->
+    <!-- Hero Section -->
     <div class="header-image">
         <div class="header-overlay"></div>
         <div class="header-content">
@@ -376,48 +530,45 @@
         </div>
     </div>
 
-<!-- 3D Model Section -->
-    
-<section id="model" class="model-section">
-    <span class="section-title">3D PREVIEW</span>
-    <h2 class="section-heading">Interactive Product Experience</h2>
-    <p class="section-description">
-        Rotate and explore our latest ski jacket design in 3D
-    </p>
-    
-    <model-viewer 
-        src="hoodie.glb" 
-        alt="FREE4ALLRIDERS Hoodie 3D Model"
-        camera-controls
-        auto-rotate
-        auto-rotate-delay="1000"
-        shadow-intensity="1"
-        exposure="1.2"
-        environment-image="neutral"
-        style="width: 100%; height: 500px; margin: 0 auto;">
-        
-        <!-- Loading progress bar -->
-        <div class="progress-bar" slot="progress-bar">
-            <div class="update-bar" style="background-color: var(--electric);"></div>
-        </div>
-        
-        <!-- AR button for mobile -->
-        <button slot="ar-button" style="background-color: var(--electric); color: white; border-radius: 20px; padding: 12px 24px; border: none; cursor: pointer;">
-            View in AR
-        </button>
-        
-        <!-- Error message if WebGL not supported -->
-        <div slot="error" style="color: white; background: rgba(255,0,0,0.5); padding: 20px; border-radius: 8px;">
-            3D viewer not supported in your browser. Try Chrome or Edge.
-        </div>
-    </model-viewer>
-    
-    <div style="margin-top: 20px;">
-        <p style="color: var(--neon-cyan); font-size: 14px;">
-            Drag to rotate • Scroll to zoom • Click/touch to interact
+    <!-- 3D Model Section -->
+    <section id="model" class="model-section">
+        <span class="section-title">3D PREVIEW</span>
+        <h2 class="section-heading">Interactive Product Experience</h2>
+        <p class="section-description">
+            Rotate and explore our latest ski jacket design in 3D
         </p>
-    </div>
-</section>
+        
+        <model-viewer 
+            src="hoodie.glb" 
+            alt="FREE4ALLRIDERS Hoodie 3D Model"
+            camera-controls
+            auto-rotate
+            auto-rotate-delay="1000"
+            shadow-intensity="1"
+            exposure="1.2"
+            environment-image="neutral"
+            style="width: 100%; height: 500px; margin: 0 auto;">
+            
+            <div class="progress-bar" slot="progress-bar">
+                <div class="update-bar" style="background-color: var(--electric);"></div>
+            </div>
+            
+            <button slot="ar-button" style="background-color: var(--electric); color: white; border-radius: 20px; padding: 12px 24px; border: none; cursor: pointer;">
+                View in AR
+            </button>
+            
+            <div slot="error" style="color: white; background: rgba(255,0,0,0.5); padding: 20px; border-radius: 8px;">
+                3D viewer not supported in your browser. Try Chrome or Edge.
+            </div>
+        </model-viewer>
+        
+        <div style="margin-top: 20px;">
+            <p style="color: var(--neon-cyan); font-size: 14px;">
+                Drag to rotate • Scroll to zoom • Click/touch to interact
+            </p>
+        </div>
+    </section>
+
     <!-- Products section -->
     <section id="products" class="product-showcase">
         <span class="section-title">OUR COLLECTION</span>
@@ -506,6 +657,140 @@
     </footer>
 
     <script>
+        // Firebase Configuration (REPLACE WITH YOUR CONFIG)
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // DOM Elements
+        const authLink = document.getElementById('authLink');
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        const closeLogin = document.getElementById('closeLogin');
+        const closeRegister = document.getElementById('closeRegister');
+        const showLogin = document.getElementById('showLogin');
+        const showRegister = document.getElementById('showRegister');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginError = document.getElementById('loginError');
+        const registerError = document.getElementById('registerError');
+
+        // Modal Functions
+        function openModal(modal) {
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Event Listeners
+        authLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (auth.currentUser) {
+                auth.signOut();
+            } else {
+                openModal(loginModal);
+            }
+        });
+
+        closeLogin.addEventListener('click', () => closeModal(loginModal));
+        closeRegister.addEventListener('click', () => closeModal(registerModal));
+        showLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal(registerModal);
+            openModal(loginModal);
+        });
+        showRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal(loginModal);
+            openModal(registerModal);
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) closeModal(loginModal);
+            if (e.target === registerModal) closeModal(registerModal);
+        });
+
+        // Login Form
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    closeModal(loginModal);
+                    loginError.textContent = '';
+                })
+                .catch(error => {
+                    loginError.textContent = getErrorMessage(error.code);
+                });
+        });
+
+        // Register Form
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validate
+            if (password !== confirmPassword) {
+                registerError.textContent = 'Las contraseñas no coinciden';
+                return;
+            }
+
+            if (password.length < 6) {
+                registerError.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                return;
+            }
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    closeModal(registerModal);
+                    registerError.textContent = '';
+                })
+                .catch(error => {
+                    registerError.textContent = getErrorMessage(error.code);
+                });
+        });
+
+        // Auth State Listener
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                authLink.textContent = 'Cerrar sesión';
+            } else {
+                authLink.textContent = 'Login';
+            }
+        });
+
+        // Error Message Translator
+        function getErrorMessage(errorCode) {
+            switch(errorCode) {
+                case 'auth/invalid-email': return 'Email inválido';
+                case 'auth/user-disabled': return 'Cuenta deshabilitada';
+                case 'auth/user-not-found': return 'Usuario no encontrado';
+                case 'auth/wrong-password': return 'Contraseña incorrecta';
+                case 'auth/email-already-in-use': return 'Email ya registrado';
+                case 'auth/weak-password': return 'Contraseña débil (mínimo 6 caracteres)';
+                case 'auth/operation-not-allowed': return 'Operación no permitida';
+                default: return 'Error desconocido';
+            }
+        }
+
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('main-header');
