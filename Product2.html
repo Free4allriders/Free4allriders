@@ -7,6 +7,10 @@
     <link rel="icon" type="image/png" href="Head-imatge.PNG">
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Paso 3: Añadir SDKs de Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
     <style>
         :root {
             --neon-pink: #ff00ff;
@@ -419,6 +423,111 @@
             animation: fadeIn 0.8s ease-out;
         }
         
+        /* Login Modal */
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow: auto;
+        }
+        
+        .login-content {
+            background-color: rgba(0, 0, 0, 0.9);
+            margin: 100px auto;
+            padding: 30px;
+            border: 1px solid var(--neon-purple);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--glow-effect);
+            position: relative;
+        }
+        
+        .close-login {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: var(--neon-pink);
+            font-size: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close-login:hover {
+            transform: rotate(90deg);
+        }
+        
+        .login-title {
+            color: var(--neon-pink);
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--neon-purple);
+            border-radius: 5px;
+            color: var(--white);
+            font-size: 16px;
+        }
+        
+        .login-form input:focus {
+            outline: none;
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--neon-purple);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .login-btn:hover {
+            background-color: var(--neon-pink);
+            box-shadow: var(--glow-effect);
+        }
+        
+        .login-options {
+            text-align: center;
+            margin-top: 20px;
+            color: #ccc;
+        }
+        
+        .login-options a {
+            color: var(--neon-purple);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .login-options a:hover {
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+        
+        .error-message {
+            color: #ff5555;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .tab {
@@ -452,6 +561,11 @@
                 padding: 6px 12px;
                 font-size: 0.8rem;
             }
+            
+            .login-content {
+                margin: 50px auto;
+                width: 95%;
+            }
         }
     </style>
 </head>
@@ -463,6 +577,7 @@
             <a href="index.html">Inicio</a>
             <a href="index.html#products">Colección</a>
             <a href="Contact.html">Contacto</a>
+            <a href="#" id="loginLink">Login</a>
         </nav>
     </header>
     
@@ -509,8 +624,8 @@
                         </div>
                         
                         <div class="action-buttons">
-                            <button class="btn btn-primary">AÑADIR AL CARRITO</button>
-                            <button class="btn btn-secondary">COMPRAR AHORA</button>
+                            <button class="btn btn-primary" id="addToCartBtn">AÑADIR AL CARRITO</button>
+                            <button class="btn btn-secondary" id="buyNowBtn">COMPRAR AHORA</button>
                         </div>
                     </div>
                 </div>
@@ -544,8 +659,8 @@
                         </div>
                         
                         <div class="action-buttons">
-                            <button class="btn btn-primary">AÑADIR AL CARRITO</button>
-                            <button class="btn btn-secondary">COMPRAR AHORA</button>
+                            <button class="btn btn-primary" id="addToCartBtn2">AÑADIR AL CARRITO</button>
+                            <button class="btn btn-secondary" id="buyNowBtn2">COMPRAR AHORA</button>
                         </div>
                     </div>
                 </div>
@@ -566,6 +681,40 @@
         </div>
     </div>
     
+    <!-- Modal de Login -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-content">
+            <span class="close-login" id="closeLogin">&times;</span>
+            <h2 class="login-title">INICIAR SESIÓN</h2>
+            <div id="loginErrorMessage" class="error-message"></div>
+            <form class="login-form" id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
+                <input type="password" id="loginPassword" placeholder="Contraseña" required>
+                <button type="submit" class="login-btn">ENTRAR</button>
+            </form>
+            <div class="login-options">
+                <p>¿No tienes cuenta? <a href="#" id="showRegister">Regístrate</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Registro -->
+    <div id="registerModal" class="login-modal">
+        <div class="login-content">
+            <span class="close-login" id="closeRegister">&times;</span>
+            <h2 class="login-title">REGISTRARSE</h2>
+            <div id="registerErrorMessage" class="error-message"></div>
+            <form class="login-form" id="registerForm">
+                <input type="email" id="registerEmail" placeholder="Correo electrónico" required>
+                <input type="password" id="registerPassword" placeholder="Contraseña (mínimo 6 caracteres)" required>
+                <button type="submit" class="login-btn">REGISTRARSE</button>
+            </form>
+            <div class="login-options">
+                <p>¿Ya tienes cuenta? <a href="#" id="showLogin">Inicia sesión</a></p>
+            </div>
+        </div>
+    </div>
+    
     <!-- Footer Neon -->
     <footer>
         <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="footer-logo">
@@ -579,6 +728,31 @@
     </footer>
     
     <script>
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
+    authDomain: "free4allriders-51c5e.firebaseapp.com",
+    projectId: "free4allriders-51c5e",
+    storageBucket: "free4allriders-51c5e.firebasestorage.app",
+    messagingSenderId: "1082764494980",
+    appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
+    measurementId: "G-7KEGQPK3P0"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+
+        // Referencia a la colección de pedidos
+        const ordersRef = db.collection('orders');
+        
         // Sistema de Pestañas
         function showTab(tabIndex) {
             const tabs = document.getElementById('tabs');
@@ -610,18 +784,205 @@
         });
         
         // Funcionalidad de Botones
-        document.querySelectorAll('.btn-primary').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const selectedSize = document.querySelector('.size-option.selected').textContent;
-                alert(`Pantalones talla ${selectedSize} añadidos al carrito`);
-            });
+        document.getElementById('addToCartBtn').addEventListener('click', addToCart);
+        document.getElementById('buyNowBtn').addEventListener('click', buyNow);
+        document.getElementById('addToCartBtn2').addEventListener('click', addToCart);
+        document.getElementById('buyNowBtn2').addEventListener('click', buyNow);
+        
+        // Función para añadir al carrito
+        function addToCart() {
+            const selectedSize = document.querySelector('.size-option.selected').textContent;
+            alert(`Pantalones talla ${selectedSize} añadidos al carrito`);
+            
+            // Verificar si el usuario está autenticado
+            const user = auth.currentUser;
+            if (user) {
+                // Guardar en Firestore si está autenticado
+                saveOrderToFirestore(user.uid, 'cart', selectedSize);
+            }
+        }
+        
+        // Función para comprar ahora
+        function buyNow() {
+            const selectedSize = document.querySelector('.size-option.selected').textContent;
+            
+            // Verificar si el usuario está autenticado
+            const user = auth.currentUser;
+            if (user) {
+                // Guardar pedido en Firestore
+                saveOrderToFirestore(user.uid, 'purchased', selectedSize)
+                    .then(() => {
+                        alert(`Compra realizada! Talla ${selectedSize}. Gracias por elegirnos!`);
+                    });
+            } else {
+                // Mostrar modal de login si no está autenticado
+                alert('Por favor inicia sesión para completar la compra');
+                document.getElementById('loginModal').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        // Función para guardar pedidos en Firestore (Paso 5)
+        function saveOrderToFirestore(userId, status, size) {
+            const orderData = {
+                userId: userId,
+                product: "HOODIE FOR RIDER ONLY",
+                size: size,
+                price: 20,
+                status: status, // 'cart' o 'purchased'
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            return ordersRef.add(orderData)
+                .then(docRef => {
+                    console.log("Pedido guardado con ID: ", docRef.id);
+                    return true;
+                })
+                .catch(error => {
+                    console.error("Error al guardar el pedido: ", error);
+                    return false;
+                });
+        }
+        
+        // Paso 4: Implementación del Login
+        // Elementos del DOM para login/registro
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        const loginLink = document.getElementById('loginLink');
+        const closeLogin = document.getElementById('closeLogin');
+        const closeRegister = document.getElementById('closeRegister');
+        const showRegister = document.getElementById('showRegister');
+        const showLogin = document.getElementById('showLogin');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginErrorMessage = document.getElementById('loginErrorMessage');
+        const registerErrorMessage = document.getElementById('registerErrorMessage');
+        
+        // Mostrar modal de login
+        loginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
         });
         
-        document.querySelectorAll('.btn-secondary').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const selectedSize = document.querySelector('.size-option.selected').textContent;
-                alert(`Compra realizada! Talla ${selectedSize}. Gracias por elegirnos!`);
-            });
+        // Cerrar modales
+        closeLogin.addEventListener('click', function() {
+            loginModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        closeRegister.addEventListener('click', function() {
+            registerModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Cambiar entre login y registro
+        showRegister.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'none';
+            registerModal.style.display = 'block';
+        });
+        
+        showLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            registerModal.style.display = 'none';
+            loginModal.style.display = 'block';
+        });
+        
+        // Cerrar al hacer clic fuera del modal
+        window.addEventListener('click', function(event) {
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            if (event.target === registerModal) {
+                registerModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            if (event.target === photosModal) {
+                photosModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Login con email/contraseña
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Login exitoso
+                    loginModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    loginErrorMessage.textContent = '';
+                    alert('Bienvenido!');
+                })
+                .catch((error) => {
+                    // Mostrar error
+                    loginErrorMessage.textContent = getErrorMessage(error.code);
+                });
+        });
+        
+        // Registro con email/contraseña
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Registro exitoso
+                    registerModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    registerErrorMessage.textContent = '';
+                    alert('Registro completado! Bienvenido.');
+                })
+                .catch((error) => {
+                    // Mostrar error
+                    registerErrorMessage.textContent = getErrorMessage(error.code);
+                });
+        });
+        
+        // Función para traducir códigos de error
+        function getErrorMessage(errorCode) {
+            switch(errorCode) {
+                case 'auth/invalid-email':
+                    return 'El correo electrónico no es válido.';
+                case 'auth/user-disabled':
+                    return 'Esta cuenta ha sido deshabilitada.';
+                case 'auth/user-not-found':
+                    return 'No existe una cuenta con este correo.';
+                case 'auth/wrong-password':
+                    return 'Contraseña incorrecta.';
+                case 'auth/email-already-in-use':
+                    return 'Este correo ya está registrado.';
+                case 'auth/weak-password':
+                    return 'La contraseña debe tener al menos 6 caracteres.';
+                default:
+                    return 'Ocurrió un error. Por favor intenta de nuevo.';
+            }
+        }
+        
+        // Observador de estado de autenticación
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Usuario logueado
+                document.getElementById('loginLink').textContent = 'Cerrar sesión';
+                document.getElementById('loginLink').onclick = function(e) {
+                    e.preventDefault();
+                    auth.signOut();
+                };
+            } else {
+                // Usuario no logueado
+                document.getElementById('loginLink').textContent = 'Login';
+                document.getElementById('loginLink').onclick = function(e) {
+                    e.preventDefault();
+                    loginModal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                };
+            }
         });
         
         // Deslizamiento con Touch
@@ -689,13 +1050,6 @@
         closeModal.addEventListener('click', function() {
             photosModal.style.display = 'none';
             document.body.style.overflow = 'auto';
-        });
-        
-        window.addEventListener('click', function(event) {
-            if (event.target === photosModal) {
-                photosModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
         });
         
         // Efecto de carga
