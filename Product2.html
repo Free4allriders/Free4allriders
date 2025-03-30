@@ -1,632 +1,134 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HOODIE FOR RIDER | FREE4ALLRIDERS</title>
-    <link rel="icon" type="image/png" href="Head-imatge.PNG">
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-    <style>
-        :root {
-            --neon-pink: #ff00ff;
-            --neon-purple: #9d00ff;
-            --dark-purple: #4b0082;
-            --black: #000000;
-            --white: #ffffff;
-            --glow-effect: 0 0 10px rgba(157, 0, 255, 0.7), 
-                          0 0 20px rgba(255, 0, 255, 0.5);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-        
-        body {
-            background-color: var(--black);
-            color: var(--white);
-            overflow-x: hidden;
-        }
-        
-        /* Header Styles */
-        header {
-            background-color: rgba(0, 0, 0, 0.9);
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--neon-purple);
-            backdrop-filter: blur(5px);
-        }
-        
-        .logo {
-            height: 40px;
-            filter: drop-shadow(var(--glow-effect));
-        }
-        
-        nav a {
-            color: var(--white);
-            text-decoration: none;
-            margin-left: 20px;
-            font-weight: 500;
-            transition: all 0.3s;
-            text-shadow: 0 0 5px var(--neon-pink);
-        }
-        
-        nav a:hover {
-            color: var(--neon-pink);
-            text-shadow: 0 0 10px var(--neon-pink);
-        }
-        
-        /* Main Container */
-        .main-container {
-            max-width: 1200px;
-            margin: 100px auto 50px;
-            padding: 0 20px;
-            animation: fadeIn 0.8s ease-out;
-        }
-        
-        /* Product Tabs */
-        .tab-container {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            border-radius: 10px;
-            border: 1px solid var(--neon-purple);
-            box-shadow: var(--glow-effect);
-        }
-        
-        .tabs {
-            display: flex;
-            width: 200%;
-            transition: transform 0.5s ease;
-        }
-        
-        .tab {
-            width: 50%;
-            padding: 20px;
-            display: flex;
-            gap: 40px;
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-        
-        /* Image Section */
-        .image-section {
-            flex: 1;
-            position: relative;
-        }
-        
-        .product-image {
-            width: 100%;
-            border-radius: 10px;
-            border: 1px solid var(--neon-pink);
-            box-shadow: var(--glow-effect);
-        }
-        
-        .image-buttons {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-            z-index: 10;
-        }
-        
-        .img-btn {
-            padding: 8px 15px;
-            background-color: var(--neon-purple);
-            color: var(--white);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 0 10px var(--neon-pink);
-            transition: all 0.3s;
-        }
-        
-        .img-btn:hover {
-            background-color: var(--neon-pink);
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px var(--neon-pink);
-        }
-        
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            overflow: auto;
-        }
-        
-        .modal-content {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            position: relative;
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            color: var(--neon-pink);
-            font-size: 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .close-modal:hover {
-            transform: rotate(90deg);
-        }
-        
-        /* Login Modal */
-        .login-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-        }
-        
-        .login-content {
-            background-color: rgba(0, 0, 0, 0.9);
-            margin: 100px auto;
-            padding: 30px;
-            border: 1px solid var(--neon-purple);
-            width: 90%;
-            max-width: 400px;
-            border-radius: 10px;
-            box-shadow: var(--glow-effect);
-            position: relative;
-        }
-        
-        .close-login {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            color: var(--neon-pink);
-            font-size: 25px;
-            cursor: pointer;
-        }
-        
-        .login-title {
-            color: var(--neon-pink);
-            text-align: center;
-            margin-bottom: 25px;
-            text-shadow: 0 0 10px var(--neon-pink);
-        }
-        
-        .login-form input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--neon-purple);
-            border-radius: 5px;
-            color: var(--white);
-            font-size: 16px;
-        }
-        
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--neon-purple);
-            color: var(--white);
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-        
-        .login-btn:hover {
-            background-color: var(--neon-pink);
-            box-shadow: var(--glow-effect);
-        }
-        
-        .error-message {
-            color: #ff5555;
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-        
-        /* Product Details */
-        .details-section {
-            flex: 1;
-            padding: 20px;
-        }
-        
-        .product-title {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            color: var(--neon-pink);
-            text-shadow: 0 0 10px var(--neon-pink);
-        }
-        
-        .product-price {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin: 20px 0;
-            color: var(--neon-purple);
-        }
-        
-        .product-description {
-            line-height: 1.6;
-            margin-bottom: 25px;
-            color: #ccc;
-        }
-        
-        .size-selector {
-            margin: 25px 0;
-        }
-        
-        .size-options {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .size-option {
-            padding: 8px 15px;
-            border: 1px solid var(--neon-purple);
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: var(--white);
-            background-color: transparent;
-        }
-        
-        .size-option:hover {
-            background-color: var(--neon-purple);
-            box-shadow: var(--glow-effect);
-        }
-        
-        .size-option.selected {
-            background-color: var(--neon-pink);
-            border-color: var(--neon-pink);
-            box-shadow: var(--glow-effect);
-        }
-        
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-        }
-        
-        .btn {
-            padding: 12px 25px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            background-color: transparent;
-            color: var(--white);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--neon-pink);
-        }
-        
-        .btn:hover {
-            background-color: rgba(157, 0, 255, 0.2);
-            box-shadow: var(--glow-effect);
-            transform: translateY(-3px);
-        }
-        
-        .btn-primary {
-            border-color: var(--neon-pink);
-            color: var(--neon-pink);
-        }
-        
-        .btn-secondary {
-            border-color: var(--neon-purple);
-            color: var(--neon-purple);
-        }
-        
-        /* Footer */
-        footer {
-            background-color: rgba(0, 0, 0, 0.9);
-            padding: 30px 5%;
-            text-align: center;
-            margin-top: 50px;
-            border-top: 1px solid var(--neon-purple);
-        }
-        
-        .footer-logo {
-            height: 30px;
-            margin-bottom: 20px;
-            filter: drop-shadow(var(--glow-effect));
-        }
-        
-        .social-links {
-            margin: 20px 0;
-        }
-        
-        .social-links a {
-            color: var(--white);
-            margin: 0 10px;
-            font-size: 1.2rem;
-            transition: all 0.3s;
-        }
-        
-        .social-links a:hover {
-            color: var(--neon-pink);
-            text-shadow: 0 0 10px var(--neon-pink);
-        }
-        
-        .copyright {
-            color: var(--neon-purple);
-            font-size: 0.9rem;
-            text-shadow: 0 0 5px var(--neon-pink);
-        }
-        
-        /* Order Confirmation Styles */
-        .order-confirmation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        .confirmation-content {
-            background: rgba(10,10,10,0.95);
-            border: 1px solid var(--neon-pink);
-            border-radius: 10px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: var(--glow-effect);
-            position: relative;
-        }
-        
-        .confirmation-title {
-            color: var(--neon-pink);
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            text-shadow: 0 0 10px var(--neon-pink);
-        }
-        
-        .confirmation-message {
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-        
-        .order-details {
-            background: rgba(0,0,0,0.3);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            border: 1px solid var(--neon-purple);
-        }
-        
-        .order-id {
-            font-weight: bold;
-            color: var(--neon-pink);
-        }
-        
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .tab {
-                flex-direction: column;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-            
-            model-viewer {
-                height: 300px;
-            }
-            
-            nav {
-                display: none;
-            }
-            
-            .confirmation-content {
-                padding: 20px;
-            }
-            
-            .confirmation-title {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+    <!-- Todo el head se mantiene igual hasta el cierre de </style> -->
+    <!-- Añade estos estilos adicionales antes del cierre de </style> -->
+    
+    /* Estilos adicionales para el carrito */
+    .cart-icon {
+        position: relative;
+        display: inline-block;
+        margin-left: 20px;
+    }
+    
+    .cart-counter {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: var(--neon-pink);
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 24px;
+        background: #333;
+        color: white;
+        border-radius: 4px;
+        z-index: 1000;
+        animation: fadeIn 0.3s;
+    }
+    
+    .toast-success {
+        background: var(--neon-purple);
+    }
+    
+    .toast-error {
+        background: #F44336;
+    }
+    
+    .cart-dropdown {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        width: 300px;
+        background: rgba(0,0,0,0.95);
+        border: 1px solid var(--neon-purple);
+        border-radius: 5px;
+        padding: 15px;
+        z-index: 1000;
+        box-shadow: var(--glow-effect);
+    }
+    
+    .cart-item {
+        display: flex;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #333;
+        padding-bottom: 10px;
+    }
+    
+    .cart-item img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        margin-right: 10px;
+        border-radius: 3px;
+    }
+    
+    .cart-item-info {
+        flex: 1;
+    }
+    
+    .cart-total {
+        font-weight: bold;
+        margin-top: 10px;
+        text-align: right;
+    }
+    
+    .checkout-btn {
+        width: 100%;
+        margin-top: 10px;
+    }
 </head>
 <body>
-    <!-- Header -->
+    <!-- Modifica el header para añadir el icono del carrito -->
     <header>
-        <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="logo">
+        <img src="logo-imatge1.PNG" alt="FREE4ALLRIDERS" class="logo">
         <nav>
             <a href="index.html">Inicio</a>
             <a href="index.html#products">Colección</a>
             <a href="Contact.html">Contacto</a>
             <a href="login.html" id="authLink">Login</a>
+            <div class="cart-icon" id="cartIcon">
+                🛒 <span class="cart-counter" id="cartCounter" style="display: none;">0</span>
+                <div class="cart-dropdown" id="cartDropdown">
+                    <div id="cartItems"></div>
+                    <div class="cart-total">Total: $<span id="cartTotal">0</span></div>
+                    <button class="btn btn-primary checkout-btn" id="checkoutBtn">Finalizar Compra</button>
+                </div>
+            </div>
         </nav>
     </header>
-    
-    <!-- Main Content -->
-    <div class="main-container">
-        <!-- Product Tabs -->
-        <div class="tab-container" id="tabContainer">
-            <div class="tabs" id="tabs">
-                <!-- Classic View -->
-                <div class="tab">
-                    <div class="image-section">
-                        <img src="Hoodie-white.jpeg" alt="HOODIE FOR RIDER" class="product-image" id="productImage">
-                        <div class="image-buttons">
-                            <button class="img-btn" id="switchBtn">SWITCH</button>
-                            <button class="img-btn" id="morePhotosBtn">MORE PHOTOS</button>
-                        </div>
-                    </div>
-                    
-                    <div class="details-section">
-                        <h1 class="product-title">HOODIE FOR RIDER ONLY</h1>
-                        <div class="product-price">20$</div>
-                        
-                        <p class="product-description">
-                            Hoodie premium diseñado específicamente para riders. Materiales de alta calidad que ofrecen 
-                            comodidad y durabilidad en tus aventuras. Diseño exclusivo con tecnología de aislamiento térmico.
-                        </p>
-                        
-                        <div class="size-selector">
-                            <h3>TALLAS DISPONIBLES:</h3>
-                            <div class="size-options">
-                                <span class="size-option">S</span>
-                                <span class="size-option selected">M</span>
-                                <span class="size-option">L</span>
-                                <span class="size-option">XL</span>
-                            </div>
-                        </div>
-                        
-                        <div class="action-buttons">
-                            <button class="btn btn-primary" id="addToCartBtn">AÑADIR AL CARRITO</button>
-                            <button class="btn btn-secondary" id="buyNowBtn">COMPRAR AHORA</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 3D View -->
-                <div class="tab">
-                    <div class="image-section">
-                        <model-viewer src="hoodie.glb" alt="Vista 3D del hoodie" auto-rotate camera-controls></model-viewer>
-                    </div>
-                    
-                    <div class="details-section">
-                        <h1 class="product-title">MODO 3D ACTIVADO</h1>
-                        <div class="product-price">20$</div>
-                        
-                        <p class="product-description">
-                            Explora cada detalle de nuestro hoodie en 360°.
-                            <br><br>
-                            <strong>CONTROLES:</strong>
-                            <br>Arrastra para rotar
-                            <br>Doble clic para resetear
-                        </p>
-                        
-                        <div class="size-selector">
-                            <h3>TALLAS DISPONIBLES:</h3>
-                            <div class="size-options">
-                                <span class="size-option">S</span>
-                                <span class="size-option selected">M</span>
-                                <span class="size-option">L</span>
-                                <span class="size-option">XL</span>
-                            </div>
-                        </div>
-                        
-                        <div class="action-buttons">
-                            <button class="btn btn-primary" id="addToCartBtn3D">AÑADIR AL CARRITO</button>
-                            <button class="btn btn-secondary" id="buyNowBtn3D">COMPRAR AHORA</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Photo Gallery Modal -->
-    <div id="photosModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeModal">&times;</span>
-            <h2 style="color: var(--neon-pink); text-align: center; margin-bottom: 20px;">GALERÍA DEL PRODUCTO</h2>
-            
-            <div class="gallery-grid">
-                <img src="Familly.jpeg" alt="Modelo frontal con el hoodie" class="gallery-img">
-                <img src="Back.jpeg" alt="Vista trasera del hoodie" class="gallery-img">
-            </div>
-        </div>
-    </div>
-    
-    <!-- Login Modal -->
-    <div id="loginModal" class="login-modal">
-        <div class="login-content">
-            <span class="close-login" id="closeLogin">&times;</span>
-            <h2 class="login-title">INICIAR SESIÓN</h2>
-            <div id="loginErrorMessage" class="error-message"></div>
-            <form class="login-form" id="loginForm">
-                <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
-                <input type="password" id="loginPassword" placeholder="Contraseña" required>
-                <button type="submit" class="login-btn">ENTRAR</button>
-            </form>
-            <div style="text-align: center; margin-top: 20px; color: #ccc;">
-                <p>¿No tienes cuenta? <a href="register.html" style="color: var(--neon-purple);">Regístrate</a></p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Order Confirmation Modal -->
-    <div id="orderConfirmation" class="order-confirmation">
-        <div class="confirmation-content">
-            <h2 class="confirmation-title">¡Pedido Recibido!</h2>
-            <p class="confirmation-message">Gracias por tu compra. Hemos recibido tu pedido correctamente.</p>
-            
-            <div class="order-details">
-                <p>Producto: <strong>HOODIE FOR RIDER ONLY</strong></p>
-                <p>Talla: <strong id="confirmedSize"></strong></p>
-                <p>Precio: <strong>20$</strong></p>
-                <p>ID del pedido: <span class="order-id" id="orderId"></span></p>
-            </div>
-            
-            <button class="btn btn-primary" onclick="document.getElementById('orderConfirmation').style.display = 'none'">Cerrar</button>
-        </div>
-    </div>
-    
-    <!-- Footer -->
-    <footer>
-        <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="footer-logo">
-        <div class="social-links">
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-tiktok"></i></a>
-        </div>
-        <p class="copyright">© 2023 FREE4ALLRIDERS | CYBER COLLECTION</p>
-    </footer>
 
-    <!-- Firebase Configuration -->
+    <!-- Todo el contenido principal se mantiene igual -->
+
+    <!-- Añade este modal adicional para el checkout -->
+    <div id="checkoutModal" class="order-confirmation">
+        <div class="confirmation-content">
+            <h2 class="confirmation-title">Resumen de Compra</h2>
+            <div id="checkoutSummary"></div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="confirmCheckout">Confirmar Compra</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('checkoutModal').style.display='none'">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Al final del body, antes del cierre </body>, reemplaza todo el script con este: -->
     <script>
-        // Replace with your actual Firebase config
-       const firebaseConfig = {
+        // Configuración Firebase (usa tus datos reales)
+        const firebaseConfig = {
     apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
     authDomain: "free4allriders-51c5e.firebaseapp.com",
     projectId: "free4allriders-51c5e",
@@ -638,203 +140,323 @@
 
 
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        // Inicialización Firebase
+        try {
+            firebase.initializeApp(firebaseConfig);
+            console.log("Firebase inicializado correctamente");
+        } catch (error) {
+            console.error("Error inicializando Firebase:", error);
+        }
+
         const auth = firebase.auth();
         const db = firebase.firestore();
-        
-        // Reference to orders collection
-        const ordersRef = db.collection('orders');
+        const CART_STORAGE_KEY = 'free4all_cart';
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Tabs functionality
-            function showTab(tabIndex) {
-                const tabs = document.getElementById('tabs');
-                tabs.style.transform = `translateX(-${tabIndex * 50}%)`;
-            }
-
-            // Size selection
-            document.querySelectorAll('.size-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    document.querySelectorAll('.size-option').forEach(opt => {
-                        opt.classList.remove('selected');
-                    });
-                    this.classList.add('selected');
-                    
-                    // Sync selection across both tabs
-                    const tabs = document.querySelectorAll('.tab');
-                    const index = Array.from(this.parentElement.children).indexOf(this);
-                    tabs.forEach(tab => {
-                        tab.querySelectorAll('.size-option')[index].classList.add('selected');
+        // Objeto del carrito
+        let cart = {
+            items: [],
+            total: 0,
+            
+            init: function() {
+                this.load();
+                this.updateUI();
+            },
+            
+            load: function() {
+                const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+                if (savedCart) {
+                    const parsedCart = JSON.parse(savedCart);
+                    this.items = parsedCart.items || [];
+                    this.total = parsedCart.total || 0;
+                }
+            },
+            
+            save: function() {
+                localStorage.setItem(
+                    CART_STORAGE_KEY, 
+                    JSON.stringify({
+                        items: this.items,
+                        total: this.total
+                    })
+                );
+                this.updateUI();
+            },
+            
+            addItem: function(product) {
+                const existingItem = this.items.find(item => 
+                    item.id === product.id && item.size === product.size);
+                
+                if (existingItem) {
+                    existingItem.quantity += product.quantity;
+                } else {
+                    this.items.push(product);
+                }
+                
+                this.calculateTotal();
+                this.save();
+            },
+            
+            removeItem: function(index) {
+                this.items.splice(index, 1);
+                this.calculateTotal();
+                this.save();
+            },
+            
+            calculateTotal: function() {
+                this.total = this.items.reduce((sum, item) => {
+                    return sum + (item.price * item.quantity);
+                }, 0);
+            },
+            
+            clear: function() {
+                this.items = [];
+                this.total = 0;
+                localStorage.removeItem(CART_STORAGE_KEY);
+                this.updateUI();
+            },
+            
+            updateUI: function() {
+                // Actualizar contador
+                const totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
+                const counter = document.getElementById('cartCounter');
+                
+                if (totalItems > 0) {
+                    counter.textContent = totalItems;
+                    counter.style.display = 'flex';
+                } else {
+                    counter.style.display = 'none';
+                }
+                
+                // Actualizar dropdown del carrito
+                const cartItemsContainer = document.getElementById('cartItems');
+                const cartTotalElement = document.getElementById('cartTotal');
+                
+                cartItemsContainer.innerHTML = '';
+                
+                if (this.items.length === 0) {
+                    cartItemsContainer.innerHTML = '<p>Tu carrito está vacío</p>';
+                    cartTotalElement.textContent = '0';
+                    return;
+                }
+                
+                this.items.forEach((item, index) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'cart-item';
+                    itemElement.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <p>Talla: ${item.size} | Cantidad: ${item.quantity}</p>
+                            <p>$${(item.price * item.quantity).toFixed(2)}</p>
+                            <button class="remove-item" data-index="${index}">Eliminar</button>
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(itemElement);
+                });
+                
+                cartTotalElement.textContent = this.total.toFixed(2);
+                
+                // Agregar event listeners a los botones de eliminar
+                document.querySelectorAll('.remove-item').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        this.removeItem(index);
+                        showToast('Producto eliminado del carrito');
                     });
                 });
-            });
-
-            // Image switching
-            const switchBtn = document.getElementById('switchBtn');
-            const productImage = document.getElementById('productImage');
-            let isMainImage = true;
-            const mainImage = 'Hoodie-black.jpeg';
-            const altImage = 'Hoodie-white.jpeg';
-
-            switchBtn.addEventListener('click', () => {
-                productImage.src = isMainImage ? altImage : mainImage;
-                isMainImage = !isMainImage;
-            });
-
-            // Photo gallery modal
-            const morePhotosBtn = document.getElementById('morePhotosBtn');
-            const photosModal = document.getElementById('photosModal');
-            const closeModal = document.getElementById('closeModal');
-
-            morePhotosBtn.addEventListener('click', () => {
-                photosModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            });
-
-            closeModal.addEventListener('click', () => {
-                photosModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-
-            // Purchase functionality
-            const addToCartBtns = [document.getElementById('addToCartBtn'), document.getElementById('addToCartBtn3D')];
-            const buyNowBtns = [document.getElementById('buyNowBtn'), document.getElementById('buyNowBtn3D')];
-
-            addToCartBtns.forEach(btn => {
-                btn.addEventListener('click', addToCart);
-            });
-
-            buyNowBtns.forEach(btn => {
-                btn.addEventListener('click', buyNow);
-            });
-
-            function addToCart() {
-                const selectedSize = document.querySelector('.size-option.selected').textContent;
-                const user = auth.currentUser;
-                
-                if (user) {
-                    saveOrder(user.uid, 'cart', selectedSize)
-                        .then(() => {
-                            showConfirmation('Añadido al carrito', selectedSize);
-                        })
-                        .catch(error => {
-                            console.error("Error:", error);
-                            alert('Error al añadir al carrito. Por favor intenta nuevamente.');
-                        });
-                } else {
-                    showLoginModal();
-                }
             }
+        };
 
-            function buyNow() {
-                const selectedSize = document.querySelector('.size-option.selected').textContent;
-                const user = auth.currentUser;
-                
-                if (user) {
-                    saveOrder(user.uid, 'purchased', selectedSize)
-                        .then((docRef) => {
-                            showConfirmation('Compra realizada', selectedSize, docRef.id);
-                        })
-                        .catch(error => {
-                            console.error("Error:", error);
-                            alert('Error al procesar la compra. Por favor intenta nuevamente.');
-                        });
-                } else {
-                    showLoginModal();
-                }
+        // Función para mostrar notificaciones
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Función para procesar la orden
+        async function processOrder() {
+            const user = auth.currentUser;
+            
+            if (!user) {
+                showToast('Por favor inicia sesión para continuar', 'error');
+                document.getElementById('loginModal').style.display = 'block';
+                return null;
             }
-
-            function saveOrder(userId, status, size) {
-                const orderData = {
-                    userId: userId,
-                    product: "HOODIE FOR RIDER ONLY",
-                    size: size,
-                    price: 20,
-                    status: status,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                return ordersRef.add(orderData);
-            }
-
-            function showConfirmation(message, size, orderId = null) {
-                const confirmation = document.getElementById('orderConfirmation');
-                const confirmedSize = document.getElementById('confirmedSize');
-                const orderIdElement = document.getElementById('orderId');
+            
+            try {
+                const batch = db.batch();
+                const ordersCollection = db.collection('orders');
+                const orderIds = [];
                 
-                confirmedSize.textContent = size;
-                
-                if (orderId) {
-                    orderIdElement.textContent = orderId;
-                } else {
-                    document.querySelector('.order-id').style.display = 'none';
-                }
-                
-                confirmation.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-
-            // Authentication system
-            const authLink = document.getElementById('authLink');
-            const loginModal = document.getElementById('loginModal');
-            const closeLogin = document.getElementById('closeLogin');
-            const loginForm = document.getElementById('loginForm');
-            const loginErrorMessage = document.getElementById('loginErrorMessage');
-
-            function showLoginModal() {
-                loginModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            }
-
-            authLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (auth.currentUser) {
-                    auth.signOut();
-                } else {
-                    showLoginModal();
-                }
-            });
-
-            closeLogin.addEventListener('click', () => {
-                loginModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-
-                auth.signInWithEmailAndPassword(email, password)
-                    .then(() => {
-                        loginModal.style.display = 'none';
-                        document.body.style.overflow = 'auto';
-                        loginErrorMessage.textContent = '';
-                    })
-                    .catch(error => {
-                        loginErrorMessage.textContent = getAuthErrorMessage(error.code);
+                // Crear un documento por cada item en el carrito
+                cart.items.forEach(item => {
+                    const orderRef = ordersCollection.doc();
+                    orderIds.push(orderRef.id);
+                    
+                    batch.set(orderRef, {
+                        userId: user.uid,
+                        userEmail: user.email,
+                        productId: item.id,
+                        productName: item.name,
+                        size: item.size,
+                        quantity: item.quantity,
+                        price: item.price,
+                        total: item.price * item.quantity,
+                        status: 'completed',
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        ip: await getClientIP()
                     });
-            });
-
-            function getAuthErrorMessage(errorCode) {
-                switch(errorCode) {
-                    case 'auth/invalid-email': return 'Email inválido';
-                    case 'auth/user-disabled': return 'Cuenta deshabilitada';
-                    case 'auth/user-not-found': return 'Usuario no encontrado';
-                    case 'auth/wrong-password': return 'Contraseña incorrecta';
-                    default: return 'Error al iniciar sesión';
-                }
+                });
+                
+                // Ejecutar la transacción
+                await batch.commit();
+                return orderIds;
+                
+            } catch (error) {
+                console.error("Error procesando orden:", error);
+                throw error;
             }
+        }
 
-            // Auth state observer
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    authLink.textContent = 'Cerrar sesión';
-                } else {
-                    authLink.textContent = 'Login';
+        // Función para obtener la IP del cliente
+        async function getClientIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch {
+                return 'unknown';
+            }
+        }
+
+        // Inicialización al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializar carrito
+            cart.init();
+            
+            // Configurar el icono del carrito
+            const cartIcon = document.getElementById('cartIcon');
+            const cartDropdown = document.getElementById('cartDropdown');
+            
+            cartIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
+            });
+            
+            document.addEventListener('click', () => {
+                cartDropdown.style.display = 'none';
+            });
+            
+            // Botón de añadir al carrito
+            document.getElementById('addToCartBtn').addEventListener('click', () => {
+                const product = {
+                    id: 'hoodie-rider', // ID único del producto
+                    name: document.querySelector('.product-title').textContent,
+                    price: parseFloat(document.querySelector('.product-price').textContent.replace('$', '')),
+                    size: document.querySelector('.size-option.selected').textContent,
+                    quantity: 1,
+                    image: document.querySelector('.product-image').src
+                };
+                
+                cart.addItem(product);
+                showToast('Producto añadido al carrito');
+            });
+            
+            // Botón de comprar ahora (añade al carrito y va directo al checkout)
+            document.getElementById('buyNowBtn').addEventListener('click', () => {
+                const product = {
+                    id: 'hoodie-rider',
+                    name: document.querySelector('.product-title').textContent,
+                    price: parseFloat(document.querySelector('.product-price').textContent.replace('$', '')),
+                    size: document.querySelector('.size-option.selected').textContent,
+                    quantity: 1,
+                    image: document.querySelector('.product-image').src
+                };
+                
+                cart.clear();
+                cart.addItem(product);
+                document.getElementById('checkoutModal').style.display = 'flex';
+                updateCheckoutSummary();
+            });
+            
+            // Botón de finalizar compra
+            document.getElementById('checkoutBtn').addEventListener('click', () => {
+                if (cart.items.length === 0) {
+                    showToast('El carrito está vacío', 'error');
+                    return;
+                }
+                
+                document.getElementById('checkoutModal').style.display = 'flex';
+                updateCheckoutSummary();
+            });
+            
+            // Botón de confirmar compra
+            document.getElementById('confirmCheckout').addEventListener('click', async () => {
+                try {
+                    const orderIds = await processOrder();
+                    
+                    if (orderIds) {
+                        // Mostrar confirmación
+                        document.getElementById('checkoutModal').style.display = 'none';
+                        
+                        // Actualizar el modal de confirmación de orden
+                        document.getElementById('confirmedSize').textContent = 
+                            cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
+                        document.getElementById('orderId').textContent = orderIds.join(', ');
+                        document.getElementById('orderConfirmation').style.display = 'flex';
+                        
+                        // Vaciar el carrito
+                        cart.clear();
+                    }
+                } catch (error) {
+                    showToast('Error al procesar la compra: ' + error.message, 'error');
                 }
             });
+            
+            // Función para actualizar el resumen de compra
+            function updateCheckoutSummary() {
+                const summaryElement = document.getElementById('checkoutSummary');
+                summaryElement.innerHTML = '';
+                
+                if (cart.items.length === 0) {
+                    summaryElement.innerHTML = '<p>No hay productos en el carrito</p>';
+                    return;
+                }
+                
+                const list = document.createElement('ul');
+                list.style.listStyle = 'none';
+                list.style.marginBottom = '20px';
+                
+                cart.items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.style.marginBottom = '10px';
+                    li.style.paddingBottom = '10px';
+                    li.style.borderBottom = '1px solid #333';
+                    li.innerHTML = `
+                        <strong>${item.name}</strong> - Talla: ${item.size}
+                        <br>Cantidad: ${item.quantity} x $${item.price.toFixed(2)} = $${(item.price * item.quantity).toFixed(2)}
+                    `;
+                    list.appendChild(li);
+                });
+                
+                const totalElement = document.createElement('div');
+                totalElement.style.fontWeight = 'bold';
+                totalElement.style.marginTop = '15px';
+                totalElement.style.textAlign = 'right';
+                totalElement.textContent = `Total: $${cart.total.toFixed(2)}`;
+                
+                summaryElement.appendChild(list);
+                summaryElement.appendChild(totalElement);
+            }
+            
+            // El resto de tu código existente (tabs, modals, etc.) se mantiene igual
+            // ... (todo el código que ya tenías para tabs, image switching, etc.)
         });
     </script>
 </body>
