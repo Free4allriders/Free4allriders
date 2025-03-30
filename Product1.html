@@ -824,17 +824,27 @@
     <!-- Order Confirmation Modal -->
     <div id="orderConfirmation" class="order-confirmation">
         <div class="confirmation-content">
-            <h2 class="confirmation-title">¡Pedido Recibido!</h2>
+            <h2 class="confirmation-title">¡Pedido Confirmado!</h2>
             <p class="confirmation-message">Gracias por tu compra. Hemos recibido tu pedido correctamente.</p>
             
             <div class="order-details">
                 <p>Producto: <strong>CHAQUETA ÉPICA</strong></p>
                 <p>Talla: <strong id="confirmedSize"></strong></p>
-                <p>Precio: <strong id="confirmedPrice">40€</strong></p>
-                <p>ID del pedido: <span class="order-id" id="orderId"></span></p>
+                <p>Total: <strong id="confirmedPrice"></strong></p>
+                <p>Nº de pedido: <span class="order-id" id="orderId"></span></p>
+                <!-- Estos elementos se llenarán dinámicamente -->
+                <p id="customerName"></p>
+                <p id="customerEmail"></p>
+                <p id="orderDate"></p>
             </div>
             
-            <button class="btn btn-primary" onclick="document.getElementById('orderConfirmation').style.display = 'none'">Cerrar</button>
+            <p style="margin-top: 20px; color: var(--neon-purple);">
+                Te hemos enviado un correo con los detalles de tu compra.
+            </p>
+            
+            <button class="btn btn-primary" onclick="document.getElementById('orderConfirmation').style.display = 'none'">
+                Cerrar
+            </button>
         </div>
     </div>
     
@@ -845,8 +855,13 @@
             <div class="checkout-summary" id="checkoutSummary">
                 <!-- Los items del carrito se añadirán aquí -->
             </div>
-            <div class="cart-total" style="text-align: right; font-size: 1.2rem;">
-                Total: $<span id="checkoutTotal">0.00</span>
+            <div class="order-details">
+                <p>Subtotal: <span id="checkoutSubtotal">0.00</span>€</p>
+                <p>Envío: <span id="checkoutShipping">5.00</span>€</p>
+                <p>IVA (21%): <span id="checkoutTax">0.00</span>€</p>
+                <p class="cart-total" style="text-align: right; font-size: 1.2rem; margin-top: 10px;">
+                    Total: <span id="checkoutTotal">0.00</span>€
+                </p>
             </div>
             <div class="action-buttons" style="margin-top: 20px;">
                 <button class="btn btn-primary" id="confirmCheckout">Confirmar Compra</button>
@@ -870,7 +885,7 @@
     <!-- Firebase Configuration -->
     <script>
         // Configuración Firebase (reemplaza con tus datos reales)
-   const firebaseConfig = {
+     const firebaseConfig = {
     apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
     authDomain: "free4allriders-51c5e.firebaseapp.com",
     projectId: "free4allriders-51c5e",
@@ -879,7 +894,6 @@
     appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
     measurementId: "G-7KEGQPK3P0"
   };
-
 
         // Inicialización Firebase
         try {
@@ -982,7 +996,7 @@
                         <div class="cart-item-info">
                             <div class="cart-item-title">${item.name}</div>
                             <div class="cart-item-details">Talla: ${item.size} | Cantidad: ${item.quantity}</div>
-                            <div class="cart-item-details">$${(item.price * item.quantity).toFixed(2)}</div>
+                            <div class="cart-item-details">${(item.price * item.quantity).toFixed(2)}€</div>
                             <button class="remove-item" data-index="${index}">Eliminar</button>
                         </div>
                     `;
@@ -1023,47 +1037,42 @@
             }
             
             try {
-                const batch = db.batch();
-                const ordersCollection = db.collection('orders');
-                const orderIds = [];
+                // Obtener datos del usuario
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                const userData = userDoc.data() || {};
                 
-                cart.items.forEach(item => {
-                    const orderRef = ordersCollection.doc();
-                    orderIds.push(orderRef.id);
-                    
-                    batch.set(orderRef, {
-                        userId: user.uid,
-                        userEmail: user.email,
-                        productId: item.id,
-                        productName: item.name,
-                        size: item.size,
-                        quantity: item.quantity,
-                        price: item.price,
-                        total: item.price * item.quantity,
-                        status: 'completed',
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                        ip: '',
-                        shippingAddress: '',
-                        paymentMethod: 'Tarjeta'
-                    });
-                });
+                // Crear objeto de orden
+                const subtotal = cart.getTotal();
+                const shipping = 5.00;
+                const tax = subtotal * 0.21;
+                const total = subtotal + shipping + tax;
                 
-                try {
-                    const ipResponse = await fetch('https://api.ipify.org?format=json');
-                    const ipData = await ipResponse.json();
-                    
-                    cart.items.forEach((item, index) => {
-                        const orderRef = ordersCollection.doc(orderIds[index]);
-                        batch.update(orderRef, {
-                            ip: ipData.ip
-                        });
-                    });
-                } catch (ipError) {
-                    console.error("Error obteniendo IP:", ipError);
-                }
+                const orderData = {
+                    userId: user.uid,
+                    userEmail: user.email,
+                    userName: userData.name || 'Cliente',
+                    items: cart.items,
+                    subtotal: subtotal,
+                    shipping: shipping,
+                    tax: tax,
+                    total: total,
+                    status: 'completed',
+                    paymentMethod: 'credit_card',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    ip: await getClientIP()
+                };
+
+                // Guardar en Firestore
+                const orderRef = await db.collection('orders').add(orderData);
                 
-                await batch.commit();
-                return orderIds;
+                // Mostrar en consola (simulación de email)
+                console.log(`Enviando confirmación a ${user.email} para la orden ${orderRef.id}`);
+                console.log('Detalles del pedido:', orderData);
+                
+                return {
+                    orderId: orderRef.id,
+                    orderData: orderData
+                };
                 
             } catch (error) {
                 console.error("Error procesando orden:", error);
@@ -1071,47 +1080,72 @@
             }
         }
 
+        // Función auxiliar para obtener IP
+        async function getClientIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                console.error("Error obteniendo IP:", error);
+                return 'unknown';
+            }
+        }
+
         // Función para actualizar el resumen de checkout
         function updateCheckoutSummary() {
             const summaryElement = document.getElementById('checkoutSummary');
+            const subtotalElement = document.getElementById('checkoutSubtotal');
+            const shippingElement = document.getElementById('checkoutShipping');
+            const taxElement = document.getElementById('checkoutTax');
             const totalElement = document.getElementById('checkoutTotal');
-            
-            summaryElement.innerHTML = '';
-            
-            if (cart.items.length === 0) {
-                summaryElement.innerHTML = '<p>No hay productos en el carrito</p>';
-                totalElement.textContent = '0.00';
-                return;
-            }
-            
-            cart.items.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.className = 'checkout-item';
-                itemElement.innerHTML = `
-                    <div>
-                        <strong>${item.name}</strong> (${item.size})
-                        <br><small>Cantidad: ${item.quantity}</small>
-                    </div>
-                    <div>$${(item.price * item.quantity).toFixed(2)}</div>
-                `;
-                summaryElement.appendChild(itemElement);
-            });
-            
-            totalElement.textContent = cart.getTotal().toFixed(2);
+                    summaryElement.innerHTML = '';
+        
+        if (cart.items.length === 0) {
+            summaryElement.innerHTML = '<p>No hay productos en el carrito</p>';
+            subtotalElement.textContent = '0.00';
+            shippingElement.textContent = '0.00';
+            taxElement.textContent = '0.00';
+            totalElement.textContent = '0.00';
+            return;
         }
+        
+        const subtotal = cart.getTotal();
+        const shipping = 5.00;
+        const tax = subtotal * 0.21;
+        const total = subtotal + shipping + tax;
+        
+        cart.items.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'checkout-item';
+            itemElement.innerHTML = `
+                <div>
+                    <strong>${item.name}</strong> (${item.size})
+                    <br><small>Cantidad: ${item.quantity}</small>
+                </div>
+                <div>${(item.price * item.quantity).toFixed(2)}€</div>
+            `;
+            summaryElement.appendChild(itemElement);
+        });
+        
+        subtotalElement.textContent = subtotal.toFixed(2);
+        shippingElement.textContent = shipping.toFixed(2);
+        taxElement.textContent = tax.toFixed(2);
+        totalElement.textContent = total.toFixed(2);
+    }
 
-        // Inicialización al cargar la página
-        document.addEventListener('DOMContentLoaded', () => {
-            // Inicializar carrito
-            cart.init();
-            
-            // Configurar el icono del carrito
-            const cartIcon = document.getElementById('cartIcon');
-            const cartDropdown = document.getElementById('cartDropdown');
-            
-            cartIcon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                           cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
+    // Inicialización al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+        // Inicializar carrito
+        cart.init();
+        
+        // Configurar el icono del carrito
+        const cartIcon = document.getElementById('cartIcon');
+        const cartDropdown = document.getElementById('cartDropdown');
+        
+        cartIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
         });
         
         document.addEventListener('click', () => {
@@ -1193,21 +1227,47 @@
         
         // Botón de confirmar compra (en el modal de checkout)
         document.getElementById('confirmCheckout').addEventListener('click', async () => {
+            const confirmBtn = document.getElementById('confirmCheckout');
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Procesando...';
+            
             try {
-                const orderIds = await processOrder();
+                const result = await processOrder();
                 
-                if (orderIds) {
+                if (result) {
+                    // Ocultar modal de checkout
                     document.getElementById('checkoutModal').style.display = 'none';
+                    
+                    // Mostrar datos en la confirmación
                     document.getElementById('confirmedSize').textContent = 
                         cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
-                    document.getElementById('confirmedPrice').textContent = `$${cart.getTotal().toFixed(2)}`;
-                    document.getElementById('orderId').textContent = orderIds.join(', ');
+                    document.getElementById('confirmedPrice').textContent = 
+                        `${result.orderData.total.toFixed(2)}€ (IVA incluido)`;
+                    document.getElementById('orderId').textContent = result.orderId;
+                    
+                    // Mostrar info del cliente
+                    document.getElementById('customerName').innerHTML = 
+                        `Cliente: <strong>${result.orderData.userName}</strong>`;
+                    document.getElementById('customerEmail').innerHTML = 
+                        `Email: <strong>${result.orderData.userEmail}</strong>`;
+                    document.getElementById('orderDate').innerHTML = 
+                        `Fecha: <strong>${new Date().toLocaleString()}</strong>`;
+                    
+                    // Mostrar modal de confirmación
                     document.getElementById('orderConfirmation').style.display = 'flex';
+                    
+                    // Vaciar el carrito
                     cart.clear();
+                    
+                    // Mostrar notificación
+                    showToast(`¡Compra realizada! ID: ${result.orderId}`, 'success');
                 }
             } catch (error) {
                 showToast('Error al procesar la compra: ' + error.message, 'error');
                 console.error("Error en checkout:", error);
+            } finally {
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'Confirmar Compra';
             }
         });
         
@@ -1365,5 +1425,3 @@
         });
     });
 </script>
-</body> 
-</html>
