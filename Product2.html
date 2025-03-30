@@ -53,8 +53,10 @@
             appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
             measurementId: "G-7KEGQPK3P0"
         };
-
-
+        firebase.initializeApp(firebaseConfig);
+        // Obtiene referencias a los servicios
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
         // Inicialización Firebase
         try {
