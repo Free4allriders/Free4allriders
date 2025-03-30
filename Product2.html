@@ -382,6 +382,64 @@
             text-shadow: 0 0 5px var(--neon-pink);
         }
         
+        /* Order Confirmation Styles */
+        .order-confirmation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .confirmation-content {
+            background: rgba(10,10,10,0.95);
+            border: 1px solid var(--neon-pink);
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--glow-effect);
+            position: relative;
+        }
+        
+        .confirmation-title {
+            color: var(--neon-pink);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        .confirmation-message {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .order-details {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid var(--neon-purple);
+        }
+        
+        .order-id {
+            font-weight: bold;
+            color: var(--neon-pink);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .tab {
@@ -403,6 +461,14 @@
             
             nav {
                 display: none;
+            }
+            
+            .confirmation-content {
+                padding: 20px;
+            }
+            
+            .confirmation-title {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -528,6 +594,23 @@
         </div>
     </div>
     
+    <!-- Order Confirmation Modal -->
+    <div id="orderConfirmation" class="order-confirmation">
+        <div class="confirmation-content">
+            <h2 class="confirmation-title">¡Pedido Recibido!</h2>
+            <p class="confirmation-message">Gracias por tu compra. Hemos recibido tu pedido correctamente.</p>
+            
+            <div class="order-details">
+                <p>Producto: <strong>HOODIE FOR RIDER ONLY</strong></p>
+                <p>Talla: <strong id="confirmedSize"></strong></p>
+                <p>Precio: <strong>20$</strong></p>
+                <p>ID del pedido: <span class="order-id" id="orderId"></span></p>
+            </div>
+            
+            <button class="btn btn-primary" onclick="document.getElementById('orderConfirmation').style.display = 'none'">Cerrar</button>
+        </div>
+    </div>
+    
     <!-- Footer -->
     <footer>
         <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="footer-logo">
@@ -542,8 +625,9 @@
 
     <!-- Firebase Configuration -->
     <script>
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
+        // Replace with your actual Firebase config
+        const firebaseConfig = {
+          
     apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
     authDomain: "free4allriders-51c5e.firebaseapp.com",
     projectId: "free4allriders-51c5e",
@@ -551,17 +635,19 @@
     messagingSenderId: "1082764494980",
     appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
     measurementId: "G-7KEGQPK3P0"
-  };
 
-        // 2. Inicializar Firebase
+
+
+        };
+
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         
-        // 3. Referencia a la colección de pedidos
+        // Reference to orders collection
         const ordersRef = db.collection('orders');
 
-        // 4. Funcionalidad del Producto
         document.addEventListener('DOMContentLoaded', () => {
             // Tabs functionality
             function showTab(tabIndex) {
@@ -613,7 +699,7 @@
                 document.body.style.overflow = 'auto';
             });
 
-            // 5. Funcionalidad de Compra
+            // Purchase functionality
             const addToCartBtns = [document.getElementById('addToCartBtn'), document.getElementById('addToCartBtn3D')];
             const buyNowBtns = [document.getElementById('buyNowBtn'), document.getElementById('buyNowBtn3D')];
 
@@ -631,11 +717,15 @@
                 
                 if (user) {
                     saveOrder(user.uid, 'cart', selectedSize)
-                        .then(() => alert(`Hoodie talla ${selectedSize} añadido al carrito`))
-                        .catch(error => console.error("Error:", error));
+                        .then(() => {
+                            showConfirmation('Añadido al carrito', selectedSize);
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                            alert('Error al añadir al carrito. Por favor intenta nuevamente.');
+                        });
                 } else {
                     showLoginModal();
-                    alert('Por favor inicia sesión para añadir productos al carrito');
                 }
             }
 
@@ -645,11 +735,15 @@
                 
                 if (user) {
                     saveOrder(user.uid, 'purchased', selectedSize)
-                        .then(() => alert(`¡Compra realizada! Hoodie talla ${selectedSize}. Gracias!`))
-                        .catch(error => console.error("Error:", error));
+                        .then((docRef) => {
+                            showConfirmation('Compra realizada', selectedSize, docRef.id);
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                            alert('Error al procesar la compra. Por favor intenta nuevamente.');
+                        });
                 } else {
                     showLoginModal();
-                    alert('Por favor inicia sesión para completar la compra');
                 }
             }
 
@@ -666,7 +760,24 @@
                 return ordersRef.add(orderData);
             }
 
-            // 6. Sistema de Autenticación
+            function showConfirmation(message, size, orderId = null) {
+                const confirmation = document.getElementById('orderConfirmation');
+                const confirmedSize = document.getElementById('confirmedSize');
+                const orderIdElement = document.getElementById('orderId');
+                
+                confirmedSize.textContent = size;
+                
+                if (orderId) {
+                    orderIdElement.textContent = orderId;
+                } else {
+                    document.querySelector('.order-id').style.display = 'none';
+                }
+                
+                confirmation.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+
+            // Authentication system
             const authLink = document.getElementById('authLink');
             const loginModal = document.getElementById('loginModal');
             const closeLogin = document.getElementById('closeLogin');
@@ -718,7 +829,7 @@
                 }
             }
 
-            // 7. Observador de estado de autenticación
+            // Auth state observer
             auth.onAuthStateChanged(user => {
                 if (user) {
                     authLink.textContent = 'Cerrar sesión';
