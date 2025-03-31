@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -445,7 +445,7 @@
             to { opacity: 1; }
         }
 
-        /* Estilos del Carrito */
+        /* Cart Styles */
         .cart-icon {
             position: relative;
             cursor: pointer;
@@ -633,20 +633,20 @@
     <header>
         <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="logo">
         <nav>
-            <a href="index.html">Inicio</a>
-            <a href="index.html#products">Colección</a>
-            <a href="Contact.html">Contacto</a>
+            <a href="index.html">Home</a>
+            <a href="index.html#products">Collection</a>
+            <a href="Contact.html">Contact</a>
             <a href="#" id="authLink">Login</a>
             <div class="cart-icon" id="cartIcon">
                 🛒 <span class="cart-counter" id="cartCounter" style="display: none;">0</span>
                 <div class="cart-dropdown" id="cartDropdown">
                     <div id="cartItemsContainer">
-                        <p>Tu carrito está vacío</p>
+                        <p>Your cart is empty</p>
                     </div>
                     <div class="cart-total">
                         Total: $<span id="cartTotal">0.00</span>
                     </div>
-                    <button class="btn btn-primary checkout-btn" id="checkoutBtn">Finalizar Compra</button>
+                    <button class="btn btn-primary checkout-btn" id="checkoutBtn">Checkout</button>
                 </div>
             </div>
         </nav>
@@ -677,7 +677,7 @@
                         </p>
                         
                         <div class="size-selector">
-                            <h3>TALLAS DISPONIBLES:</h3>
+                            <h3>AVAILABLE SIZES:</h3>
                             <div class="size-options">
                                 <span class="size-option">S</span>
                                 <span class="size-option selected">M</span>
@@ -687,8 +687,8 @@
                         </div>
                         
                         <div class="action-buttons">
-                            <button class="btn btn-primary" id="addToCartBtn">AÑADIR AL CARRITO</button>
-                            <button class="btn btn-secondary" id="buyNowBtn">COMPRAR AHORA</button>
+                            <button class="btn btn-primary" id="addToCartBtn">ADD TO CART</button>
+                            <button class="btn btn-secondary" id="buyNowBtn">BUY NOW</button>
                         </div>
                     </div>
                 </div>
@@ -696,23 +696,23 @@
                 <!-- 3D View -->
                 <div class="tab">
                     <div class="image-section">
-                        <model-viewer src="hoodie.glb" alt="Vista 3D del hoodie" auto-rotate camera-controls></model-viewer>
+                        <model-viewer src="hoodie.glb" alt="3D View of the hoodie" auto-rotate camera-controls></model-viewer>
                     </div>
                     
                     <div class="details-section">
-                        <h1 class="product-title">MODO 3D ACTIVADO</h1>
+                        <h1 class="product-title">3D MODE ACTIVATED</h1>
                         <div class="product-price">20$</div>
                         
                         <p class="product-description">
-                            Explora cada detalle de nuestro hoodie en 360°.
+                            Explore every detail of our hoodie in 360°.
                             <br><br>
-                            <strong>CONTROLES:</strong>
-                            <br>Arrastra para rotar
-                            <br>Doble clic para resetear
+                            <strong>CONTROLS:</strong>
+                            <br>Drag to rotate
+                            <br>Double click to reset
                         </p>
                         
                         <div class="size-selector">
-                            <h3>TALLAS DISPONIBLES:</h3>
+                            <h3>AVAILABLE SIZES:</h3>
                             <div class="size-options">
                                 <span class="size-option">S</span>
                                 <span class="size-option selected">M</span>
@@ -722,8 +722,8 @@
                         </div>
                         
                         <div class="action-buttons">
-                            <button class="btn btn-primary" id="addToCartBtn3D">AÑADIR AL CARRITO</button>
-                            <button class="btn btn-secondary" id="buyNowBtn3D">COMPRAR AHORA</button>
+                            <button class="btn btn-primary" id="addToCartBtn3D">ADD TO CART</button>
+                            <button class="btn btn-secondary" id="buyNowBtn3D">BUY NOW</button>
                         </div>
                     </div>
                 </div>
@@ -735,11 +735,11 @@
     <div id="photosModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" id="closeModal">&times;</span>
-            <h2 style="color: var(--neon-pink); text-align: center; margin-bottom: 20px;">GALERÍA DEL PRODUCTO</h2>
+            <h2 style="color: var(--neon-pink); text-align: center; margin-bottom: 20px;">PRODUCT GALLERY</h2>
             
             <div class="gallery-grid">
-                <img src="Familly.jpeg" alt="Modelo frontal con el hoodie" class="gallery-img">
-                <img src="Back.jpeg" alt="Vista trasera del hoodie" class="gallery-img">
+                <img src="Familly.jpeg" alt="Front view with the hoodie" class="gallery-img">
+                <img src="Back.jpeg" alt="Back view of the hoodie" class="gallery-img">
             </div>
         </div>
     </div>
@@ -748,15 +748,15 @@
     <div id="loginModal" class="login-modal">
         <div class="login-content">
             <span class="close-login" id="closeLogin">&times;</span>
-            <h2 class="login-title">INICIAR SESIÓN</h2>
+            <h2 class="login-title">LOGIN</h2>
             <div id="loginErrorMessage" class="error-message"></div>
             <form class="login-form" id="loginForm">
-                <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
-                <input type="password" id="loginPassword" placeholder="Contraseña" required>
-                <button type="submit" class="login-btn">ENTRAR</button>
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button type="submit" class="login-btn">LOGIN</button>
             </form>
             <div style="text-align: center; margin-top: 20px; color: #ccc;">
-                <p>¿No tienes cuenta? <a href="register.html" style="color: var(--neon-purple);">Regístrate</a></p>
+                <p>Don't have an account? <a href="register.html" style="color: var(--neon-purple);">Register</a></p>
             </div>
         </div>
     </div>
@@ -764,33 +764,33 @@
     <!-- Order Confirmation Modal -->
     <div id="orderConfirmation" class="order-confirmation">
         <div class="confirmation-content">
-            <h2 class="confirmation-title">¡Pedido Recibido!</h2>
-            <p class="confirmation-message">Gracias por tu compra. Hemos recibido tu pedido correctamente.</p>
+            <h2 class="confirmation-title">Order Received!</h2>
+            <p class="confirmation-message">Thank you for your purchase. We have received your order successfully.</p>
             
             <div class="order-details">
-                <p>Producto: <strong>HOODIE FOR RIDER ONLY</strong></p>
-                <p>Talla: <strong id="confirmedSize"></strong></p>
-                <p>Precio: <strong id="confirmedPrice">20$</strong></p>
-                <p>ID del pedido: <span class="order-id" id="orderId"></span></p>
+                <p>Product: <strong>HOODIE FOR RIDER ONLY</strong></p>
+                <p>Size: <strong id="confirmedSize"></strong></p>
+                <p>Price: <strong id="confirmedPrice">20$</strong></p>
+                <p>Order ID: <span class="order-id" id="orderId"></span></p>
             </div>
             
-            <button class="btn btn-primary" onclick="document.getElementById('orderConfirmation').style.display = 'none'">Cerrar</button>
+            <button class="btn btn-primary" onclick="document.getElementById('orderConfirmation').style.display = 'none'">Close</button>
         </div>
     </div>
     
     <!-- Checkout Modal -->
     <div id="checkoutModal" class="order-confirmation">
         <div class="confirmation-content">
-            <h2 class="confirmation-title">Resumen de Compra</h2>
+            <h2 class="confirmation-title">Order Summary</h2>
             <div class="checkout-summary" id="checkoutSummary">
-                <!-- Los items del carrito se añadirán aquí -->
+                <!-- Cart items will be added here -->
             </div>
             <div class="cart-total" style="text-align: right; font-size: 1.2rem;">
                 Total: $<span id="checkoutTotal">0.00</span>
             </div>
             <div class="action-buttons" style="margin-top: 20px;">
-                <button class="btn btn-primary" id="confirmCheckout">Confirmar Compra</button>
-                <button class="btn btn-secondary" onclick="document.getElementById('checkoutModal').style.display = 'none'">Cancelar</button>
+                <button class="btn btn-primary" id="confirmCheckout">Confirm Purchase</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('checkoutModal').style.display = 'none'">Cancel</button>
             </div>
         </div>
     </div>
@@ -809,32 +809,30 @@
 
     <!-- Firebase Configuration -->
     <script>
-        // Configuración Firebase (reemplaza con tus datos reales)
-       const firebaseConfig = {
-    apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
-    authDomain: "free4allriders-51c5e.firebaseapp.com",
-    projectId: "free4allriders-51c5e",
-    storageBucket: "free4allriders-51c5e.firebasestorage.app",
-    messagingSenderId: "1082764494980",
-    appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
-    measurementId: "G-7KEGQPK3P0"
-  };
+        // Firebase Configuration (replace with your real data)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
+            authDomain: "free4allriders-51c5e.firebaseapp.com",
+            projectId: "free4allriders-51c5e",
+            storageBucket: "free4allriders-51c5e.firebasestorage.app",
+            messagingSenderId: "1082764494980",
+            appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
+            measurementId: "G-7KEGQPK3P0"
+        };
 
-
-
-        // Inicialización Firebase
+        // Firebase Initialization
         try {
             firebase.initializeApp(firebaseConfig);
-            console.log("Firebase inicializado correctamente");
+            console.log("Firebase initialized successfully");
         } catch (error) {
-            console.error("Error inicializando Firebase:", error);
+            console.error("Error initializing Firebase:", error);
         }
 
         const auth = firebase.auth();
         const db = firebase.firestore();
         const CART_STORAGE_KEY = 'free4all_cart_v2';
 
-        // Objeto del carrito
+        // Cart object
         const cart = {
             items: [],
             
@@ -866,13 +864,13 @@
                 }
                 
                 this.save();
-                showToast('Producto añadido al carrito');
+                showToast('Product added to cart');
             },
             
             removeItem: function(index) {
                 this.items.splice(index, 1);
                 this.save();
-                showToast('Producto eliminado del carrito');
+                showToast('Product removed from cart');
             },
             
             clear: function() {
@@ -910,7 +908,7 @@
                 cartItemsContainer.innerHTML = '';
                 
                 if (this.items.length === 0) {
-                    cartItemsContainer.innerHTML = '<p>Tu carrito está vacío</p>';
+                    cartItemsContainer.innerHTML = '<p>Your cart is empty</p>';
                     cartTotalElement.textContent = '0.00';
                     return;
                 }
@@ -922,9 +920,9 @@
                         <img src="${item.image}" alt="${item.name}">
                         <div class="cart-item-info">
                             <div class="cart-item-title">${item.name}</div>
-                            <div class="cart-item-details">Talla: ${item.size} | Cantidad: ${item.quantity}</div>
+                            <div class="cart-item-details">Size: ${item.size} | Quantity: ${item.quantity}</div>
                             <div class="cart-item-details">$${(item.price * item.quantity).toFixed(2)}</div>
-                            <button class="remove-item" data-index="${index}">Eliminar</button>
+                            <button class="remove-item" data-index="${index}">Remove</button>
                         </div>
                     `;
                     cartItemsContainer.appendChild(itemElement);
@@ -941,7 +939,7 @@
             }
         };
 
-        // Función para mostrar notificaciones
+        // Function to show notifications
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
             toast.className = `toast${type === 'error' ? ' toast-error' : ''}`;
@@ -953,12 +951,12 @@
             }, 3000);
         }
 
-        // Función para procesar la orden
+        // Function to process the order
         async function processOrder() {
             const user = auth.currentUser;
             
             if (!user) {
-                showToast('Por favor inicia sesión para continuar', 'error');
+                showToast('Please log in to continue', 'error');
                 document.getElementById('loginModal').style.display = 'block';
                 return null;
             }
@@ -985,7 +983,7 @@
                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                         ip: '',
                         shippingAddress: '',
-                        paymentMethod: 'Tarjeta'
+                        paymentMethod: 'Card'
                     });
                 });
                 
@@ -1000,19 +998,19 @@
                         });
                     });
                 } catch (ipError) {
-                    console.error("Error obteniendo IP:", ipError);
+                    console.error("Error getting IP:", ipError);
                 }
                 
                 await batch.commit();
                 return orderIds;
                 
             } catch (error) {
-                console.error("Error procesando orden:", error);
+                console.error("Error processing order:", error);
                 throw error;
             }
         }
 
-        // Función para actualizar el resumen de checkout
+        // Function to update checkout summary
         function updateCheckoutSummary() {
             const summaryElement = document.getElementById('checkoutSummary');
             const totalElement = document.getElementById('checkoutTotal');
@@ -1020,7 +1018,7 @@
             summaryElement.innerHTML = '';
             
             if (cart.items.length === 0) {
-                summaryElement.innerHTML = '<p>No hay productos en el carrito</p>';
+                summaryElement.innerHTML = '<p>No products in cart</p>';
                 totalElement.textContent = '0.00';
                 return;
             }
@@ -1031,7 +1029,7 @@
                 itemElement.innerHTML = `
                     <div>
                         <strong>${item.name}</strong> (${item.size})
-                        <br><small>Cantidad: ${item.quantity}</small>
+                        <br><small>Quantity: ${item.quantity}</small>
                     </div>
                     <div>$${(item.price * item.quantity).toFixed(2)}</div>
                 `;
@@ -1041,12 +1039,12 @@
             totalElement.textContent = cart.getTotal().toFixed(2);
         }
 
-        // Inicialización al cargar la página
+        // Initialization when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            // Inicializar carrito
+            // Initialize cart
             cart.init();
             
-            // Configurar el icono del carrito
+            // Configure cart icon
             const cartIcon = document.getElementById('cartIcon');
             const cartDropdown = document.getElementById('cartDropdown');
             
@@ -1059,7 +1057,7 @@
                 cartDropdown.style.display = 'none';
             });
             
-            // Botón de añadir al carrito (vista normal)
+            // Add to cart button (normal view)
             document.getElementById('addToCartBtn').addEventListener('click', () => {
                 const product = {
                     id: 'hoodie-rider-1',
@@ -1073,7 +1071,7 @@
                 cart.addItem(product);
             });
             
-            // Botón de añadir al carrito (vista 3D)
+            // Add to cart button (3D view)
             document.getElementById('addToCartBtn3D').addEventListener('click', () => {
                 const product = {
                     id: 'hoodie-rider-1',
@@ -1087,7 +1085,7 @@
                 cart.addItem(product);
             });
             
-            // Botón de comprar ahora (vista normal)
+            // Buy now button (normal view)
             document.getElementById('buyNowBtn').addEventListener('click', () => {
                 const product = {
                     id: 'hoodie-rider-1',
@@ -1104,12 +1102,27 @@
                 updateCheckoutSummary();
             });
             
-            // Botón de comprar ahora (vista 3D)
-            document.getElementById('buyNowBtn3D').addEventListener
-                        // Botón de finalizar compra (desde el dropdown del carrito)
+            // Buy now button (3D view)
+            document.getElementById('buyNowBtn3D').addEventListener('click', () => {
+                const product = {
+                    id: 'hoodie-rider-1',
+                    name: 'HOODIE FOR RIDER ONLY (3D)',
+                    price: parseFloat(document.querySelector('.product-price').textContent.replace('$', '')),
+                    size: document.querySelector('.size-option.selected').textContent,
+                    quantity: 1,
+                    image: 'hoodie.glb'
+                };
+                
+                cart.clear();
+                cart.addItem(product);
+                document.getElementById('checkoutModal').style.display = 'flex';
+                updateCheckoutSummary();
+            });
+            
+            // Checkout button (from cart dropdown)
             document.getElementById('checkoutBtn').addEventListener('click', () => {
                 if (cart.getTotalItems() === 0) {
-                    showToast('El carrito está vacío', 'error');
+                    showToast('Cart is empty', 'error');
                     return;
                 }
                 
@@ -1117,7 +1130,7 @@
                 updateCheckoutSummary();
             });
             
-            // Botón de confirmar compra (en el modal de checkout)
+            // Confirm purchase button (in checkout modal)
             document.getElementById('confirmCheckout').addEventListener('click', async () => {
                 try {
                     const orderIds = await processOrder();
@@ -1132,12 +1145,12 @@
                         cart.clear();
                     }
                 } catch (error) {
-                    showToast('Error al procesar la compra: ' + error.message, 'error');
-                    console.error("Error en checkout:", error);
+                    showToast('Error processing purchase: ' + error.message, 'error');
+                    console.error("Checkout error:", error);
                 }
             });
             
-            // Selector de tallas
+            // Size selector
             document.querySelectorAll('.size-option').forEach(option => {
                 option.addEventListener('click', function() {
                     document.querySelectorAll('.size-option').forEach(opt => {
@@ -1147,7 +1160,7 @@
                 });
             });
             
-            // Sistema de autenticación mejorado
+            // Improved authentication system
             const authLink = document.getElementById('authLink');
             const loginModal = document.getElementById('loginModal');
             const closeLogin = document.getElementById('closeLogin');
@@ -1163,9 +1176,9 @@
                 if (auth.currentUser) {
                     e.preventDefault();
                     auth.signOut().then(() => {
-                        showToast('Sesión cerrada correctamente');
+                        showToast('Logged out successfully');
                     }).catch(error => {
-                        showToast('Error al cerrar sesión', 'error');
+                        showToast('Error logging out', 'error');
                     });
                 } else {
                     e.preventDefault();
@@ -1188,7 +1201,7 @@
                         loginModal.style.display = 'none';
                         document.body.style.overflow = 'auto';
                         loginErrorMessage.textContent = '';
-                        showToast('Sesión iniciada correctamente');
+                        showToast('Logged in successfully');
                     })
                     .catch(error => {
                         loginErrorMessage.textContent = getAuthErrorMessage(error.code);
@@ -1197,19 +1210,19 @@
             
             function getAuthErrorMessage(errorCode) {
                 switch(errorCode) {
-                    case 'auth/invalid-email': return 'Email inválido';
-                    case 'auth/user-disabled': return 'Cuenta deshabilitada';
-                    case 'auth/user-not-found': return 'Usuario no encontrado';
-                    case 'auth/wrong-password': return 'Contraseña incorrecta';
-                    default: return 'Error al iniciar sesión';
+                    case 'auth/invalid-email': return 'Invalid email';
+                    case 'auth/user-disabled': return 'Account disabled';
+                    case 'auth/user-not-found': return 'User not found';
+                    case 'auth/wrong-password': return 'Wrong password';
+                    default: return 'Login error';
                 }
             }
             
-            // Observador de estado de autenticación mejorado
+            // Improved auth state observer
             auth.onAuthStateChanged(user => {
                 const authLink = document.getElementById('authLink');
                 if (user) {
-                    authLink.textContent = 'Cerrar sesión';
+                    authLink.textContent = 'Logout';
                     authLink.href = '#';
                 } else {
                     authLink.textContent = 'Login';
@@ -1217,7 +1230,7 @@
                 }
             });
             
-            // Galería de fotos
+            // Photo gallery
             const morePhotosBtn = document.getElementById('morePhotosBtn');
             const photosModal = document.getElementById('photosModal');
             const closeModal = document.getElementById('closeModal');
@@ -1232,7 +1245,7 @@
                 document.body.style.overflow = 'auto';
             });
             
-            // Cambio de vista
+            // View switching
             const switchBtn = document.getElementById('switchBtn');
             const productImage = document.getElementById('productImage');
             let isMainImage = true;
