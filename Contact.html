@@ -5,52 +5,311 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contacto | FREE4ALLRIDERS</title>
     <link rel="icon" type="image/png" href="logo-imatge.PNG">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --deep-pink: #ff1493;
+            --dark-bg: #111;
+            --light-text: #fff;
+            --dark-text: #333;
+            --gray-bg: #222;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background-color: #111;
-            color: #fff;
-            font-family: 'Urban Jungle', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
             background-image: url('graffiti-wall.jpg');
             background-size: cover;
             background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+        
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid var(--neon-pink);
+        }
+        
         .logo {
-            filter: drop-shadow(0 0 10px #ff00ff);
+            height: 60px;
+            filter: drop-shadow(0 0 10px var(--neon-pink));
+            transition: transform 0.3s;
         }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+        
         nav a {
-            color: #ff00ff;
-            text-shadow: 2px 2px 5px #ff1493;
+            color: var(--neon-pink);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-shadow: 2px 2px 5px var(--deep-pink);
+            position: relative;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
         }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--neon-pink);
+            transition: width 0.3s;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        nav a.active {
+            color: white;
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
         .contact-hero {
             background: rgba(0, 0, 0, 0.7);
-            padding: 50px;
-            border: 3px solid #ff00ff;
-            box-shadow: 0 0 20px #ff00ff;
+            padding: 4rem 2rem;
+            border: 3px solid var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
             text-align: center;
+            margin: 2rem auto;
+            max-width: 1200px;
+            width: 90%;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
         }
+        
         .hero-title {
             font-size: 3rem;
-            color: #ff1493;
-            text-shadow: 4px 4px 10px #ff00ff;
+            color: var(--deep-pink);
+            text-shadow: 4px 4px 10px var(--neon-pink);
+            margin-bottom: 1rem;
+            font-family: 'Montserrat', sans-serif;
         }
-        .submit-btn {
-            background: linear-gradient(45deg, #ff1493, #ff00ff);
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .contact-form, .contact-info {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid var(--neon-pink);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+            backdrop-filter: blur(5px);
+        }
+        
+        .form-title, .info-title {
+            font-size: 2rem;
+            color: var(--neon-pink);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 2px 2px 5px var(--deep-pink);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--neon-pink);
+            font-weight: 600;
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--neon-pink);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--deep-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(45deg, var(--deep-pink), var(--neon-pink));
+            color: white;
+            padding: 12px 25px;
             font-size: 1.2rem;
             border: none;
+            border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 0 15px #ff00ff;
-            transition: 0.3s;
+            box-shadow: 0 0 15px var(--neon-pink);
+            transition: all 0.3s;
+            display: block;
+            width: 100%;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
+        
         .submit-btn:hover {
-            box-shadow: 0 0 25px #ff1493;
-            transform: scale(1.1);
+            box-shadow: 0 0 25px var(--deep-pink);
+            transform: translateY(-3px);
         }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .info-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed rgba(255, 0, 255, 0.3);
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
         .info-item h3 {
-            color: #ff00ff;
-            text-shadow: 2px 2px 5px #ff1493;
+            color: var(--neon-pink);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-item p, .info-item a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .info-item a:hover {
+            color: var(--neon-pink);
+            text-decoration: underline;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+        
+        .social-link {
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .social-link:hover {
+            color: var(--neon-pink);
+            transform: translateY(-3px);
+        }
+        
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+            border-top: 1px solid var(--neon-pink);
+        }
+        
+        /* Animaciones */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px var(--neon-pink); }
+            50% { box-shadow: 0 0 25px var(--deep-pink); }
+            100% { box-shadow: 0 0 15px var(--neon-pink); }
+        }
+        
+        .submit-btn {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            nav {
+                margin-top: 1rem;
+                gap: 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .contact-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .contact-form, .contact-info {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -61,65 +320,102 @@
             <a href="#">Inicio</a>
             <a href="#">Productos</a>
             <a href="#" class="active">Contacto</a>
+            <a href="#">Blog</a>
         </nav>
     </header>
     
     <section class="contact-hero">
         <div class="hero-content">
-            <h1 class="hero-title">Contáctenos</h1>
+            <h1 class="hero-title">CONTÁCTANOS</h1>
             <p class="hero-subtitle">
-                Si tiene alguna consulta sobre nuestros productos o desea colaborar con nosotros, no dude en ponerse en contacto. Le responderemos en un plazo máximo de 24 horas.
+                ¿Tienes dudas sobre nuestros productos o quieres colaborar con nosotros? Escríbenos y te responderemos en menos de 24 horas. ¡El mundo del motor nos une!
             </p>
         </div>
     </section>
     
     <div class="contact-container">
         <div class="contact-form">
-            <h2 class="form-title">Formulario de Contacto</h2>
+            <h2 class="form-title">ENVÍA TU MENSAJE</h2>
             <form id="contactForm">
                 <div class="form-group">
-                    <label for="name" class="form-label">Nombre</label>
-                    <input type="text" id="name" class="form-input" required>
+                    <label for="name" class="form-label"><i class="fas fa-user"></i> Nombre</label>
+                    <input type="text" id="name" class="form-input" placeholder="Tu nombre completo" required>
                 </div>
                 <div class="form-group">
-                    <label for="email" class="form-label">Correo Electrónico</label>
-                    <input type="email" id="email" class="form-input" required>
+                    <label for="email" class="form-label"><i class="fas fa-envelope"></i> Correo Electrónico</label>
+                    <input type="email" id="email" class="form-input" placeholder="tu@email.com" required>
                 </div>
                 <div class="form-group">
-                    <label for="subject" class="form-label">Asunto</label>
-                    <input type="text" id="subject" class="form-input" required>
+                    <label for="subject" class="form-label"><i class="fas fa-tag"></i> Asunto</label>
+                    <input type="text" id="subject" class="form-input" placeholder="¿Sobre qué quieres hablar?" required>
                 </div>
                 <div class="form-group">
-                    <label for="message" class="form-label">Mensaje</label>
-                    <textarea id="message" class="form-textarea" required></textarea>
+                    <label for="message" class="form-label"><i class="fas fa-comment"></i> Mensaje</label>
+                    <textarea id="message" class="form-textarea" placeholder="Escribe aquí tu mensaje..." required></textarea>
                 </div>
-                <button type="submit" class="submit-btn">Enviar Mensaje</button>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                </button>
             </form>
         </div>
         
         <div class="contact-info">
-            <h2 class="info-title">Información de Contacto</h2>
+            <h2 class="info-title">ENCUÉNTRANOS</h2>
             <div class="info-item">
-                <h3>Dirección</h3>
+                <h3><i class="fas fa-map-marker-alt"></i> Dirección</h3>
                 <p>Calle Futurista 123, Neon District, Barcelona, España</p>
             </div>
             <div class="info-item">
-                <h3>Correo Electrónico</h3>
+                <h3><i class="fas fa-envelope"></i> Correo Electrónico</h3>
                 <a href="mailto:info@free4allriders.com">info@free4allriders.com</a>
             </div>
             <div class="info-item">
-                <h3>Teléfono</h3>
+                <h3><i class="fas fa-phone"></i> Teléfono</h3>
                 <a href="tel:+34931234567">+34 93 123 45 67</a>
             </div>
             <div class="info-item">
-                <h3>Horario</h3>
+                <h3><i class="fas fa-clock"></i> Horario</h3>
                 <p>Lunes - Viernes: 9:00 - 18:00<br>Sábado: 10:00 - 14:00</p>
+            </div>
+            
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
             </div>
         </div>
     </div>
     
     <footer>
-        <p>&copy; 2025 FREE4ALLRIDERS. Todos los derechos reservados.</p>
+        <p>&copy; 2025 FREE4ALLRIDERS. Todos los derechos reservados. | <a href="#" style="color: var(--neon-pink);">Política de Privacidad</a> | <a href="#" style="color: var(--neon-pink);">Términos de Servicio</a></p>
     </footer>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulación de envío del formulario
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡Mensaje Enviado!';
+                submitBtn.style.background = 'linear-gradient(45deg, #00ff00, #00cc00)';
+                
+                // Resetear formulario después de 3 segundos
+                setTimeout(() => {
+                    document.getElementById('contactForm').reset();
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Mensaje';
+                    submitBtn.style.background = 'linear-gradient(45deg, var(--deep-pink), var(--neon-pink))';
+                    submitBtn.disabled = false;
+                }, 3000);
+            }, 1500);
+            
+            // Aquí iría el código real para enviar el formulario
+            // Por ejemplo con fetch() a un backend
+        });
+    </script>
 </body>
 </html>
