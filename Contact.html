@@ -1,20 +1,21 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacto | FREE4ALLRIDERS</title>
+    <title>Contact Us | FREE4ALLRIDERS</title>
     <link rel="icon" type="image/png" href="logo-imatge.PNG">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-pink: #ff00ff;
-            --deep-pink: #ff1493;
-            --dark-bg: #111;
-            --light-text: #fff;
-            --dark-text: #333;
-            --gray-bg: #222;
+            --primary-color: #0066cc;
+            --secondary-color: #004080;
+            --accent-color: #ff6600;
+            --dark-bg: #1a1a1a;
+            --light-text: #ffffff;
+            --light-gray: #f5f5f5;
+            --dark-text: #333333;
         }
         
         * {
@@ -24,35 +25,23 @@
         }
         
         body {
-            background-color: var(--dark-bg);
-            color: var(--light-text);
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             line-height: 1.6;
-            background-image: url('graffiti-wall.jpg');
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            color: var(--dark-text);
+            background-color: var(--light-gray);
         }
         
         header {
-            background: rgba(0, 0, 0, 0.8);
+            background-color: var(--dark-bg);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(5px);
-            border-bottom: 1px solid var(--neon-pink);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
         .logo {
-            height: 60px;
-            filter: drop-shadow(0 0 10px var(--neon-pink));
+            height: 50px;
             transition: transform 0.3s;
         }
         
@@ -66,14 +55,12 @@
         }
         
         nav a {
-            color: var(--neon-pink);
+            color: var(--light-text);
             text-decoration: none;
             font-weight: 600;
-            font-size: 1.1rem;
-            text-shadow: 2px 2px 5px var(--deep-pink);
+            font-size: 1rem;
+            transition: color 0.3s;
             position: relative;
-            transition: all 0.3s;
-            font-family: 'Montserrat', sans-serif;
         }
         
         nav a::after {
@@ -83,7 +70,7 @@
             height: 2px;
             bottom: -5px;
             left: 0;
-            background-color: var(--neon-pink);
+            background-color: var(--accent-color);
             transition: width 0.3s;
         }
         
@@ -92,35 +79,27 @@
         }
         
         nav a.active {
-            color: white;
-            text-shadow: 0 0 10px var(--neon-pink);
+            color: var(--accent-color);
         }
         
         .contact-hero {
-            background: rgba(0, 0, 0, 0.7);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--light-text);
             padding: 4rem 2rem;
-            border: 3px solid var(--neon-pink);
-            box-shadow: 0 0 20px var(--neon-pink);
             text-align: center;
-            margin: 2rem auto;
-            max-width: 1200px;
-            width: 90%;
-            border-radius: 10px;
-            backdrop-filter: blur(5px);
         }
         
         .hero-title {
-            font-size: 3rem;
-            color: var(--deep-pink);
-            text-shadow: 4px 4px 10px var(--neon-pink);
+            font-size: 2.5rem;
             margin-bottom: 1rem;
-            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
         }
         
         .hero-subtitle {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             max-width: 800px;
             margin: 0 auto;
+            opacity: 0.9;
         }
         
         .contact-container {
@@ -128,7 +107,7 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 2rem;
-            padding: 2rem;
+            padding: 3rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -136,21 +115,17 @@
         .contact-form, .contact-info {
             flex: 1;
             min-width: 300px;
-            background: rgba(0, 0, 0, 0.7);
+            background: white;
             padding: 2rem;
-            border-radius: 10px;
-            border: 1px solid var(--neon-pink);
-            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
-            backdrop-filter: blur(5px);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
         
         .form-title, .info-title {
-            font-size: 2rem;
-            color: var(--neon-pink);
+            font-size: 1.8rem;
+            color: var(--primary-color);
             margin-bottom: 1.5rem;
-            text-align: center;
-            font-family: 'Montserrat', sans-serif;
-            text-shadow: 2px 2px 5px var(--deep-pink);
+            font-weight: 600;
         }
         
         .form-group {
@@ -160,26 +135,23 @@
         .form-label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--neon-pink);
+            color: var(--dark-text);
             font-weight: 600;
         }
         
         .form-input, .form-textarea {
             width: 100%;
             padding: 0.8rem;
-            border: 1px solid var(--neon-pink);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-radius: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
             font-size: 1rem;
             transition: all 0.3s;
         }
         
         .form-input:focus, .form-textarea:focus {
             outline: none;
-            border-color: var(--deep-pink);
-            box-shadow: 0 0 10px var(--neon-pink);
-            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
         }
         
         .form-textarea {
@@ -188,35 +160,27 @@
         }
         
         .submit-btn {
-            background: linear-gradient(45deg, var(--deep-pink), var(--neon-pink));
+            background-color: var(--primary-color);
             color: white;
             padding: 12px 25px;
-            font-size: 1.2rem;
+            font-size: 1rem;
             border: none;
-            border-radius: 50px;
+            border-radius: 4px;
             cursor: pointer;
-            box-shadow: 0 0 15px var(--neon-pink);
             transition: all 0.3s;
-            display: block;
             width: 100%;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
         
         .submit-btn:hover {
-            box-shadow: 0 0 25px var(--deep-pink);
-            transform: translateY(-3px);
-        }
-        
-        .submit-btn:active {
-            transform: translateY(0);
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
         }
         
         .info-item {
             margin-bottom: 1.5rem;
             padding-bottom: 1.5rem;
-            border-bottom: 1px dashed rgba(255, 0, 255, 0.3);
+            border-bottom: 1px solid #eee;
         }
         
         .info-item:last-child {
@@ -226,63 +190,66 @@
         }
         
         .info-item h3 {
-            color: var(--neon-pink);
+            color: var(--primary-color);
             margin-bottom: 0.5rem;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
         
         .info-item p, .info-item a {
-            color: white;
+            color: var(--dark-text);
             text-decoration: none;
             transition: color 0.3s;
         }
         
         .info-item a:hover {
-            color: var(--neon-pink);
-            text-decoration: underline;
+            color: var(--primary-color);
         }
         
         .social-links {
             display: flex;
             gap: 1rem;
             margin-top: 2rem;
-            justify-content: center;
         }
         
         .social-link {
-            color: white;
+            color: var(--primary-color);
             font-size: 1.5rem;
             transition: all 0.3s;
         }
         
         .social-link:hover {
-            color: var(--neon-pink);
+            color: var(--secondary-color);
             transform: translateY(-3px);
         }
         
         footer {
-            background: rgba(0, 0, 0, 0.8);
+            background-color: var(--dark-bg);
+            color: var(--light-text);
             text-align: center;
             padding: 1.5rem;
-            margin-top: auto;
-            border-top: 1px solid var(--neon-pink);
+            margin-top: 2rem;
         }
         
-        /* Animaciones */
-        @keyframes pulse {
-            0% { box-shadow: 0 0 15px var(--neon-pink); }
-            50% { box-shadow: 0 0 25px var(--deep-pink); }
-            100% { box-shadow: 0 0 15px var(--neon-pink); }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
         }
         
-        .submit-btn {
-            animation: pulse 2s infinite;
+        .footer-links a {
+            color: var(--light-text);
+            text-decoration: none;
+            transition: color 0.3s;
         }
         
-        /* Responsive */
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+        
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -292,23 +259,16 @@
             nav {
                 margin-top: 1rem;
                 gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
             }
             
             .hero-title {
                 font-size: 2rem;
             }
             
-            .hero-subtitle {
-                font-size: 1rem;
-            }
-            
             .contact-container {
-                flex-direction: column;
-                padding: 1rem;
-            }
-            
-            .contact-form, .contact-info {
-                width: 100%;
+                padding: 2rem 1rem;
             }
         }
     </style>
@@ -317,104 +277,169 @@
     <header>
         <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="logo">
         <nav>
-            <a href="#">Inicio</a>
-            <a href="#">Productos</a>
-            <a href="#" class="active">Contacto</a>
-            <a href="#">Blog</a>
+            <a href="index.html">Home</a>
+            <a href="index.html#products">Products</a>
+            <a href="contact.html" class="active">Contact</a>
         </nav>
     </header>
     
     <section class="contact-hero">
         <div class="hero-content">
-            <h1 class="hero-title">CONTÁCTANOS</h1>
+            <h1 class="hero-title">Contact Us</h1>
             <p class="hero-subtitle">
-                ¿Tienes dudas sobre nuestros productos o quieres colaborar con nosotros? Escríbenos y te responderemos en menos de 24 horas. ¡El mundo del motor nos une!
+                We're here to help. Fill out the form or use our direct contact information.
             </p>
         </div>
     </section>
     
     <div class="contact-container">
         <div class="contact-form">
-            <h2 class="form-title">ENVÍA TU MENSAJE</h2>
+            <h2 class="form-title">Contact Form</h2>
             <form id="contactForm">
                 <div class="form-group">
-                    <label for="name" class="form-label"><i class="fas fa-user"></i> Nombre</label>
-                    <input type="text" id="name" class="form-input" placeholder="Tu nombre completo" required>
+                    <label for="name" class="form-label"><i class="fas fa-user"></i> Full Name</label>
+                    <input type="text" id="name" class="form-input" placeholder="John Doe" required>
                 </div>
                 <div class="form-group">
-                    <label for="email" class="form-label"><i class="fas fa-envelope"></i> Correo Electrónico</label>
-                    <input type="email" id="email" class="form-input" placeholder="tu@email.com" required>
+                    <label for="email" class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="example@email.com" required>
                 </div>
                 <div class="form-group">
-                    <label for="subject" class="form-label"><i class="fas fa-tag"></i> Asunto</label>
-                    <input type="text" id="subject" class="form-input" placeholder="¿Sobre qué quieres hablar?" required>
+                    <label for="phone" class="form-label"><i class="fas fa-phone"></i> Phone (Optional)</label>
+                    <input type="tel" id="phone" class="form-input" placeholder="+34 600 000 000">
                 </div>
                 <div class="form-group">
-                    <label for="message" class="form-label"><i class="fas fa-comment"></i> Mensaje</label>
-                    <textarea id="message" class="form-textarea" placeholder="Escribe aquí tu mensaje..." required></textarea>
+                    <label for="subject" class="form-label"><i class="fas fa-tag"></i> Subject</label>
+                    <select id="subject" class="form-input" required>
+                        <option value="" disabled selected>Select a subject</option>
+                        <option value="General inquiry">General inquiry</option>
+                        <option value="Technical support">Technical support</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Collaborations">Collaborations</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message" class="form-label"><i class="fas fa-comment"></i> Message</label>
+                    <textarea id="message" class="form-textarea" placeholder="Please describe your inquiry in detail..." required></textarea>
                 </div>
                 <button type="submit" class="submit-btn">
-                    <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                    <i class="fas fa-paper-plane"></i> Send Message
                 </button>
             </form>
         </div>
         
         <div class="contact-info">
-            <h2 class="info-title">ENCUÉNTRANOS</h2>
+            <h2 class="info-title">Contact Information</h2>
             <div class="info-item">
-                <h3><i class="fas fa-map-marker-alt"></i> Dirección</h3>
-                <p>Calle Futurista 123, Neon District, Barcelona, España</p>
+                <h3><i class="fas fa-map-marker-alt"></i> Address</h3>
+                <p>Motor Street 45, North Industrial Park, Barcelona, Spain</p>
             </div>
             <div class="info-item">
-                <h3><i class="fas fa-envelope"></i> Correo Electrónico</h3>
-                <a href="mailto:info@free4allriders.com">info@free4allriders.com</a>
+                <h3><i class="fas fa-envelope"></i> Email</h3>
+                <a href="mailto:contact@free4allriders.com">contact@free4allriders.com</a>
             </div>
             <div class="info-item">
-                <h3><i class="fas fa-phone"></i> Teléfono</h3>
-                <a href="tel:+34931234567">+34 93 123 45 67</a>
+                <h3><i class="fas fa-phone"></i> Phone</h3>
+                <a href="tel:+34930123456">+34 93 012 34 56</a>
             </div>
             <div class="info-item">
-                <h3><i class="fas fa-clock"></i> Horario</h3>
-                <p>Lunes - Viernes: 9:00 - 18:00<br>Sábado: 10:00 - 14:00</p>
+                <h3><i class="fas fa-clock"></i> Business Hours</h3>
+                <p>Monday to Friday: 9:00 - 18:00<br>
+                Saturday: 10:00 - 14:00</p>
             </div>
             
             <div class="social-links">
-                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="social-link" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
             </div>
         </div>
     </div>
     
     <footer>
-        <p>&copy; 2025 FREE4ALLRIDERS. Todos los derechos reservados. | <a href="#" style="color: var(--neon-pink);">Política de Privacidad</a> | <a href="#" style="color: var(--neon-pink);">Términos de Servicio</a></p>
+        <p>&copy; 2025 FREE4ALLRIDERS. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="shipping.html">Shipping & Returns</a>
+        </div>
     </footer>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
     <script>
+        // Firebase Configuration (replace with your data)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Simulación de envío del formulario
             const submitBtn = document.querySelector('.submit-btn');
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             submitBtn.disabled = true;
             
-            setTimeout(() => {
-                submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡Mensaje Enviado!';
-                submitBtn.style.background = 'linear-gradient(45deg, #00ff00, #00cc00)';
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value || 'Not provided';
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+            
+            // Send data to Firestore
+            db.collection("contacts").add({
+                name: name,
+                email: email,
+                phone: phone,
+                subject: subject,
+                message: message,
+                date: timestamp,
+                read: false
+            })
+            .then(() => {
+                // Success
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent';
+                submitBtn.style.backgroundColor = '#28a745';
                 
-                // Resetear formulario después de 3 segundos
+                // Reset form after 3 seconds
                 setTimeout(() => {
                     document.getElementById('contactForm').reset();
-                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Mensaje';
-                    submitBtn.style.background = 'linear-gradient(45deg, var(--deep-pink), var(--neon-pink))';
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.style.backgroundColor = '';
                     submitBtn.disabled = false;
                 }, 3000);
-            }, 1500);
-            
-            // Aquí iría el código real para enviar el formulario
-            // Por ejemplo con fetch() a un backend
+            })
+            .catch((error) => {
+                // Error
+                console.error("Error sending message: ", error);
+                submitBtn.innerHTML = '<i class="fas fa-times"></i> Send Failed';
+                submitBtn.style.backgroundColor = '#dc3545';
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Try Again';
+                    submitBtn.style.backgroundColor = '';
+                    submitBtn.disabled = false;
+                }, 3000);
+            });
         });
     </script>
 </body>
