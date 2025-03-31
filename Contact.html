@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us | FREE4ALLRIDERS</title>
+    <title>Contact | FREE4ALLRIDERS</title>
     <link rel="icon" type="image/png" href="logo-imatge.PNG">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #0066cc;
-            --secondary-color: #004080;
-            --accent-color: #ff6600;
-            --dark-bg: #1a1a1a;
-            --light-text: #ffffff;
-            --light-gray: #f5f5f5;
-            --dark-text: #333333;
+            --neon-pink: #ff00ff;
+            --deep-pink: #ff1493;
+            --dark-bg: #111;
+            --light-text: #fff;
+            --gray-bg: #222;
         }
         
         * {
@@ -25,23 +23,33 @@
         }
         
         body {
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.6;
-            color: var(--dark-text);
-            background-color: var(--light-gray);
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            font-family: 'Urbanist', sans-serif;
+            background-image: url('graffiti-wall.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
         header {
-            background-color: var(--dark-bg);
+            background: rgba(0, 0, 0, 0.8);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid var(--neon-pink);
         }
         
         .logo {
-            height: 50px;
+            height: 60px;
+            filter: drop-shadow(0 0 10px var(--neon-pink));
             transition: transform 0.3s;
         }
         
@@ -55,12 +63,13 @@
         }
         
         nav a {
-            color: var(--light-text);
+            color: var(--neon-pink);
             text-decoration: none;
             font-weight: 600;
-            font-size: 1rem;
-            transition: color 0.3s;
+            font-size: 1.1rem;
+            text-shadow: 2px 2px 5px var(--deep-pink);
             position: relative;
+            transition: all 0.3s;
         }
         
         nav a::after {
@@ -70,7 +79,7 @@
             height: 2px;
             bottom: -5px;
             left: 0;
-            background-color: var(--accent-color);
+            background-color: var(--neon-pink);
             transition: width 0.3s;
         }
         
@@ -79,27 +88,34 @@
         }
         
         nav a.active {
-            color: var(--accent-color);
+            color: white;
+            text-shadow: 0 0 10px var(--neon-pink);
         }
         
         .contact-hero {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--light-text);
+            background: rgba(0, 0, 0, 0.7);
             padding: 4rem 2rem;
+            border: 3px solid var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
             text-align: center;
+            margin: 2rem auto;
+            max-width: 1200px;
+            width: 90%;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
         }
         
         .hero-title {
-            font-size: 2.5rem;
+            font-size: 3rem;
+            color: var(--deep-pink);
+            text-shadow: 4px 4px 10px var(--neon-pink);
             margin-bottom: 1rem;
-            font-weight: 700;
         }
         
         .hero-subtitle {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             max-width: 800px;
             margin: 0 auto;
-            opacity: 0.9;
         }
         
         .contact-container {
@@ -107,7 +123,7 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 2rem;
-            padding: 3rem 2rem;
+            padding: 2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -115,17 +131,20 @@
         .contact-form, .contact-info {
             flex: 1;
             min-width: 300px;
-            background: white;
+            background: rgba(0, 0, 0, 0.7);
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            border: 1px solid var(--neon-pink);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+            backdrop-filter: blur(5px);
         }
         
         .form-title, .info-title {
-            font-size: 1.8rem;
-            color: var(--primary-color);
+            font-size: 2rem;
+            color: var(--neon-pink);
             margin-bottom: 1.5rem;
-            font-weight: 600;
+            text-align: center;
+            text-shadow: 2px 2px 5px var(--deep-pink);
         }
         
         .form-group {
@@ -135,23 +154,26 @@
         .form-label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--dark-text);
+            color: var(--neon-pink);
             font-weight: 600;
         }
         
         .form-input, .form-textarea {
             width: 100%;
             padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: 1px solid var(--neon-pink);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 5px;
             font-size: 1rem;
             transition: all 0.3s;
         }
         
         .form-input:focus, .form-textarea:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+            border-color: var(--deep-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+            background: rgba(255, 255, 255, 0.2);
         }
         
         .form-textarea {
@@ -160,27 +182,35 @@
         }
         
         .submit-btn {
-            background-color: var(--primary-color);
+            background: linear-gradient(45deg, var(--deep-pink), var(--neon-pink));
             color: white;
             padding: 12px 25px;
-            font-size: 1rem;
+            font-size: 1.2rem;
             border: none;
-            border-radius: 4px;
+            border-radius: 50px;
             cursor: pointer;
+            box-shadow: 0 0 15px var(--neon-pink);
             transition: all 0.3s;
+            display: block;
             width: 100%;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .submit-btn:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
+            box-shadow: 0 0 25px var(--deep-pink);
+            transform: translateY(-3px);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
         }
         
         .info-item {
             margin-bottom: 1.5rem;
             padding-bottom: 1.5rem;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px dashed rgba(255, 0, 255, 0.3);
         }
         
         .info-item:last-child {
@@ -190,66 +220,63 @@
         }
         
         .info-item h3 {
-            color: var(--primary-color);
+            color: var(--neon-pink);
             margin-bottom: 0.5rem;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
         
         .info-item p, .info-item a {
-            color: var(--dark-text);
+            color: white;
             text-decoration: none;
             transition: color 0.3s;
         }
         
         .info-item a:hover {
-            color: var(--primary-color);
+            color: var(--neon-pink);
+            text-decoration: underline;
         }
         
         .social-links {
             display: flex;
             gap: 1rem;
             margin-top: 2rem;
+            justify-content: center;
         }
         
         .social-link {
-            color: var(--primary-color);
+            color: white;
             font-size: 1.5rem;
             transition: all 0.3s;
         }
         
         .social-link:hover {
-            color: var(--secondary-color);
+            color: var(--neon-pink);
             transform: translateY(-3px);
         }
         
         footer {
-            background-color: var(--dark-bg);
-            color: var(--light-text);
+            background: rgba(0, 0, 0, 0.8);
             text-align: center;
             padding: 1.5rem;
-            margin-top: 2rem;
+            margin-top: auto;
+            border-top: 1px solid var(--neon-pink);
         }
         
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 1rem;
+        /* Animations */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px var(--neon-pink); }
+            50% { box-shadow: 0 0 25px var(--deep-pink); }
+            100% { box-shadow: 0 0 15px var(--neon-pink); }
         }
         
-        .footer-links a {
-            color: var(--light-text);
-            text-decoration: none;
-            transition: color 0.3s;
+        .submit-btn {
+            animation: pulse 2s infinite;
         }
         
-        .footer-links a:hover {
-            color: var(--accent-color);
-        }
-        
+        /* Responsive */
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -259,8 +286,6 @@
             nav {
                 margin-top: 1rem;
                 gap: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
             }
             
             .hero-title {
@@ -268,7 +293,8 @@
             }
             
             .contact-container {
-                padding: 2rem 1rem;
+                flex-direction: column;
+                padding: 1rem;
             }
         }
     </style>
@@ -285,75 +311,68 @@
     
     <section class="contact-hero">
         <div class="hero-content">
-            <h1 class="hero-title">Contact Us</h1>
+            <h1 class="hero-title">GET IN TOUCH</h1>
             <p class="hero-subtitle">
-                We're here to help. Fill out the form or use our direct contact information.
+                Got questions about our products or want to collaborate? Drop us a line and we'll get back to you within 24 hours. The road connects us all!
             </p>
         </div>
     </section>
     
     <div class="contact-container">
         <div class="contact-form">
-            <h2 class="form-title">Contact Form</h2>
+            <h2 class="form-title">CONTACT FORM</h2>
             <form id="contactForm">
                 <div class="form-group">
                     <label for="name" class="form-label"><i class="fas fa-user"></i> Full Name</label>
-                    <input type="text" id="name" class="form-input" placeholder="John Doe" required>
+                    <input type="text" id="name" class="form-input" placeholder="Your full name" required>
                 </div>
                 <div class="form-group">
-                    <label for="email" class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
-                    <input type="email" id="email" class="form-input" placeholder="example@email.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="phone" class="form-label"><i class="fas fa-phone"></i> Phone (Optional)</label>
-                    <input type="tel" id="phone" class="form-input" placeholder="+34 600 000 000">
+                    <label for="email" class="form-label"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
                 </div>
                 <div class="form-group">
                     <label for="subject" class="form-label"><i class="fas fa-tag"></i> Subject</label>
                     <select id="subject" class="form-input" required>
                         <option value="" disabled selected>Select a subject</option>
-                        <option value="General inquiry">General inquiry</option>
-                        <option value="Technical support">Technical support</option>
-                        <option value="Sales">Sales</option>
-                        <option value="Collaborations">Collaborations</option>
+                        <option value="Product Inquiry">Product Inquiry</option>
+                        <option value="Technical Support">Technical Support</option>
+                        <option value="Collaboration">Collaboration</option>
                         <option value="Other">Other</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="message" class="form-label"><i class="fas fa-comment"></i> Message</label>
-                    <textarea id="message" class="form-textarea" placeholder="Please describe your inquiry in detail..." required></textarea>
+                    <textarea id="message" class="form-textarea" placeholder="Type your message here..." required></textarea>
                 </div>
                 <button type="submit" class="submit-btn">
-                    <i class="fas fa-paper-plane"></i> Send Message
+                    <i class="fas fa-paper-plane"></i> SEND MESSAGE
                 </button>
             </form>
         </div>
         
         <div class="contact-info">
-            <h2 class="info-title">Contact Information</h2>
+            <h2 class="info-title">FIND US</h2>
             <div class="info-item">
                 <h3><i class="fas fa-map-marker-alt"></i> Address</h3>
-                <p>Motor Street 45, North Industrial Park, Barcelona, Spain</p>
+                <p>Future Street 123, Neon District, Barcelona, Spain</p>
             </div>
             <div class="info-item">
                 <h3><i class="fas fa-envelope"></i> Email</h3>
-                <a href="mailto:contact@free4allriders.com">contact@free4allriders.com</a>
+                <a href="mailto:info@free4allriders.com">info@free4allriders.com</a>
             </div>
             <div class="info-item">
                 <h3><i class="fas fa-phone"></i> Phone</h3>
-                <a href="tel:+34930123456">+34 93 012 34 56</a>
+                <a href="tel:+34931234567">+34 93 123 45 67</a>
             </div>
             <div class="info-item">
-                <h3><i class="fas fa-clock"></i> Business Hours</h3>
-                <p>Monday to Friday: 9:00 - 18:00<br>
-                Saturday: 10:00 - 14:00</p>
+                <h3><i class="fas fa-clock"></i> Opening Hours</h3>
+                <p>Monday - Friday: 9:00 - 18:00<br>Saturday: 10:00 - 14:00</p>
             </div>
             
             <div class="social-links">
-                <a href="#" class="social-link" title="Facebook"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link" title="Facebook"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" class="social-link" title="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                 <a href="#" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
             </div>
         </div>
@@ -361,11 +380,6 @@
     
     <footer>
         <p>&copy; 2025 FREE4ALLRIDERS. All rights reserved.</p>
-        <div class="footer-links">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="shipping.html">Shipping & Returns</a>
-        </div>
     </footer>
 
     <!-- Firebase SDK -->
@@ -375,12 +389,466 @@
     <script>
         // Firebase Configuration (replace with your data)
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | FREE4ALLRIDERS</title>
+    <link rel="icon" type="image/png" href="logo-imatge.PNG">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --deep-pink: #ff1493;
+            --dark-bg: #111;
+            --light-text: #fff;
+            --gray-bg: #222;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            font-family: 'Urbanist', sans-serif;
+            background-image: url('graffiti-wall.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid var(--neon-pink);
+        }
+        
+        .logo {
+            height: 60px;
+            filter: drop-shadow(0 0 10px var(--neon-pink));
+            transition: transform 0.3s;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: var(--neon-pink);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-shadow: 2px 2px 5px var(--deep-pink);
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--neon-pink);
+            transition: width 0.3s;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        nav a.active {
+            color: white;
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        .contact-hero {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 4rem 2rem;
+            border: 3px solid var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
+            text-align: center;
+            margin: 2rem auto;
+            max-width: 1200px;
+            width: 90%;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            color: var(--deep-pink);
+            text-shadow: 4px 4px 10px var(--neon-pink);
+            margin-bottom: 1rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .contact-form, .contact-info {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid var(--neon-pink);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+            backdrop-filter: blur(5px);
+        }
+        
+        .form-title, .info-title {
+            font-size: 2rem;
+            color: var(--neon-pink);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-shadow: 2px 2px 5px var(--deep-pink);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--neon-pink);
+            font-weight: 600;
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--neon-pink);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--deep-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(45deg, var(--deep-pink), var(--neon-pink));
+            color: white;
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--neon-pink);
+            transition: all 0.3s;
+            display: block;
+            width: 100%;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .submit-btn:hover {
+            box-shadow: 0 0 25px var(--deep-pink);
+            transform: translateY(-3px);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .info-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed rgba(255, 0, 255, 0.3);
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .info-item h3 {
+            color: var(--neon-pink);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-item p, .info-item a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .info-item a:hover {
+            color: var(--neon-pink);
+            text-decoration: underline;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+        
+        .social-link {
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .social-link:hover {
+            color: var(--neon-pink);
+            transform: translateY(-3px);
+        }
+        
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+            border-top: 1px solid var(--neon-pink);
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px var(--neon-pink); }
+            50% { box-shadow: 0 0 25px var(--deep-pink); }
+            100% { box-shadow: 0 0 15px var(--neon-pink); }
+        }
+        
+        .submit-btn {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            nav {
+                margin-top: 1rem;
+                gap: 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .contact-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="logo">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="index.html#products">Products</a>
+            <a href="contact.html" class="active">Contact</a>
+        </nav>
+    </header>
+    
+    <section class="contact-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">GET IN TOUCH</h1>
+            <p class="hero-subtitle">
+                Got questions about our products or want to collaborate? Drop us a line and we'll get back to you within 24 hours. The road connects us all!
+            </p>
+        </div>
+    </section>
+    
+    <div class="contact-container">
+        <div class="contact-form">
+            <h2 class="form-title">CONTACT FORM</h2>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="name" class="form-label"><i class="fas fa-user"></i> Full Name</label>
+                    <input type="text" id="name" class="form-input" placeholder="Your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="form-label"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject" class="form-label"><i class="fas fa-tag"></i> Subject</label>
+                    <select id="subject" class="form-input" required>
+                        <option value="" disabled selected>Select a subject</option>
+                        <option value="Product Inquiry">Product Inquiry</option>
+                        <option value="Technical Support">Technical Support</option>
+                        <option value="Collaboration">Collaboration</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message" class="form-label"><i class="fas fa-comment"></i> Message</label>
+                    <textarea id="message" class="form-textarea" placeholder="Type your message here..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> SEND MESSAGE
+                </button>
+            </form>
+        </div>
+        
+        <div class="contact-info">
+            <h2 class="info-title">FIND US</h2>
+            <div class="info-item">
+                <h3><i class="fas fa-map-marker-alt"></i> Address</h3>
+                <p>Future Street 123, Neon District, Barcelona, Spain</p>
+            </div>
+            <div class="info-item">
+                <h3><i class="fas fa-envelope"></i> Email</h3>
+                <a href="mailto:info@free4allriders.com">info@free4allriders.com</a>
+            </div>
+            <div class="info-item">
+                <h3><i class="fas fa-phone"></i> Phone</h3>
+                <a href="tel:+34931234567">+34 93 123 45 67</a>
+            </div>
+            <div class="info-item">
+                <h3><i class="fas fa-clock"></i> Opening Hours</h3>
+                <p>Monday - Friday: 9:00 - 18:00<br>Saturday: 10:00 - 14:00</p>
+            </div>
+            
+            <div class="social-links">
+                <a href="#" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-link" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 FREE4ALLRIDERS. All rights reserved.</p>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Firebase Configuration (replace with your data)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
+            authDomain: "free4allriders-51c5e.firebaseapp.com",
+            projectId: "free4allriders-51c5e",
+            storageBucket: "free4allriders-51c5e.firebasestorage.app",
+            messagingSenderId: "1082764494980",
+            appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
+            measurementId: "G-7KEGQPK3P0"
+        };
+
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+            
+            // Send data to Firestore
+            db.collection("contacts").add({
+                name: name,
+                email: email,
+                subject: subject,
+                message: message,
+                timestamp: timestamp,
+                read: false
+            })
+            .then(() => {
+                // Success
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
+                submitBtn.style.background = 'linear-gradient(45deg, #00ff00, #00cc00)';
+                
+                // Reset form after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('contactForm').reset();
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.style.background = 'linear-gradient(45deg, var(--deep-pink), var(--neon-pink))';
+                    submitBtn.disabled = false;
+                }, 3000);
+            })
+            .catch((error) => {
+                // Error
+                console.error("Error sending message: ", error);
+                submitBtn.innerHTML = '<i class="fas fa-times"></i> Send Failed';
+                submitBtn.style.background = 'linear-gradient(45deg, #ff0000, #cc0000)';
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Try Again';
+                    submitBtn.style.background = 'linear-gradient(45deg, var(--deep-pink), var(--neon-pink))';
+                    submitBtn.disabled = false;
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>
         };
 
         // Initialize Firebase
@@ -400,7 +868,6 @@
             // Get form values
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value || 'Not provided';
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;
             const timestamp = firebase.firestore.FieldValue.serverTimestamp();
@@ -409,22 +876,21 @@
             db.collection("contacts").add({
                 name: name,
                 email: email,
-                phone: phone,
                 subject: subject,
                 message: message,
-                date: timestamp,
+                timestamp: timestamp,
                 read: false
             })
             .then(() => {
                 // Success
-                submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent';
-                submitBtn.style.backgroundColor = '#28a745';
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
+                submitBtn.style.background = 'linear-gradient(45deg, #00ff00, #00cc00)';
                 
                 // Reset form after 3 seconds
                 setTimeout(() => {
                     document.getElementById('contactForm').reset();
                     submitBtn.innerHTML = originalText;
-                    submitBtn.style.backgroundColor = '';
+                    submitBtn.style.background = 'linear-gradient(45deg, var(--deep-pink), var(--neon-pink))';
                     submitBtn.disabled = false;
                 }, 3000);
             })
@@ -432,11 +898,11 @@
                 // Error
                 console.error("Error sending message: ", error);
                 submitBtn.innerHTML = '<i class="fas fa-times"></i> Send Failed';
-                submitBtn.style.backgroundColor = '#dc3545';
+                submitBtn.style.background = 'linear-gradient(45deg, #ff0000, #cc0000)';
                 
                 setTimeout(() => {
                     submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Try Again';
-                    submitBtn.style.backgroundColor = '';
+                    submitBtn.style.background = 'linear-gradient(45deg, var(--deep-pink), var(--neon-pink))';
                     submitBtn.disabled = false;
                 }, 3000);
             });
