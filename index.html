@@ -54,7 +54,7 @@
         }
         
         .logo {
-            height: 40px;
+            height: 20px;
             filter: drop-shadow(var(--glow-effect));
         }
         
@@ -103,6 +103,11 @@
             font-size: 1.2rem;
             color: var(--silver);
             transition: all 0.3s;
+         
+    order: -1;  /* Esto lo mueve al principio del flex container */
+    margin-right: 20px; /* Espacio entre el carrito y los demás elementos */
+    margin-left: 0; /* Elimina el margen izquierdo si lo tenía */
+}
         }
         
         .cart-icon:hover {
@@ -139,6 +144,9 @@
             padding: 15px;
             z-index: 1000;
             box-shadow: var(--glow-effect);
+    right: auto; /* Anula la posición derecha */
+    left: 0; /* Lo ancla a la izquierda del icono */
+
         }
         
         .cart-item {
@@ -623,6 +631,10 @@
                 margin-top: 15px;
                 justify-content: center;
                 width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 15px; /* Espacio uniforme entre elementos */
+}
             }
             
             .nav-link {
