@@ -665,7 +665,6 @@
                 display: flex;
                 align-items: center;
                 gap: 15px; /* Espacio uniforme entre elementos */
-}
             }
             
             .nav-link {
@@ -858,14 +857,22 @@
         <div class="product-card">
             <img src="Camiseta.PNG" alt="T-shirt" class="product-image">
             <div class="product-info">
-                <h4>Riders Black Hoodie </h4>
+                <h4>Riders Black Hoodie</h4>
                 <p>FE4R Hoodie</p>
                 <a href="Product4.html" class="btn-magnetic">View Details</a>
             </div>
         </div>
+        
+        <!-- Product 5 - Nuevo producto añadido -->
+        <div class="product-card">
+            <img src="Product5-image.jpg" alt="Riders Gloves" class="product-image">
+            <div class="product-info">
+                <h4>Riders Gloves</h4>
+                <p>Premium ski gloves with touchscreen compatibility</p>
+                <a href="Product5.html" class="btn-magnetic">View Details</a>
+            </div>
+        </div>
     </div>
-    <!-- Product 5 -->
-
 </section>
 
     <!-- Action Gallery -->
@@ -931,13 +938,7 @@
     <script>
         // Firebase Configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
-            authDomain: "free4allriders-51c5e.firebaseapp.com",
-            projectId: "free4allriders-51c5e",
-            storageBucket: "free4allriders-51c5e.firebasestorage.app",
-            messagingSenderId: "1082764494980",
-            appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
-            measurementId: "G-7KEGQPK3P0"
+        X
         };
 
         // Initialize Firebase
@@ -1067,272 +1068,270 @@
                 
                 if (!user) {
                     this.showToast('Please log in to continue', 'error');
-                    document.getElementById('loginModal').style.display = 'block';
-                    return null;
-                }
-                
-                try {
-                    const batch = db.batch();
-                    const ordersCollection = db.collection('orders');
-                    const orderIds = [];
-                    
-                    this.items.forEach(item => {
-                        const orderRef = ordersCollection.doc();
-                        orderIds.push(orderRef.id);
-                        
-                        batch.set(orderRef, {
-                            userId: user.uid,
-                            userEmail: user.email,
-                            productId: item.id,
-                            productName: item.name,
-                            size: item.size,
-                            quantity: item.quantity,
-                            price: item.price,
-                            total: item.price * item.quantity,
-                            status: 'completed',
-                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                    });
-                    
-                    await batch.commit();
-                    return orderIds;
-                    
-                } catch (error) {
-                    console.error("Error processing order:", error);
-                    throw error;
-                }
-            },
-            
-            showCheckoutSummary: function() {
-                const summaryElement = document.getElementById('checkoutSummary');
-                const totalElement = document.getElementById('checkoutTotal');
-                
-                summaryElement.innerHTML = '';
-                
-                if (this.items.length === 0) {
-                    summaryElement.innerHTML = '<p>No products in cart</p>';
-                    totalElement.textContent = '0.00';
-                    return;
-                }
+document.getElementById('loginModal').style.display = 'block';
+return null;
+}
+
+Copy
+            try {
+                const batch = db.batch();
+                const ordersCollection = db.collection('orders');
+                const orderIds = [];
                 
                 this.items.forEach(item => {
-                    const itemElement = document.createElement('div');
-                    itemElement.className = 'checkout-item';
-                    itemElement.innerHTML = `
-                        <div>
-                            <strong>${item.name}</strong> (${item.size})
-                            <br><small>Quantity: ${item.quantity}</small>
-                        </div>
-                        <div>€${(item.price * item.quantity).toFixed(2)}</div>
-                    `;
-                    summaryElement.appendChild(itemElement);
-                });
-                
-                totalElement.textContent = this.getTotal().toFixed(2);
-            }
-        };
-
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize cart
-            cart.init();
-            
-            // Cart icon functionality
-            const cartIcon = document.getElementById('cartIcon');
-            const cartDropdown = document.getElementById('cartDropdown');
-            
-            cartIcon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                cartDropdown.style.display = cartDropdown.style
-                                cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
-            });
-            
-            document.addEventListener('click', () => {
-                cartDropdown.style.display = 'none';
-            });
-            
-            // Checkout button
-            document.getElementById('checkoutBtn').addEventListener('click', () => {
-                if (cart.getTotalItems() === 0) {
-                    cart.showToast('Your cart is empty', 'error');
-                    return;
-                }
-                document.getElementById('checkoutModal').style.display = 'flex';
-                cart.showCheckoutSummary();
-            });
-            
-            // Confirm purchase
-            document.getElementById('confirmCheckout').addEventListener('click', async () => {
-                try {
-                    const orderIds = await cart.processOrder();
+                    const orderRef = ordersCollection.doc();
+                    orderIds.push(orderRef.id);
                     
-                    if (orderIds) {
-                        document.getElementById('checkoutModal').style.display = 'none';
-                        document.getElementById('orderConfirmation').style.display = 'flex';
-                        cart.clear();
-                    }
-                } catch (error) {
-                    cart.showToast('Error processing purchase: ' + error.message, 'error');
-                    console.error("Checkout error:", error);
-                }
+                    batch.set(orderRef, {
+                        userId: user.uid,
+                        userEmail: user.email,
+                        productId: item.id,
+                        productName: item.name,
+                        size: item.size,
+                        quantity: item.quantity,
+                        price: item.price,
+                        total: item.price * item.quantity,
+                        status: 'completed',
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                });
+                
+                await batch.commit();
+                return orderIds;
+                
+            } catch (error) {
+                console.error("Error processing order:", error);
+                throw error;
+            }
+        },
+        
+        showCheckoutSummary: function() {
+            const summaryElement = document.getElementById('checkoutSummary');
+            const totalElement = document.getElementById('checkoutTotal');
+            
+            summaryElement.innerHTML = '';
+            
+            if (this.items.length === 0) {
+                summaryElement.innerHTML = '<p>No products in cart</p>';
+                totalElement.textContent = '0.00';
+                return;
+            }
+            
+            this.items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'checkout-item';
+                itemElement.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong> (${item.size})
+                        <br><small>Quantity: ${item.quantity}</small>
+                    </div>
+                    <div>€${(item.price * item.quantity).toFixed(2)}</div>
+                `;
+                summaryElement.appendChild(itemElement);
             });
             
-            // Add to cart buttons for products
-            document.querySelectorAll('.product-card').forEach((card, index) => {
-                const addToCartBtn = document.createElement('button');
-                addToCartBtn.className = 'btn-magnetic';
-                addToCartBtn.style.marginTop = '15px';
-                addToCartBtn.textContent = 'Add to Cart';
-                addToCartBtn.addEventListener('click', () => {
-                    const product = {
-                        id: 'product-' + (index + 1),
-                        name: card.querySelector('h4').textContent,
-                        price: 35, // You should add actual prices to your products
-                        size: 'M', // Default size
-                        quantity: 1,
-                        image: card.querySelector('img').src
-                    };
-                    cart.addItem(product);
-                });
-                card.querySelector('.product-info').appendChild(addToCartBtn);
-            });
+            totalElement.textContent = this.getTotal().toFixed(2);
+        }
+    };
 
-            // Auth Modals
-            const authLink = document.getElementById('authLink');
-            const loginModal = document.getElementById('loginModal');
-            const registerModal = document.getElementById('registerModal');
-            const closeLogin = document.getElementById('closeLogin');
-            const closeRegister = document.getElementById('closeRegister');
-            const showLogin = document.getElementById('showLogin');
-            const showRegister = document.getElementById('showRegister');
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-            const loginError = document.getElementById('loginError');
-            const registerError = document.getElementById('registerError');
-
-            function openModal(modal) {
-                modal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeModal(modal) {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-
-            authLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (auth.currentUser) {
-                    auth.signOut();
-                } else {
-                    openModal(loginModal);
-                }
-            });
-
-            closeLogin.addEventListener('click', () => closeModal(loginModal));
-            closeRegister.addEventListener('click', () => closeModal(registerModal));
-            showLogin.addEventListener('click', (e) => {
-                e.preventDefault();
-                closeModal(registerModal);
-                openModal(loginModal);
-            });
-            showRegister.addEventListener('click', (e) => {
-                e.preventDefault();
-                closeModal(loginModal);
-                openModal(registerModal);
-            });
-
-            // Close modal when clicking outside
-            window.addEventListener('click', (e) => {
-                if (e.target === loginModal) closeModal(loginModal);
-                if (e.target === registerModal) closeModal(registerModal);
-                if (e.target === document.getElementById('checkoutModal')) {
-                    document.getElementById('checkoutModal').style.display = 'none';
-                }
-                if (e.target === document.getElementById('orderConfirmation')) {
-                    document.getElementById('orderConfirmation').style.display = 'none';
-                }
-            });
-
-            // Login Form
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-
-                auth.signInWithEmailAndPassword(email, password)
-                    .then(() => {
-                        closeModal(loginModal);
-                        loginError.textContent = '';
-                        cart.showToast('Logged in successfully');
-                    })
-                    .catch(error => {
-                        loginError.textContent = getErrorMessage(error.code);
-                    });
-            });
-
-            // Register Form
-            registerForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = document.getElementById('registerEmail').value;
-                const password = document.getElementById('registerPassword').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
-
-                if (password !== confirmPassword) {
-                    registerError.textContent = 'Las contraseñas no coinciden';
-                    return;
-                }
-
-                if (password.length < 6) {
-                    registerError.textContent = 'La contraseña debe tener al menos 6 caracteres';
-                    return;
-                }
-
-                auth.createUserWithEmailAndPassword(email, password)
-                    .then(() => {
-                        closeModal(registerModal);
-                        registerError.textContent = '';
-                        cart.showToast('Account created successfully');
-                    })
-                    .catch(error => {
-                        registerError.textContent = getErrorMessage(error.code);
-                    });
-            });
-
-            // Auth State Listener
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    authLink.textContent = 'Logout';
-                } else {
-                    authLink.textContent = 'Login';
-                }
-            });
-
-            // Error Message Translator
-            function getErrorMessage(errorCode) {
-                switch(errorCode) {
-                    case 'auth/invalid-email': return 'Email inválido';
-                    case 'auth/user-disabled': return 'Cuenta deshabilitada';
-                    case 'auth/user-not-found': return 'Usuario no encontrado';
-                    case 'auth/wrong-password': return 'Contraseña incorrecta';
-                    case 'auth/email-already-in-use': return 'Email ya registrado';
-                    case 'auth/weak-password': return 'Contraseña débil (mínimo 6 caracteres)';
-                    case 'auth/operation-not-allowed': return 'Operación no permitida';
-                    default: return 'Error desconocido';
-                }
-            }
-
-            // Header scroll effect
-            window.addEventListener('scroll', function() {
-                const header = document.querySelector('header');
-                if (window.scrollY > 50) {
-                    header.style.padding = '10px 5%';
-                } else {
-                    header.style.padding = '15px 5%';
-                }
-            });
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize cart
+        cart.init();
+        
+        // Cart icon functionality
+        const cartIcon = document.getElementById('cartIcon');
+        const cartDropdown = document.getElementById('cartDropdown');
+        
+        cartIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
         });
-    </script>
-</body>
-</html>
+        
+        document.addEventListener('click', () => {
+            cartDropdown.style.display = 'none';
+        });
+        
+        // Checkout button
+        document.getElementById('checkoutBtn').addEventListener('click', () => {
+            if (cart.getTotalItems() === 0) {
+                cart.showToast('Your cart is empty', 'error');
+                return;
+            }
+            document.getElementById('checkoutModal').style.display = 'flex';
+            cart.showCheckoutSummary();
+        });
+        
+        // Confirm purchase
+        document.getElementById('confirmCheckout').addEventListener('click', async () => {
+            try {
+                const orderIds = await cart.processOrder();
                 
+                if (orderIds) {
+                    document.getElementById('checkoutModal').style.display = 'none';
+                    document.getElementById('orderConfirmation').style.display = 'flex';
+                    cart.clear();
+                }
+            } catch (error) {
+                cart.showToast('Error processing purchase: ' + error.message, 'error');
+                console.error("Checkout error:", error);
+            }
+        });
+        
+        // Add to cart buttons for products
+        document.querySelectorAll('.product-card').forEach((card, index) => {
+            const addToCartBtn = document.createElement('button');
+            addToCartBtn.className = 'btn-magnetic';
+            addToCartBtn.style.marginTop = '15px';
+            addToCartBtn.textContent = 'Add to Cart';
+            addToCartBtn.addEventListener('click', () => {
+                const product = {
+                    id: 'product-' + (index + 1),
+                    name: card.querySelector('h4').textContent,
+                    price: 35, // You should add actual prices to your products
+                    size: 'M', // Default size
+                    quantity: 1,
+                    image: card.querySelector('img').src
+                };
+                cart.addItem(product);
+            });
+            card.querySelector('.product-info').appendChild(addToCartBtn);
+        });
+
+        // Auth Modals
+        const authLink = document.getElementById('authLink');
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        const closeLogin = document.getElementById('closeLogin');
+        const closeRegister = document.getElementById('closeRegister');
+        const showLogin = document.getElementById('showLogin');
+        const showRegister = document.getElementById('showRegister');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginError = document.getElementById('loginError');
+        const registerError = document.getElementById('registerError');
+
+        function openModal(modal) {
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        authLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (auth.currentUser) {
+                auth.signOut();
+            } else {
+                openModal(loginModal);
+            }
+        });
+
+        closeLogin.addEventListener('click', () => closeModal(loginModal));
+        closeRegister.addEventListener('click', () => closeModal(registerModal));
+        showLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal(registerModal);
+            openModal(loginModal);
+        });
+        showRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal(loginModal);
+            openModal(registerModal);
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) closeModal(loginModal);
+            if (e.target === registerModal) closeModal(registerModal);
+            if (e.target === document.getElementById('checkoutModal')) {
+                document.getElementById('checkoutModal').style.display = 'none';
+            }
+            if (e.target === document.getElementById('orderConfirmation')) {
+                document.getElementById('orderConfirmation').style.display = 'none';
+            }
+        });
+
+        // Login Form
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    closeModal(loginModal);
+                    loginError.textContent = '';
+                    cart.showToast('Logged in successfully');
+                })
+                .catch(error => {
+                    loginError.textContent = getErrorMessage(error.code);
+                });
+        });
+
+        // Register Form
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                registerError.textContent = 'Las contraseñas no coinciden';
+                return;
+            }
+
+            if (password.length < 6) {
+                registerError.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                return;
+            }
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    closeModal(registerModal);
+                    registerError.textContent = '';
+                    cart.showToast('Account created successfully');
+                })
+                .catch(error => {
+                    registerError.textContent = getErrorMessage(error.code);
+                });
+        });
+
+        // Auth State Listener
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                authLink.textContent = 'Logout';
+            } else {
+                authLink.textContent = 'Login';
+            }
+        });
+
+        // Error Message Translator
+        function getErrorMessage(errorCode) {
+            switch(errorCode) {
+                case 'auth/invalid-email': return 'Email inválido';
+                case 'auth/user-disabled': return 'Cuenta deshabilitada';
+                case 'auth/user-not-found': return 'Usuario no encontrado';
+                case 'auth/wrong-password': return 'Contraseña incorrecta';
+                case 'auth/email-already-in-use': return 'Email ya registrado';
+                case 'auth/weak-password': return 'Contraseña débil (mínimo 6 caracteres)';
+                case 'auth/operation-not-allowed': return 'Operación no permitida';
+                default: return 'Error desconocido';
+            }
+        }
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.padding = '10px 5%';
+            } else {
+                header.style.padding = '15px 5%';
+            }
+        });
+    });
+</script>
+</body> </html>
