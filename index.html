@@ -137,39 +137,29 @@
         }
 
         /* Cart Styles */
-        .cart-icon {
-            position: relative;
-            cursor: pointer;
-            margin-left: 15px;
-            font-size: 1.2rem;
-            color: var(--silver);
-            transition: all 0.3s;
-         
-    order: -1;  /* Esto lo mueve al principio del flex container */
-    margin-right: 20px; /* Espacio entre el carrito y los demás elementos */
-    margin-left: 0; /* Elimina el margen izquierdo si lo tenía */
-}
-        }
-        
-        .cart-icon:hover {
-            color: var(--electric);
-        }
-        
-        .cart-counter {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background-color: var(--electric);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: bold;
-        }
+      .cart-icon {
+        font-size: 1.4rem; /* Tamaño del emoji */
+        line-height: 1;
+        margin-left: 15px;
+    }
+    
+    /* Posicionar el contador sobre el emoji */
+    .cart-counter {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: var(--electric);
+        color: white;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: bold;
+        font-family: 'Inter', sans-serif;
+    }
         
         .cart-dropdown {
             display: none;
