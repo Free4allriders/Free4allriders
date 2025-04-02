@@ -57,35 +57,43 @@
             scroll-behavior: smooth;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: var(--carbon);
-            color: var(--silver);
-            overflow-x: hidden;
-            padding-top: 80px;
-        }
+       /* Header Styles */
+    header {
+        background-color: rgba(10, 10, 10, 0.95);
+        padding: 5px 3%;  /* Reducido el padding vertical */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid var(--electric);
+        backdrop-filter: blur(10px);
+        height: 50px;  /* Altura fija más pequeña */
+    }
+    
+    .logo-container img {
+        height: 30px;  /* Logo más pequeño */
+        filter: drop-shadow(var(--glow-effect));
+    }
+    
+    .nav-link {
+        color: var(--silver);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 12px;  /* Texto más pequeño */
+        transition: all 0.3s;
+        position: relative;
+        padding: 5px 0;
+        white-space: nowrap;
+    }
+    
+    /* Ajustar el cuerpo para que no quede oculto bajo el header */
+    body {
+        padding-top: 50px;  /* Reducido para coincidir con la nueva altura del header */
+    }
 
-        /* Header Styles */
-        header {
-            background-color: rgba(10, 10, 10, 0.95);
-            padding: 5px 3%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--electric);
-            backdrop-filter: blur(10px);
-        }
-        
-        .logo {
-            height: 10px;
-            filter: drop-shadow(var(--glow-effect));
-        }
         
         nav {
             display: flex;
