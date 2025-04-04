@@ -11,6 +11,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-functions-compat.js"></script>
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=TU_CLIENT_ID_SANDBOX&currency=EUR"></script>
     <style>
         :root {
             --neon-pink: #ff00ff;
@@ -439,6 +442,27 @@
             color: var(--neon-pink);
         }
         
+        /* PayPal Button Container */
+        .paypal-button-container {
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .payment-options {
+            margin-top: 30px;
+            border-top: 1px solid var(--neon-purple);
+            padding-top: 20px;
+        }
+        
+        .payment-method {
+            display: none;
+        }
+        
+        .payment-method.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -575,21 +599,6 @@
             }
         }
         
-        /* Checkout Modal */
-        .checkout-summary {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-        }
-        
-        .checkout-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #333;
-        }
-        
         /* Responsive */
         @media (max-width: 768px) {
             .tab {
@@ -644,7 +653,7 @@
                         <p>Your cart is empty</p>
                     </div>
                     <div class="cart-total">
-                        Total: $<span id="cartTotal">0.00</span>
+                        Total: €<span id="cartTotal">0.00</span>
                     </div>
                     <button class="btn btn-primary checkout-btn" id="checkoutBtn">Checkout</button>
                 </div>
@@ -669,7 +678,7 @@
                     
                     <div class="details-section">
                         <h1 class="product-title">RIDERS EXCLUSIVE HOODIE</h1>
-                        <div class="product-price">35$</div>
+                        <div class="product-price">35€</div>
                         
                         <p class="product-description">
                             Premium hoodie designed specifically for riders. Made of high quality materials 
@@ -701,7 +710,7 @@
                     
                     <div class="details-section">
                         <h1 class="product-title">3D MODE ACTIVATED</h1>
-                        <div class="product-price">20$</div>
+                        <div class="product-price">35€</div>
                         
                         <p class="product-description">
                             Explore every detail of our hoodie in 360°.
@@ -768,10 +777,11 @@
             <p class="confirmation-message">Thank you for your purchase. We have received your order successfully.</p>
             
             <div class="order-details">
-                <p>Product: <strong>HOODIE FOR RIDER ONLY</strong></p>
+                <p>Product: <strong>HOODIE FOR RIDER</strong></p>
                 <p>Size: <strong id="confirmedSize"></strong></p>
-                <p>Price: <strong id="confirmedPrice">20$</strong></p>
+                <p>Price: <strong id="confirmedPrice">35€</strong></p>
                 <p>Order ID: <span class="order-id" id="orderId"></span></p>
+                <p>Payment Method: <strong id="paymentMethod"></strong></p>
             </div>
             
             <button class="btn btn-primary" onclick="document.getElementById('orderConfirmation').style.display = 'none'">Close</button>
@@ -786,10 +796,34 @@
                 <!-- Cart items will be added here -->
             </div>
             <div class="cart-total" style="text-align: right; font-size: 1.2rem;">
-                Total: $<span id="checkoutTotal">0.00</span>
+                Total: €<span id="checkoutTotal">0.00</span>
             </div>
+            
+            <div class="payment-options">
+                <h3>Payment Method:</h3>
+                <div class="action-buttons" style="margin-bottom: 20px;">
+                    <button class="btn btn-primary" id="payWithCardBtn">Credit Card</button>
+                    <button class="btn btn-secondary" id="payWithPayPalBtn">PayPal</button>
+                </div>
+                
+                <div id="cardPayment" class="payment-method">
+                    <!-- Formulario de tarjeta (simulado) -->
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" placeholder="Card Number" style="width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); color: white;">
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" placeholder="MM/YY" style="flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); color: white;">
+                            <input type="text" placeholder="CVV" style="flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); color: white;">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="confirmCardPayment" style="width: 100%;">Pay with Card</button>
+                </div>
+                
+                <div id="paypalPayment" class="payment-method">
+                    <div class="paypal-button-container" id="paypalButtonContainer"></div>
+                </div>
+            </div>
+            
             <div class="action-buttons" style="margin-top: 20px;">
-                <button class="btn btn-primary" id="confirmCheckout">Confirm Purchase</button>
                 <button class="btn btn-secondary" onclick="document.getElementById('checkoutModal').style.display = 'none'">Cancel</button>
             </div>
         </div>
@@ -811,13 +845,12 @@
     <script>
         // Firebase Configuration (replace with your real data)
         const firebaseConfig = {
-            apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
-            authDomain: "free4allriders-51c5e.firebaseapp.com",
-            projectId: "free4allriders-51c5e",
-            storageBucket: "free4allriders-51c5e.firebasestorage.app",
-            messagingSenderId: "1082764494980",
-            appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
-            measurementId: "G-7KEGQPK3P0"
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
         };
 
         // Firebase Initialization
@@ -830,7 +863,8 @@
 
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const CART_STORAGE_KEY = 'free4all_cart_v2';
+        const functions = firebase.functions();
+        const CART_STORAGE_KEY = 'free4all_cart_v3';
 
         // Cart object
         const cart = {
@@ -921,7 +955,7 @@
                         <div class="cart-item-info">
                             <div class="cart-item-title">${item.name}</div>
                             <div class="cart-item-details">Size: ${item.size} | Quantity: ${item.quantity}</div>
-                            <div class="cart-item-details">$${(item.price * item.quantity).toFixed(2)}</div>
+                            <div class="cart-item-details">€${(item.price * item.quantity).toFixed(2)}</div>
                             <button class="remove-item" data-index="${index}">Remove</button>
                         </div>
                     `;
@@ -952,439 +986,6 @@
         }
 
         // Function to process the order
-        async function processOrder() {
-            const user = auth.currentUser;
-            
-            if (!user) {
-                showToast('Please log in to continue', 'error');
-                document.getElementById('loginModal').style.display = 'block';
-                return null;
-            }
-            
-            try {
-                const batch = db.batch();
-                const ordersCollection = db.collection('orders');
-                const orderIds = [];
-                
-                cart.items.forEach(item => {
-                    const orderRef = ordersCollection.doc();
-                    orderIds.push(orderRef.id);
-                    
-                    batch.set(orderRef, {
-                        userId: user.uid,
-                        userEmail: user.email,
-                        productId: item.id,
-                        productName: item.name,
-                        size: item.size,
-                        quantity: item.quantity,
-                        price: item.price,
-                        total: item.price * item.quantity,
-                        status: 'completed',
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                        ip: '',
-                        shippingAddress: '',
-                        paymentMethod: 'Card'
-                    });
-                });
-                
-                try {
-                    const ipResponse = await fetch('https://api.ipify.org?format=json');
-                    const ipData = await ipResponse.json();
-                    
-                    cart.items.forEach((item, index) => {
-                        const orderRef = ordersCollection.doc(orderIds[index]);
-                        batch.update(orderRef, {
-                            ip: ipData.ip
-                        });
-                    });
-                } catch (ipError) {
-                    console.error("Error getting IP:", ipError);
-                }
-                
-                await batch.commit();
-                return orderIds;
-                
-            } catch (error) {
-                console.error("Error processing order:", error);
-                throw error;
-            }
-        }
-
-        // Function to update checkout summary
-        function updateCheckoutSummary() {
-            const summaryElement = document.getElementById('checkoutSummary');
-            const totalElement = document.getElementById('checkoutTotal');
-            
-            summaryElement.innerHTML = '';
-            
-            if (cart.items.length === 0) {
-                summaryElement.innerHTML = '<p>No products in cart</p>';
-                totalElement.textContent = '0.00';
-                return;
-            }
-            
-            cart.items.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.className = 'checkout-item';
-                itemElement.innerHTML = `
-                    <div>
-                        <strong>${item.name}</strong> (${item.size})
-                        <br><small>Quantity: ${item.quantity}</small>
-                    </div>
-                    <div>$${(item.price * item.quantity).toFixed(2)}</div>
-                `;
-                summaryElement.appendChild(itemElement);
-            });
-            
-            totalElement.textContent = cart.getTotal().toFixed(2);
-        }
-
-        // Initialization when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize cart
-            cart.init();
-            
-            // Configure cart icon
-            const cartIcon = document.getElementById('cartIcon');
-            const cartDropdown = document.getElementById('cartDropdown');
-            
-            cartIcon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
-            });
-            
-            document.addEventListener('click', () => {
-                cartDropdown.style.display = 'none';
-            });
-            
-            // Add to cart button (normal view)
-            document.getElementById('addToCartBtn').addEventListener('click', () => {
-                const product = {
-                    id: 'hoodie-rider-1',
-                    name: document.querySelector('.product-title').textContent,
-                    price: parseFloat(document.querySelector('.product-price').textContent.replace('$', '')),
-                    size: document.querySelector('.size-option.selected').textContent,
-                    quantity: 1,
-                    image: document.querySelector('.product-image').src
-                };
-                
-                cart.addItem(product);
-            });
-            
-            // Add to cart button (3D view)
-            document.getElementById('addToCartBtn3D').addEventListener('click', () => {
-                const product = {
-                    id: 'hoodie-rider-1',
-                    name: 'HOODIE FOR RIDER ONLY (3D)',
-                    price: parseFloat(document.querySelector('.product-price').textContent.replace('$', '')),
-                    size: document.querySelector('.size-option.selected').textContent,
-                    quantity: 1,
-                    image: 'hoodie.glb'
-                };
-                
-                cart.addItem(product);
-            });
-            
-            // Buy now button (normal view)
-            document.getElementById('buyNowBtn').addEventListener('click', () => {
-                const product = {
-                    id: 'hoodie-rider-1',
-                    name: document.querySelector('.product-title').textContent,
-                    price: parseFloat(document.querySelector('.product-price').textContent.replace('$', '')),
-                    size: document.querySelector('.size-option.selected').textContent,
-                    quantity: 1,
-                    image: document.querySelector('.product-image').src
-                };
-                
-                cart.clear();
-                cart.addItem(product);
-                document.getElementById('checkoutModal').style.display = 'flex';
-                updateCheckoutSummary();
-            });
-            
-            // Buy now button (3D view)
-            document.getElementById('buyNowBtn3D').addEventListener('click', () => {
-                const product = {
-                    id: 'hoodie-rider-1',
-                    name: 'HOODIE FOR RIDER ONLY (3D)',
-                    price: parseFloat(document.querySelector('.product-price').textContent.replace('$', '')),
-                    size: document.querySelector('.size-option.selected').textContent,
-                    quantity: 1,
-                    image: 'hoodie.glb'
-                };
-                
-                cart.clear();
-                cart.addItem(product);
-                document.getElementById('checkoutModal').style.display = 'flex';
-                updateCheckoutSummary();
-            });
-            
-            // Checkout button (from cart dropdown)
-            document.getElementById('checkoutBtn').addEventListener('click', () => {
-                if (cart.getTotalItems() === 0) {
-                    showToast('Cart is empty', 'error');
-                    return;
-                }
-                
-                document.getElementById('checkoutModal').style.display = 'flex';
-                updateCheckoutSummary();
-            });
-            
-            // Confirm purchase button (in checkout modal)
-            document.getElementById('confirmCheckout').addEventListener('click', async () => {
-                try {
-                    const orderIds = await processOrder();
-                    
-                    if (orderIds) {
-                        document.getElementById('checkoutModal').style.display = 'none';
-                        document.getElementById('confirmedSize').textContent = 
-                            cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
-                        document.getElementById('confirmedPrice').textContent = `$${cart.getTotal().toFixed(2)}`;
-                        document.getElementById('orderId').textContent = orderIds.join(', ');
-                        document.getElementById('orderConfirmation').style.display = 'flex';
-                        cart.clear();
-                    }
-                } catch (error) {
-                    showToast('Error processing purchase: ' + error.message, 'error');
-                    console.error("Checkout error:", error);
-                }
-            });
-            
-            // Size selector
-            document.querySelectorAll('.size-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    document.querySelectorAll('.size-option').forEach(opt => {
-                        opt.classList.remove('selected');
-                    });
-                    this.classList.add('selected');
-                });
-            });
-            
-            // Improved authentication system
-            const authLink = document.getElementById('authLink');
-            const loginModal = document.getElementById('loginModal');
-            const closeLogin = document.getElementById('closeLogin');
-            const loginForm = document.getElementById('loginForm');
-            const loginErrorMessage = document.getElementById('loginErrorMessage');
-            
-            function showLoginModal() {
-                loginModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            }
-            
-            authLink.addEventListener('click', (e) => {
-                if (auth.currentUser) {
-                    e.preventDefault();
-                    auth.signOut().then(() => {
-                        showToast('Logged out successfully');
-                    }).catch(error => {
-                        showToast('Error logging out', 'error');
-                    });
-                } else {
-                    e.preventDefault();
-                    showLoginModal();
-                }
-            });
-            
-            closeLogin.addEventListener('click', () => {
-                loginModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-            
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-                
-                auth.signInWithEmailAndPassword(email, password)
-                    .then(() => {
-                        loginModal.style.display = 'none';
-                        document.body.style.overflow = 'auto';
-                        loginErrorMessage.textContent = '';
-                        showToast('Logged in successfully');
-                    })
-                    .catch(error => {
-                        loginErrorMessage.textContent = getAuthErrorMessage(error.code);
-                    });
-            });
-            
-            function getAuthErrorMessage(errorCode) {
-                switch(errorCode) {
-                    case 'auth/invalid-email': return 'Invalid email';
-                    case 'auth/user-disabled': return 'Account disabled';
-                    case 'auth/user-not-found': return 'User not found';
-                    case 'auth/wrong-password': return 'Wrong password';
-                    default: return 'Login error';
-                }
-            }
-            
-            // Improved auth state observer
-            auth.onAuthStateChanged(user => {
-                const authLink = document.getElementById('authLink');
-                if (user) {
-                    authLink.textContent = 'Logout';
-                    authLink.href = '#';
-                } else {
-                    authLink.textContent = 'Login';
-                    authLink.href = 'login.html';
-                }
-            });
-            
-            // Photo gallery
-            const morePhotosBtn = document.getElementById('morePhotosBtn');
-            const photosModal = document.getElementById('photosModal');
-            const closeModal = document.getElementById('closeModal');
-            
-            morePhotosBtn.addEventListener('click', () => {
-                photosModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            });
-            
-            closeModal.addEventListener('click', () => {
-                photosModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-            
-            // View switching
-            const switchBtn = document.getElementById('switchBtn');
-            const productImage = document.getElementById('productImage');
-            let isMainImage = true;
-            const mainImage = 'Hoodie-black.jpeg';
-            const altImage = 'Hoodie-white.jpeg';
-            
-            switchBtn.addEventListener('click', () => {
-                productImage.src = isMainImage ? altImage : mainImage;
-                isMainImage = !isMainImage;
-            });
-        });
-    </script> <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-functions-compat.js">
-</script>
-    <!-- PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=TU_CLIENT_ID_SANDBOX&currency=EUR"></script>
-    <style>
-        /* [Tus estilos CSS existentes...] */
-        /* Añade esto al final de tus estilos existentes */
-        
-        .paypal-button-container {
-            margin-top: 20px;
-            width: 100%;
-        }
-        
-        .payment-options {
-            margin-top: 30px;
-            border-top: 1px solid var(--neon-purple);
-            padding-top: 20px;
-        }
-        
-        .payment-method {
-            display: none;
-        }
-        
-        .payment-method.active {
-            display: block;
-            animation: fadeIn 0.5s ease-out;
-        }
-    </style>
-
-
-    
-    <div id="checkoutModal" class="order-confirmation">
-        <div class="confirmation-content">
-            <h2 class="confirmation-title">Order Summary</h2>
-            <div class="checkout-summary" id="checkoutSummary">
-                <!-- Cart items will be added here -->
-            </div>
-            <div class="cart-total" style="text-align: right; font-size: 1.2rem;">
-                Total: €<span id="checkoutTotal">0.00</span>
-            </div>
-            
-            <div class="payment-options">
-                <h3>Payment Method:</h3>
-                <div class="action-buttons" style="margin-bottom: 20px;">
-                    <button class="btn btn-primary" id="payWithCardBtn">Credit Card</button>
-                    <button class="btn btn-secondary" id="payWithPayPalBtn">PayPal</button>
-                </div>
-                
-                <div id="cardPayment" class="payment-method">
-                    <!-- Formulario de tarjeta (simulado) -->
-                    <div style="margin-bottom: 20px;">
-                        <input type="text" placeholder="Card Number" style="width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); color: white;">
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" placeholder="MM/YY" style="flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); color: white;">
-                            <input type="text" placeholder="CVV" style="flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); color: white;">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" id="confirmCardPayment" style="width: 100%;">Pay with Card</button>
-                </div>
-                
-                <div id="paypalPayment" class="payment-method">
-                    <div class="paypal-button-container" id="paypalButtonContainer"></div>
-                </div>
-            </div>
-            
-            <div class="action-buttons" style="margin-top: 20px;">
-                <button class="btn btn-secondary" onclick="document.getElementById('checkoutModal').style.display = 'none'">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-
-    <script>
-        // [Tu configuración de Firebase existente...]
-        
-        // Configuración de PayPal
-        let paypalButtons;
-        
-        // Función para inicializar los botones de PayPal
-        function initPayPalButtons(total) {
-            if (paypalButtons) {
-                paypalButtons.close();
-            }
-            
-            paypalButtons = paypal.Buttons({
-                createOrder: function(data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: total.toString(),
-                                currency_code: "EUR"
-                            }
-                        }]
-                    });
-                },
-                onApprove: async function(data, actions) {
-                    try {
-                        const orderIds = await processOrder('paypal', data.orderID);
-                        
-                        if (orderIds) {
-                            document.getElementById('checkoutModal').style.display = 'none';
-                            document.getElementById('confirmedSize').textContent = 
-                                cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
-                            document.getElementById('confirmedPrice').textContent = `€${cart.getTotal().toFixed(2)}`;
-                            document.getElementById('orderId').textContent = orderIds.join(', ');
-                            document.getElementById('orderConfirmation').style.display = 'flex';
-                            cart.clear();
-                            
-                            // Mostrar ID de transacción de PayPal
-                            const paypalInfo = document.createElement('p');
-                            paypalInfo.innerHTML = `PayPal ID: <strong>${data.orderID}</strong>`;
-                            document.querySelector('.order-details').appendChild(paypalInfo);
-                        }
-                    } catch (error) {
-                        showToast('Error processing PayPal payment: ' + error.message, 'error');
-                        console.error("PayPal error:", error);
-                    }
-                },
-                onError: function(err) {
-                    showToast('PayPal error: ' + err.message, 'error');
-                    console.error("PayPal error:", err);
-                }
-            });
-            
-            paypalButtons.render('#paypalButtonContainer');
-        }
-
-        // Función para procesar el pedido (actualizada)
         async function processOrder(paymentMethod, paymentId = '') {
             const user = auth.currentUser;
             
@@ -1424,7 +1025,7 @@
                 await batch.commit();
                 
                 // Enviar email de confirmación a través de Cloud Functions
-                const sendOrderEmail = firebase.functions().httpsCallable('sendOrderEmail');
+                const sendOrderEmail = functions.httpsCallable('sendOrderEmail');
                 await sendOrderEmail({
                     orderIds: orderIds,
                     customerEmail: user.email,
@@ -1439,48 +1040,272 @@
             }
         }
 
-        // [El resto de tus funciones existentes...]
-        
-        // Event listeners para métodos de pago
-        document.addEventListener('DOMContentLoaded', () => {
-            // [Tu inicialización existente...]
+        // Function to update checkout summary
+        function updateCheckoutSummary() {
+            const summaryElement = document.getElementById('checkoutSummary');
+            const totalElement = document.getElementById('checkoutTotal');
             
-            // Configurar botones de método de pago
-            document.getElementById('payWithCardBtn').addEventListener('click', () => {
+            summaryElement.innerHTML = '';
+            
+            if (cart.items.length === 0) {
+                summaryElement.innerHTML = '<p>No products in cart</p>';
+                totalElement.textContent = '0.00';
+                return;
+            }
+            
+            cart.items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'checkout-item';
+                itemElement.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong> (${item.size})
+                        <br><small>Quantity: ${item.quantity}</small>
+                    </div>
+                    <div>€${(item.price * item.quantity).toFixed(2)}</div>
+                `;
+                summaryElement.appendChild(itemElement);
+            });
+            
+            totalElement.textContent = cart.getTotal().toFixed(2);
+        }
+
+        // PayPal integration
+        let paypalButtons;
+        
+        function initPayPalButtons(total) {
+            if (paypalButtons) {
+                paypalButtons.close();
+            }
+            
+            paypalButtons = paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: total.toString(),
+                                currency_code: "EUR"
+                            }
+                        }]
+                    });
+                },
+                onApprove: async function(data, actions) {
+                    try {
+                        const orderIds = await processOrder('paypal', data.orderID);
+                        
+                        if (orderIds) {
+                            document.getElementById('checkoutModal').style.display = 'none';
+                            document.getElementById('confirmedSize').textContent = 
+                            cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
+                            document.getElementById('orderId').textContent = orderIds.join(', ');
+                            document.getElementById('paymentMethod').textContent = 'PayPal';
+                            document.getElementById('orderConfirmation').style.display = 'flex';
+                            
+                            // Clear cart after successful purchase
+                            cart.clear();
+                        }
+                    } catch (error) {
+                        console.error("Error processing PayPal payment:", error);
+                        showToast('Error processing payment. Please try again.', 'error');
+                    }
+                },
+                onError: function(err) {
+                    console.error("PayPal error:", err);
+                    showToast('Error processing PayPal payment. Please try again.', 'error');
+                }
+            });
+            
+            paypalButtons.render('#paypalButtonContainer');
+        }
+
+        // DOM Content Loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize cart
+            cart.init();
+            
+            // Switch between product views
+            const switchBtn = document.getElementById('switchBtn');
+            const tabs = document.getElementById('tabs');
+            
+            switchBtn.addEventListener('click', function() {
+                tabs.style.transform = tabs.style.transform === 'translateX(-50%)' ? 'translateX(0)' : 'translateX(-50%)';
+            });
+            
+            // Photo gallery modal
+            const morePhotosBtn = document.getElementById('morePhotosBtn');
+            const photosModal = document.getElementById('photosModal');
+            const closeModal = document.getElementById('closeModal');
+            
+            morePhotosBtn.addEventListener('click', function() {
+                photosModal.style.display = 'block';
+            });
+            
+            closeModal.addEventListener('click', function() {
+                photosModal.style.display = 'none';
+            });
+            
+            // Login modal
+            const authLink = document.getElementById('authLink');
+            const loginModal = document.getElementById('loginModal');
+            const closeLogin = document.getElementById('closeLogin');
+            const loginForm = document.getElementById('loginForm');
+            
+            authLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginModal.style.display = 'block';
+            });
+            
+            closeLogin.addEventListener('click', function() {
+                loginModal.style.display = 'none';
+            });
+            
+            // Login form handler
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                const errorMessage = document.getElementById('loginErrorMessage');
+                
+                try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    loginModal.style.display = 'none';
+                    authLink.textContent = 'Logout';
+                    showToast('Login successful');
+                } catch (error) {
+                    console.error("Login error:", error);
+                    errorMessage.textContent = error.message;
+                }
+            });
+            
+            // Auth state listener
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    authLink.textContent = 'Logout';
+                    authLink.onclick = function(e) {
+                        e.preventDefault();
+                        auth.signOut();
+                    };
+                } else {
+                    authLink.textContent = 'Login';
+                    authLink.onclick = function(e) {
+                        e.preventDefault();
+                        loginModal.style.display = 'block';
+                    };
+                }
+            });
+            
+            // Size selection
+            document.querySelectorAll('.size-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.size-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Add to cart buttons
+            function addToCartHandler() {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
+                const price = parseFloat(document.querySelector('.product-price').textContent.replace('€', ''));
+                
+                const product = {
+                    id: 'hoodie-rider',
+                    name: 'HOODIE FOR RIDER',
+                    image: 'Hoodie-white.jpeg',
+                    size: selectedSize,
+                    price: price,
+                    quantity: 1
+                };
+                
+                cart.addItem(product);
+            }
+            
+            document.getElementById('addToCartBtn').addEventListener('click', addToCartHandler);
+            document.getElementById('addToCartBtn3D').addEventListener('click', addToCartHandler);
+            
+            // Buy now buttons
+            function buyNowHandler() {
+                addToCartHandler();
+                document.getElementById('checkoutModal').style.display = 'flex';
+                updateCheckoutSummary();
+            }
+            
+            document.getElementById('buyNowBtn').addEventListener('click', buyNowHandler);
+            document.getElementById('buyNowBtn3D').addEventListener('click', buyNowHandler);
+            
+            // Cart icon toggle
+            document.getElementById('cartIcon').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const dropdown = document.getElementById('cartDropdown');
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            });
+            
+            // Close cart dropdown when clicking outside
+            document.addEventListener('click', function() {
+                document.getElementById('cartDropdown').style.display = 'none';
+            });
+            
+            // Checkout button
+            document.getElementById('checkoutBtn').addEventListener('click', function() {
+                if (cart.getTotalItems() === 0) {
+                    showToast('Your cart is empty', 'error');
+                    return;
+                }
+                
+                document.getElementById('checkoutModal').style.display = 'flex';
+                updateCheckoutSummary();
+            });
+            
+            // Payment method selection
+            document.getElementById('payWithCardBtn').addEventListener('click', function() {
                 document.getElementById('cardPayment').classList.add('active');
                 document.getElementById('paypalPayment').classList.remove('active');
             });
             
-            document.getElementById('payWithPayPalBtn').addEventListener('click', () => {
+            document.getElementById('payWithPayPalBtn').addEventListener('click', function() {
                 document.getElementById('paypalPayment').classList.add('active');
                 document.getElementById('cardPayment').classList.remove('active');
                 initPayPalButtons(cart.getTotal().toFixed(2));
             });
             
-            // Pago con tarjeta (simulado)
-            document.getElementById('confirmCardPayment').addEventListener('click', async () => {
+            // Simulate card payment
+            document.getElementById('confirmCardPayment').addEventListener('click', async function() {
                 try {
-                    const orderIds = await processOrder('card');
+                    const orderIds = await processOrder('credit_card');
                     
                     if (orderIds) {
                         document.getElementById('checkoutModal').style.display = 'none';
                         document.getElementById('confirmedSize').textContent = 
                             cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
-                        document.getElementById('confirmedPrice').textContent = `€${cart.getTotal().toFixed(2)}`;
                         document.getElementById('orderId').textContent = orderIds.join(', ');
+                        document.getElementById('paymentMethod').textContent = 'Credit Card';
                         document.getElementById('orderConfirmation').style.display = 'flex';
+                        
+                        // Clear cart after successful purchase
                         cart.clear();
                     }
                 } catch (error) {
-                    showToast('Error processing payment: ' + error.message, 'error');
-                    console.error("Payment error:", error);
+                    console.error("Error processing card payment:", error);
+                    showToast('Error processing payment. Please try again.', 'error');
                 }
             });
             
-            // Por defecto mostrar PayPal
-            document.getElementById('payWithPayPalBtn').click();
+            // Close modals when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === document.getElementById('loginModal')) {
+                    document.getElementById('loginModal').style.display = 'none';
+                }
+                if (event.target === document.getElementById('photosModal')) {
+                    document.getElementById('photosModal').style.display = 'none';
+                }
+                if (event.target === document.getElementById('orderConfirmation')) {
+                    document.getElementById('orderConfirmation').style.display = 'none';
+                }
+                if (event.target === document.getElementById('checkoutModal')) {
+                    document.getElementById('checkoutModal').style.display = 'none';
+                }
+            });
         });
     </script>
-    
 </body>
 </html>
