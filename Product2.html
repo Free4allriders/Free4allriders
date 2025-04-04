@@ -1257,6 +1257,230 @@
                 isMainImage = !isMainImage;
             });
         });
+    </script> <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-functions-compat.js">
+</script>
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=TU_CLIENT_ID_SANDBOX&currency=EUR"></script>
+    <style>
+        /* [Tus estilos CSS existentes...] */
+        /* Añade esto al final de tus estilos existentes */
+        
+        .paypal-button-container {
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .payment-options {
+            margin-top: 30px;
+            border-top: 1px solid var(--neon-purple);
+            padding-top: 20px;
+        }
+        
+        .payment-method {
+            display: none;
+        }
+        
+        .payment-method.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+
+
+    
+    <div id="checkoutModal" class="order-confirmation">
+        <div class="confirmation-content">
+            <h2 class="confirmation-title">Order Summary</h2>
+            <div class="checkout-summary" id="checkoutSummary">
+                <!-- Cart items will be added here -->
+            </div>
+            <div class="cart-total" style="text-align: right; font-size: 1.2rem;">
+                Total: €<span id="checkoutTotal">0.00</span>
+            </div>
+            
+            <div class="payment-options">
+                <h3>Payment Method:</h3>
+                <div class="action-buttons" style="margin-bottom: 20px;">
+                    <button class="btn btn-primary" id="payWithCardBtn">Credit Card</button>
+                    <button class="btn btn-secondary" id="payWithPayPalBtn">PayPal</button>
+                </div>
+                
+                <div id="cardPayment" class="payment-method">
+                    <!-- Formulario de tarjeta (simulado) -->
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" placeholder="Card Number" style="width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); color: white;">
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" placeholder="MM/YY" style="flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); color: white;">
+                            <input type="text" placeholder="CVV" style="flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); color: white;">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="confirmCardPayment" style="width: 100%;">Pay with Card</button>
+                </div>
+                
+                <div id="paypalPayment" class="payment-method">
+                    <div class="paypal-button-container" id="paypalButtonContainer"></div>
+                </div>
+            </div>
+            
+            <div class="action-buttons" style="margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="document.getElementById('checkoutModal').style.display = 'none'">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // [Tu configuración de Firebase existente...]
+        
+        // Configuración de PayPal
+        let paypalButtons;
+        
+        // Función para inicializar los botones de PayPal
+        function initPayPalButtons(total) {
+            if (paypalButtons) {
+                paypalButtons.close();
+            }
+            
+            paypalButtons = paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: total.toString(),
+                                currency_code: "EUR"
+                            }
+                        }]
+                    });
+                },
+                onApprove: async function(data, actions) {
+                    try {
+                        const orderIds = await processOrder('paypal', data.orderID);
+                        
+                        if (orderIds) {
+                            document.getElementById('checkoutModal').style.display = 'none';
+                            document.getElementById('confirmedSize').textContent = 
+                                cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
+                            document.getElementById('confirmedPrice').textContent = `€${cart.getTotal().toFixed(2)}`;
+                            document.getElementById('orderId').textContent = orderIds.join(', ');
+                            document.getElementById('orderConfirmation').style.display = 'flex';
+                            cart.clear();
+                            
+                            // Mostrar ID de transacción de PayPal
+                            const paypalInfo = document.createElement('p');
+                            paypalInfo.innerHTML = `PayPal ID: <strong>${data.orderID}</strong>`;
+                            document.querySelector('.order-details').appendChild(paypalInfo);
+                        }
+                    } catch (error) {
+                        showToast('Error processing PayPal payment: ' + error.message, 'error');
+                        console.error("PayPal error:", error);
+                    }
+                },
+                onError: function(err) {
+                    showToast('PayPal error: ' + err.message, 'error');
+                    console.error("PayPal error:", err);
+                }
+            });
+            
+            paypalButtons.render('#paypalButtonContainer');
+        }
+
+        // Función para procesar el pedido (actualizada)
+        async function processOrder(paymentMethod, paymentId = '') {
+            const user = auth.currentUser;
+            
+            if (!user) {
+                showToast('Please log in to continue', 'error');
+                document.getElementById('loginModal').style.display = 'block';
+                return null;
+            }
+            
+            try {
+                const batch = db.batch();
+                const ordersCollection = db.collection('orders');
+                const orderIds = [];
+                
+                // Crear documentos para cada item en el carrito
+                cart.items.forEach(item => {
+                    const orderRef = ordersCollection.doc();
+                    orderIds.push(orderRef.id);
+                    
+                    batch.set(orderRef, {
+                        userId: user.uid,
+                        userEmail: user.email,
+                        productId: item.id,
+                        productName: item.name,
+                        size: item.size,
+                        quantity: item.quantity,
+                        price: item.price,
+                        total: item.price * item.quantity,
+                        status: 'paid',
+                        paymentMethod: paymentMethod,
+                        paymentId: paymentId,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        shippingStatus: 'processing'
+                    });
+                });
+                
+                await batch.commit();
+                
+                // Enviar email de confirmación a través de Cloud Functions
+                const sendOrderEmail = firebase.functions().httpsCallable('sendOrderEmail');
+                await sendOrderEmail({
+                    orderIds: orderIds,
+                    customerEmail: user.email,
+                    total: cart.getTotal().toFixed(2)
+                });
+                
+                return orderIds;
+                
+            } catch (error) {
+                console.error("Error processing order:", error);
+                throw error;
+            }
+        }
+
+        // [El resto de tus funciones existentes...]
+        
+        // Event listeners para métodos de pago
+        document.addEventListener('DOMContentLoaded', () => {
+            // [Tu inicialización existente...]
+            
+            // Configurar botones de método de pago
+            document.getElementById('payWithCardBtn').addEventListener('click', () => {
+                document.getElementById('cardPayment').classList.add('active');
+                document.getElementById('paypalPayment').classList.remove('active');
+            });
+            
+            document.getElementById('payWithPayPalBtn').addEventListener('click', () => {
+                document.getElementById('paypalPayment').classList.add('active');
+                document.getElementById('cardPayment').classList.remove('active');
+                initPayPalButtons(cart.getTotal().toFixed(2));
+            });
+            
+            // Pago con tarjeta (simulado)
+            document.getElementById('confirmCardPayment').addEventListener('click', async () => {
+                try {
+                    const orderIds = await processOrder('card');
+                    
+                    if (orderIds) {
+                        document.getElementById('checkoutModal').style.display = 'none';
+                        document.getElementById('confirmedSize').textContent = 
+                            cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
+                        document.getElementById('confirmedPrice').textContent = `€${cart.getTotal().toFixed(2)}`;
+                        document.getElementById('orderId').textContent = orderIds.join(', ');
+                        document.getElementById('orderConfirmation').style.display = 'flex';
+                        cart.clear();
+                    }
+                } catch (error) {
+                    showToast('Error processing payment: ' + error.message, 'error');
+                    console.error("Payment error:", error);
+                }
+            });
+            
+            // Por defecto mostrar PayPal
+            document.getElementById('payWithPayPalBtn').click();
+        });
     </script>
+    
 </body>
 </html>
