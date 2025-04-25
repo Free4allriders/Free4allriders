@@ -713,7 +713,20 @@
             <button class="tab-btn active" onclick="showTab(0)">VISTA CLÁSICA</button>
             <button class="tab-btn" onclick="showTab(1)">EXPERIENCIA 3D</button>
         </div>
-        
+
+        <style>
+        h1.gradient-title {
+            font-family: 'Arial', sans-serif;
+            font-size: 2.5em;
+            background: linear-gradient(90deg, #FF6680, #FF4DA9, #CD42D7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            margin: 20px 0;
+        }
+    </style>
+
         <div class="swipe-indicator">← Desliza para cambiar entre vistas →</div>
         
         <!-- Contenedor de Pestañas -->
@@ -730,7 +743,7 @@
                     </div>
                     
                     <div class="details-section">
-                        <h1 class="product-title">Camiseta </h1>
+                        <h1 class="gradient-title">Camiseta </h1>
                         <div class="product-price">25€</div>
                         
                         <p class="product-description">
