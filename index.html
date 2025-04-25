@@ -762,6 +762,36 @@
             </div>
         </div>
     </div>
+        .graphic-title {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg,
+                #8a00ff 0%,    /* Deep purple */
+                #d800ff 30%,   /* Electric purple */
+                #ff00cc 60%,   /* Hot pink */
+                #00f7ff 90%);  /* Cyan accent */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            text-shadow: 
+                0 0 10px rgba(138, 0, 255, 0.3),
+                0 0 3px rgba(255,255,255,0.5); /* White edge detail */
+        }
+
+        .graphic-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                rgba(255,255,255,0.8),
+                rgba(0,247,255,0.5));
+        }
+    </style>
 
     <!-- Hero Section -->
     <div class="header-image">
@@ -770,7 +800,7 @@
             <div class="hero">
                 <h1>            <br>        <br>          </h1>
                 <p>                                            </p> <br>
-                <p>Premium ski clothing designed for extreme performance and style</p>
+                <p class="graphic-title">Premium ski clothing designed for extreme performance and style</p>
                 <a href="#model" class="btn-magnetic">View 3D Collection</a>
             </div>
         </div>
