@@ -990,7 +990,7 @@
                 const createCheckoutSession = functions.httpsCallable('createStripeCheckoutSession');
                 const result = await createCheckoutSession({
                     items: cart.items,
-                    orderId: prod_SysnTTt2DbAh3s
+                    orderId: orderId
                 });
                 
                 // 3. Redirigir a Stripe Checkout
