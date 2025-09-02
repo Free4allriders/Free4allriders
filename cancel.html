@@ -1,1 +1,206 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Cancelled - Free4AllRiders</title>
+    <link rel="icon" type="image/png" href="Head-imatge.PNG">
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-purple: #9d00ff;
+            --dark-purple: #4b0082;
+            --black: #000000;
+            --white: #ffffff;
+            --glow-effect: 0 0 10px rgba(157, 0, 255, 0.7), 
+                          0 0 20px rgba(255, 0, 255, 0.5);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .cancel-container {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            border: 1px solid #ff5555;
+            box-shadow: 0 0 10px rgba(255, 85, 85, 0.7), 
+                        0 0 20px rgba(255, 85, 85, 0.5);
+        }
+        
+        .cancel-icon {
+            font-size: 80px;
+            color: #ff5555;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ff5555;
+        }
+        
+        h1 {
+            color: #ff5555;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff5555;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        
+        .order-details {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ff5555;
+            margin: 25px 0;
+            text-align: left;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .detail-label {
+            color: #ff5555;
+            font-weight: bold;
+        }
+        
+        .detail-value {
+            color: var(--white);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #ff5555;
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 10px;
+            transition: all 0.3s;
+            border: 1px solid #ff5555;
+        }
+        
+        .btn:hover {
+            background-color: #ff3333;
+            box-shadow: 0 0 15px rgba(255, 85, 85, 0.7);
+            transform: translateY(-3px);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: #ff5555;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 85, 85, 0.2);
+        }
+        
+        .help-text {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+        
+        .help-text a {
+            color: var(--neon-purple);
+            text-decoration: none;
+        }
+        
+        .help-text a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .cancel-container {
+                padding: 20px;
+            }
+            
+            .cancel-icon {
+                font-size: 60px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cancel-container">
+        <div class="cancel-icon">✗</div>
+        <h1>Payment Cancelled</h1>
+        <p>Your payment was not completed. No charges have been made to your account.</p>
+        
+        <div class="order-details">
+            <div class="detail-item">
+                <span class="detail-label">Order ID:</span>
+                <span class="detail-value" id="orderId">Loading...</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value" style="color: #ff5555;">Cancelled</span>
+            </div>
+        </div>
+        
+        <p>If this was a mistake, you can complete your purchase by returning to your cart.</p>
+        
+        <div>
+            <a href="index.html" class="btn">Return to Store</a>
+            <a href="#" class="btn btn-secondary" id="retryBtn">Retry Payment</a>
+        </div>
+        
+        <div class="help-text">
+            <p>Need help? <a href="Contact.html">Contact our support team</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get order ID from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('order_id');
+            
+            // Display order ID
+            if (orderId) {
+                document.getElementById('orderId').textContent = orderId;
+                
+                // Store the order ID for potential retry
+                localStorage.setItem('cancelled_order_id', orderId);
+            } else {
+                document.getElementById('orderId').textContent = 'Not available';
+            }
+            
+            // Retry button handler
+            document.getElementById('retryBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // In a real implementation, this would redirect to the checkout page
+                // with the stored order items. For now, we'll just show a message.
+                alert('In a complete implementation, this would redirect you to retry your payment. Please return to your cart to complete your purchase.');
+            });
+        });
+    </script>
+</body>
+</html>
