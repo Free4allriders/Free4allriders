@@ -800,43 +800,85 @@
     </div>
 
     <!-- 3D Model Section -->
-    <section id="model" class="model-section">
-        <span class="section-title">3D PREVIEW</span>
-        <h2 class="section-heading">Interactive Product Experience</h2>
+   <!-- 3D Model Section -->
+<section id="model" class="model-section">
+    <span class="section-title">3D PREVIEW</span>
+    <h2 class="section-heading">Interactive Product Experience</h2>
+    <p class="section-description">
+        Rotate and explore our latest ski jacket design in 3D
+    </p>
+    
+    <model-viewer 
+        src="tshirt_2025-09-02T15-25-36.glb" 
+        alt="FREE4ALLRIDERS Hoodie 3D Model"
+        camera-controls
+        auto-rotate
+        auto-rotate-delay="1000"
+        shadow-intensity="1"
+        exposure="1.2"
+        environment-image="neutral"
+        style="width: 100%; height: 500px; margin: 0 auto;">
+        
+        <div class="progress-bar" slot="progress-bar">
+            <div class="update-bar" style="background-color: var(--electric);"></div>
+        </div>
+        
+        <button slot="ar-button" style="background-color: var(--electric); color: white; border-radius: 20px; padding: 12px 24px; border: none; cursor: pointer;">
+            View in AR
+        </button>
+        
+        <div slot="error" style="color: white; background: rgba(255,0,0,0.5); padding: 20px; border-radius: 8px;">
+            3D viewer not supported in your browser. Try Chrome or Edge.
+        </div>
+    </model-viewer>
+    
+    <!-- Video Gallery -->
+    <div class="video-gallery" style="margin-top: 80px;">
+        <span class="section-title">BEHIND THE DESIGN</span>
+        <h2 class="section-heading">Creation Process</h2>
         <p class="section-description">
-            Rotate and explore our latest ski jacket design in 3D
+            Discover how our products come to life from concept to final design
         </p>
         
-        <model-viewer 
-            src="tshirt_2025-09-02T15-25-36.glb" 
-            alt="FREE4ALLRIDERS Hoodie 3D Model"
-            camera-controls
-            auto-rotate
-            auto-rotate-delay="1000"
-            shadow-intensity="1"
-            exposure="1.2"
-            environment-image="neutral"
-            style="width: 100%; height: 500px; margin: 0 auto;">
-            
-            <div class="progress-bar" slot="progress-bar">
-                <div class="update-bar" style="background-color: var(--electric);"></div>
+        <div class="video-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 30px; margin-top: 40px;">
+            <div class="video-item" style="background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; border: 1px solid rgba(247,123,255,0.1);">
+                <video 
+                    controls 
+                    style="width: 100%; height: auto; display: block;"
+                    poster=""
+                    preload="metadata">
+                    <source src="dazeign-export-1366x613-2025-09-02T20-09-18.webm" type="video/webm">
+                    Your browser does not support the video tag.
+                </video>
+                <div style="padding: 20px; text-align: center;">
+                    <h4 style="color: var(--electric); margin-bottom: 10px;">Design Concept #1</h4>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 14px;">Initial design exploration for our premium collection</p>
+                </div>
             </div>
             
-            <button slot="ar-button" style="background-color: var(--electric); color: white; border-radius: 20px; padding: 12px 24px; border: none; cursor: pointer;">
-                View in AR
-            </button>
-            
-            <div slot="error" style="color: white; background: rgba(255,0,0,0.5); padding: 20px; border-radius: 8px;">
-                3D viewer not supported in your browser. Try Chrome or Edge.
+            <div class="video-item" style="background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; border: 1px solid rgba(247,123,255,0.1);">
+                <video 
+                    controls 
+                    style="width: 100%; height: auto; display: block;"
+                    poster=""
+                    preload="metadata">
+                    <source src="dazeign-export-1366x613-2025-09-02T20-35-03.webm" type="video/webm">
+                    Your browser does not support the video tag.
+                </video>
+                <div style="padding: 20px; text-align: center;">
+                    <h4 style="color: var(--electric); margin-bottom: 10px;">Design Concept #2</h4>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 14px;">Advanced technical features visualization</p>
+                </div>
             </div>
-        </model-viewer>
-        
-        <div style="margin-top: 20px;">
-            <p style="color: var(--neon-cyan); font-size: 14px;">
-                Drag to rotate • Scroll to zoom • Click/touch to interact
-            </p>
         </div>
-    </section>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <p style="color: var(--neon-cyan); font-size: 14px;">
+            Drag to rotate • Scroll to zoom • Click/touch to interact
+        </p>
+    </div>
+</section>
        <!-- Products section -->
 <section id="products" class="product-showcase">
     <span class="section-title">OUR COLLECTION</span>
