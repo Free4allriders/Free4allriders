@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +11,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-functions-compat.js"></script>
+    <!-- Stripe SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
         :root {
             --neon-pink: #ff00ff;
@@ -829,8 +831,12 @@
             console.error("Error initializing Firebase:", error);
         }
 
+        // Stripe Initialization - REEMPLAZA CON TU CLAVE PÚBLICA
+        const stripe = Stripe('pk_test_tu_clave_publica_aqui');
+
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const functions = firebase.functions();
         const CART_STORAGE_KEY = 'free4all_cart_v2';
 
         // Cart object
@@ -952,8 +958,8 @@
             }, 3000);
         }
 
-        // Function to process the order
-        async function processOrder() {
+        // Function to process the order with Stripe
+        async function processOrderWithStripe() {
             const user = auth.currentUser;
             
             if (!user) {
@@ -963,47 +969,40 @@
             }
             
             try {
-                const batch = db.batch();
-                const ordersCollection = db.collection('orders');
-                const orderIds = [];
+                // 1. Crear la orden en Firestore
+                const orderRef = db.collection('orders').doc();
+                const orderId = orderRef.id;
                 
-                cart.items.forEach(item => {
-                    const orderRef = ordersCollection.doc();
-                    orderIds.push(orderRef.id);
-                    
-                    batch.set(orderRef, {
-                        userId: user.uid,
-                        userEmail: user.email,
-                        productId: item.id,
-                        productName: item.name,
-                        size: item.size,
-                        quantity: item.quantity,
-                        price: item.price,
-                        total: item.price * item.quantity,
-                        status: 'completed',
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                        ip: '',
-                        shippingAddress: '',
-                        paymentMethod: 'Card'
-                    });
+                const orderData = {
+                    orderId: orderId,
+                    userId: user.uid,
+                    userEmail: user.email,
+                    items: cart.items,
+                    total: cart.getTotal(),
+                    status: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    paymentMethod: 'Stripe'
+                };
+                
+                await orderRef.set(orderData);
+                
+                // 2. Llamar a la Cloud Function para crear sesión de pago
+                const createCheckoutSession = functions.httpsCallable('createStripeCheckoutSession');
+                const result = await createCheckoutSession({
+                    items: cart.items,
+                    orderId: orderId
                 });
                 
-                try {
-                    const ipResponse = await fetch('https://api.ipify.org?format=json');
-                    const ipData = await ipResponse.json();
-                    
-                    cart.items.forEach((item, index) => {
-                        const orderRef = ordersCollection.doc(orderIds[index]);
-                        batch.update(orderRef, {
-                            ip: ipData.ip
-                        });
-                    });
-                } catch (ipError) {
-                    console.error("Error getting IP:", ipError);
+                // 3. Redirigir a Stripe Checkout
+                const { error } = await stripe.redirectToCheckout({
+                    sessionId: result.data.sessionId,
+                });
+                
+                if (error) {
+                    throw new Error(error.message);
                 }
                 
-                await batch.commit();
-                return orderIds;
+                return orderId;
                 
             } catch (error) {
                 console.error("Error processing order:", error);
@@ -1134,14 +1133,14 @@
             // Confirm purchase button (in checkout modal)
             document.getElementById('confirmCheckout').addEventListener('click', async () => {
                 try {
-                    const orderIds = await processOrder();
+                    const orderId = await processOrderWithStripe();
                     
-                    if (orderIds) {
+                    if (orderId) {
                         document.getElementById('checkoutModal').style.display = 'none';
                         document.getElementById('confirmedSize').textContent = 
                             cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
                         document.getElementById('confirmedPrice').textContent = `$${cart.getTotal().toFixed(2)}`;
-                        document.getElementById('orderId').textContent = orderIds.join(', ');
+                        document.getElementById('orderId').textContent = orderId;
                         document.getElementById('orderConfirmation').style.display = 'flex';
                         cart.clear();
                     }
