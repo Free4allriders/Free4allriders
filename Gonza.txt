@@ -1,6 +1,0 @@
--Calma
--Estoy por ahi unas 4 horas
--Un amigo trabaja en los dieños 3D
--No desmontes la web
--No compartas la ApiKey con nadie
--Firebase backend -falta login lo hare cuando vuelva
