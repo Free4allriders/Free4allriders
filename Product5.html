@@ -996,30 +996,17 @@
 
         // Function to process the order with Stripe
         async function processOrderWithStripe() {
-    console.log('=== INICIANDO PROCESO DE PAGO ===');
-    
-    // Mostrar loading
-    const loadingOverlay = document.createElement('div');
-    loadingOverlay.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-        background: rgba(0,0,0,0.9); display: flex; justify-content: center; 
-        align-items: center; z-index: 3000; flex-direction: column;
-    `;
-    loadingOverlay.innerHTML = `
-        <div style="border: 4px solid rgba(255, 255, 255, 0.3); border-radius: 50%; 
-                   border-top: 4px solid #f77bff; width: 50px; height: 50px; 
-                   animation: spin 1s linear infinite;"></div>
-        <p style="color: #f77bff; margin-top: 20px;">Processing your payment...</p>
-    `;
-    document.body.appendChild(loadingOverlay);
-    
     try {
-        console.log('1. Creando orden en Firestore...');
+        console.log('Iniciando proceso de pago...');
         
-        // 1. CREAR LA ORDEN EN FIRESTORE
+        // Verificar que el carrito tiene items
+        if (!cart.items || cart.items.length === 0) {
+            throw new Error('El carrito está vacío');
+        }
+
+        // Crear orden en Firestore primero
         const orderRef = db.collection('orders').doc();
         const orderId = orderRef.id;
-        
         const user = auth.currentUser;
 
         const orderData = {
@@ -1034,89 +1021,46 @@
         };
         
         await orderRef.set(orderData);
-        console.log('✓ Orden creada en Firestore con ID:', orderId);
-        
-        // Guardar info para la página de éxito
-        localStorage.setItem('last_order', JSON.stringify({
-            id: orderId,
-            total: cart.getTotal(),
-            items: cart.items
-        }));
-        
-        console.log('2. Llamando a Cloud Function...');
-        console.log('Datos a enviar:', {
-            items: cart.items,
-            orderId: orderId,
-            customerEmail: user ? user.email : null
-        });
-        
-        // 2. LLAMAR A LA CLOUD FUNCTION
-        const createCheckoutSession = functions.httpsCallable('createStripeCheckoutSession');
-        const result = await createCheckoutSession({
+        console.log('Orden creada en Firestore:', orderId);
+
+        // Preparar datos para Stripe
+        const stripeData = {
             items: cart.items.map(item => ({
                 id: item.id,
                 name: item.name,
                 price: item.price,
                 quantity: item.quantity,
-                image: item.image
+                image: item.image || ''
             })),
             orderId: orderId,
             customerEmail: user ? user.email : null
-        });
+        };
+
+        console.log('Enviando a Stripe:', stripeData);
+
+        // Llamar a la Cloud Function
+        const createCheckoutSession = functions.httpsCallable('createStripeCheckoutSession');
+        const result = await createCheckoutSession(stripeData);
         
-        console.log('✓ Cloud Function respondió:', result);
-        
-        if (!result.data.success) {
-            throw new Error(result.data.message || 'Error creating payment session');
+        console.log('Respuesta de Stripe:', result.data);
+
+        // Redirigir a Stripe
+        if (result.data.success && result.data.sessionId) {
+            const stripe = Stripe('pk_test_tu_clave_publica_aqui');
+            const { error } = await stripe.redirectToCheckout({
+                sessionId: result.data.sessionId
+            });
+            
+            if (error) {
+                throw new Error(error.message);
+            }
+        } else {
+            throw new Error('No session ID received');
         }
-        
-        console.log('3. Redirigiendo a Stripe con sessionId:', result.data.sessionId);
-        
-        // 3. REDIRIGIR A STRIPE
-        const sessionId = result.data.sessionId;
-        
-        // Verificar que el sessionId es válido
-        if (!sessionId || !sessionId.startsWith('cs_')) {
-            throw new Error('Invalid session ID received from server: ' + sessionId);
-        }
-        
-        // Redirigir usando el método de Stripe
-        const { error } = await stripe.redirectToCheckout({
-            sessionId: sessionId
-        });
-        
-        if (error) {
-            console.error('✗ Error de redirección a Stripe:', error);
-            throw new Error(error.message);
-        }
-        
-        console.log('✓ Redirección a Stripe exitosa');
         
     } catch (error) {
-        console.error('✗ ERROR en el proceso:', error);
-        
-        // Remover loading
-        loadingOverlay.remove();
-        
-        // Cerrar modal de checkout
-        document.getElementById('checkoutModal').style.display = 'none';
-        
-        // Mostrar error específico
-        let errorMessage = 'Error processing payment: ';
-        
-        if (error.message.includes('invalid-argument')) {
-            errorMessage += 'Invalid product information. Please try again.';
-        } else if (error.message.includes('payment processor')) {
-            errorMessage += 'Payment processor error. Please contact support.';
-        } else if (error.message.includes('internal')) {
-            errorMessage += 'Server error. Please try again later.';
-        } else if (error.message.includes('Network Error')) {
-            errorMessage += 'Network connection error. Check your internet.';
-        } else {
-            errorMessage += error.message;
-        }
-        
-        showToast(errorMessage, 'error');
+        console.error('Error en el proceso de pago:', error);
+        showToast('Error: ' + error.message, 'error');
     }
 }
         // Function to update checkout summary
