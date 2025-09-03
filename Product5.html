@@ -629,6 +629,41 @@
                 right: -50px;
             }
         }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            flex-direction: column;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--neon-pink);
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: var(--neon-pink);
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -829,10 +864,11 @@
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Error initializing Firebase:", error);
+            alert("Error initializing the app. Please refresh the page.");
         }
 
-        // Stripe Initialization - REEMPLAZA CON TU CLAVE PÚBLICA
-        const stripe = Stripe('pk_test_51S2uvYRU6YgKQ25ksXKPW35uT393MuYPzjhWA5g48u0DJ3xK4qzf8spxkafZO0RrPQT6TngXzkU3swflqwDsKTrN00TI0TWYtU');
+        // Stripe Initialization - ¡IMPORTANTE! REEMPLAZA CON TU CLAVE PÚBLICA REAL
+        const stripe = Stripe('pk_test_tu_clave_publica_real_aqui'); // ← REEMPLAZA ESTO
 
         const auth = firebase.auth();
         const db = firebase.firestore();
@@ -960,16 +996,28 @@
 
         // Function to process the order with Stripe
         async function processOrderWithStripe() {
-            const user = auth.currentUser;
+            console.log('=== INICIANDO PROCESO DE PAGO ===');
             
+            const user = auth.currentUser;
             if (!user) {
                 showToast('Please log in to continue', 'error');
                 document.getElementById('loginModal').style.display = 'block';
-                return null;
+                return;
             }
             
+            // Mostrar loading
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.className = 'loading-overlay';
+            loadingOverlay.innerHTML = `
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Processing your payment...</p>
+            `;
+            document.body.appendChild(loadingOverlay);
+            
             try {
-                // 1. Crear la orden en Firestore
+                console.log('1. Creando orden en Firestore...');
+                
+                // 1. CREAR LA ORDEN EN FIRESTORE
                 const orderRef = db.collection('orders').doc();
                 const orderId = orderRef.id;
                 
@@ -985,28 +1033,86 @@
                 };
                 
                 await orderRef.set(orderData);
+                console.log('✓ Orden creada en Firestore con ID:', orderId);
                 
-                // 2. Llamar a la Cloud Function para crear sesión de pago
+                // Guardar info para la página de éxito
+                localStorage.setItem('last_order', JSON.stringify({
+                    id: orderId,
+                    total: cart.getTotal(),
+                    items: cart.items
+                }));
+                
+                console.log('2. Llamando a Cloud Function...');
+                
+                // 2. LLAMAR A LA CLOUD FUNCTION
                 const createCheckoutSession = functions.httpsCallable('createStripeCheckoutSession');
                 const result = await createCheckoutSession({
                     items: cart.items,
                     orderId: orderId
                 });
                 
-                // 3. Redirigir a Stripe Checkout
+                console.log('✓ Cloud Function respondió:', result);
+                
+                if (!result.data.success) {
+                    throw new Error(result.data.message || 'Error creating payment session');
+                }
+                
+                console.log('3. Redirigiendo a Stripe con sessionId:', result.data.sessionId);
+                
+                // 3. REDIRIGIR A STRIPE
+                const sessionId = result.data.sessionId;
+                
+                // Verificar que el sessionId es válido
+                if (!sessionId || !sessionId.startsWith('cs_')) {
+                    throw new Error('Invalid session ID received from server');
+                }
+                
+                // Redirigir usando el método de Stripe
                 const { error } = await stripe.redirectToCheckout({
-                    sessionId: result.data.sessionId,
+                    sessionId: sessionId
                 });
                 
                 if (error) {
+                    console.error('✗ Error de redirección a Stripe:', error);
+                    
+                    // Intentar redirección manual como fallback
+                    if (error.type === 'card_error' || error.param === 'sessionId') {
+                        console.log('Intentando redirección manual...');
+                        window.location.href = `https://checkout.stripe.com/pay/${sessionId}`;
+                        return;
+                    }
+                    
                     throw new Error(error.message);
                 }
                 
-                return orderId;
+                console.log('✓ Redirección a Stripe exitosa');
                 
             } catch (error) {
-                console.error("Error processing order:", error);
-                throw error;
+                console.error('✗ ERROR en el proceso:', error);
+                
+                // Remover loading
+                const loadingOverlay = document.querySelector('.loading-overlay');
+                if (loadingOverlay) loadingOverlay.remove();
+                
+                // Cerrar modal de checkout
+                document.getElementById('checkoutModal').style.display = 'none';
+                
+                // Mostrar error específico
+                let errorMessage = 'Error: ';
+                
+                if (error.message.includes('internal')) {
+                    errorMessage += 'Server error. Please try again later.';
+                } else if (error.message.includes('unauthenticated')) {
+                    errorMessage += 'Please log in to continue';
+                } else if (error.message.includes('Network Error')) {
+                    errorMessage += 'Network connection error. Check your internet.';
+                } else if (error.message.includes('sessionId')) {
+                    errorMessage += 'Payment session error. Please try again.';
+                } else {
+                    errorMessage += error.message;
+                }
+                
+                showToast(errorMessage, 'error');
             }
         }
 
@@ -1133,20 +1239,10 @@
             // Confirm purchase button (in checkout modal)
             document.getElementById('confirmCheckout').addEventListener('click', async () => {
                 try {
-                    const orderId = await processOrderWithStripe();
-                    
-                    if (orderId) {
-                        document.getElementById('checkoutModal').style.display = 'none';
-                        document.getElementById('confirmedSize').textContent = 
-                            cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
-                        document.getElementById('confirmedPrice').textContent = `$${cart.getTotal().toFixed(2)}`;
-                        document.getElementById('orderId').textContent = orderId;
-                        document.getElementById('orderConfirmation').style.display = 'flex';
-                        cart.clear();
-                    }
+                    await processOrderWithStripe();
                 } catch (error) {
-                    showToast('Error processing purchase: ' + error.message, 'error');
                     console.error("Checkout error:", error);
+                    showToast('Error processing purchase: ' + error.message, 'error');
                 }
             });
             
