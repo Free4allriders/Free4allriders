@@ -1231,60 +1231,35 @@ document.addEventListener('DOMContentLoaded', () => {
         cart.addItem(product);
     });
     
-    // 2. Add to Cart (Vista 3D) - CORREGIDO  
-    document.getElementById('addToCartBtn3D').addEventListener('click', () => {
-        const selectedSize = document.querySelector('.size-option.selected').textContent;
-        
-        const product = {
-            id: 'hoodie-rider',
-            name: 'HOODIE FOR RIDER ONLY (3D)',
-            price: 35,
-            size: selectedSize,
-            quantity: 1,
-            image: 'hoodie.glb'
-        };
-        
-        console.log('Adding to cart:', product);
-        cart.addItem(product);
-    });
+    // ADD TO CART - SIMPLIFICADO
+document.getElementById('addToCartBtn').addEventListener('click', () => {
+    const product = {
+        name: 'HOODIE FOR RIDER',
+        price: 35,
+        size: document.querySelector('.size-option.selected').textContent,
+        quantity: 1,
+        image: 'Hoodie-black.jpeg'
+    };
     
-    // 3. Buy Now (Vista Normal) - CORREGIDO
-    document.getElementById('buyNowBtn').addEventListener('click', () => {
-        const selectedSize = document.querySelector('.size-option.selected').textContent;
-        
-        const product = {
-            id: 'hoodie-rider',
-            name: document.querySelector('.product-title').textContent,
-            price: 35,
-            size: selectedSize,
-            quantity: 1,
-            image: 'Hoodie-black.jpeg'
-        };
-        
-        cart.clear();
-        cart.addItem(product);
-        document.getElementById('checkoutModal').style.display = 'flex';
-        updateCheckoutSummary();
-    });
+    cart.addItem(product);
+    showToast('¡Añadido al carrito!');
+});
+
+// BUY NOW - SIMPLIFICADO  
+document.getElementById('buyNowBtn').addEventListener('click', () => {
+    const product = {
+        name: 'HOODIE FOR RIDER',
+        price: 35,
+        size: document.querySelector('.size-option.selected').textContent,
+        quantity: 1,
+        image: 'Hoodie-black.jpeg'
+    };
     
-    // 4. Buy Now (Vista 3D) - CORREGIDO
-    document.getElementById('buyNowBtn3D').addEventListener('click', () => {
-        const selectedSize = document.querySelector('.size-option.selected').textContent;
-        
-        const product = {
-            id: 'hoodie-rider',
-            name: 'HOODIE FOR RIDER ONLY (3D)',
-            price: 35,
-            size: selectedSize,
-            quantity: 1,
-            image: 'hoodie.glb'
-        };
-        
-        cart.clear();
-        cart.addItem(product);
-        document.getElementById('checkoutModal').style.display = 'flex';
-        updateCheckoutSummary();
-    });
+    cart.clear();
+    cart.addItem(product);
+    document.getElementById('checkoutModal').style.display = 'flex';
+    updateCheckoutSummary();
+});
     
     // 5. Checkout button (from cart dropdown)
     document.getElementById('checkoutBtn').addEventListener('click', () => {
