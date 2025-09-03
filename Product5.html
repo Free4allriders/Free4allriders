@@ -995,18 +995,36 @@
         }
 
         // Function to process the order with Stripe - CORREGIDA
-        async function processOrderWithStripe() {
+       async function processOrderWithStripe() {
     console.log('=== INICIANDO PROCESO DE PAGO STRIPE ===');
     
+    // Mostrar loading
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: rgba(0,0,0,0.9); display: flex; justify-content: center; 
+        align-items: center; z-index: 3000; flex-direction: column;
+    `;
+    loadingOverlay.innerHTML = `
+        <div style="border: 4px solid rgba(255, 255, 255, 0.3); border-radius: 50%; 
+                   border-top: 4px solid #f77bff; width: 50px; height: 50px; 
+                   animation: spin 1s linear infinite;"></div>
+        <p style="color: #f77bff; margin-top: 20px;">Processing your payment...</p>
+    `;
+    document.body.appendChild(loadingOverlay);
+    
     try {
+        console.log('1. Validando carrito...');
+        
         // Validar carrito
-        if (!cart.items || cart.items.length === 0) {
+        if (!cart || !cart.items || !Array.isArray(cart.items) || cart.items.length === 0) {
             throw new Error('El carrito está vacío');
         }
 
         console.log('Items en carrito:', cart.items);
 
-        // Crear orden en Firestore
+        // 2. Crear orden en Firestore
+        console.log('2. Creando orden en Firestore...');
         const orderRef = db.collection('orders').doc();
         const orderId = orderRef.id;
         const user = auth.currentUser;
@@ -1023,27 +1041,31 @@
         };
         
         await orderRef.set(orderData);
-        console.log('✅ Orden creada en Firestore:', orderId);
+        console.log('Orden creada en Firestore:', orderId);
 
-        // Preparar datos para Stripe - FORMATO CORRECTO
+        // 3. Preparar datos para Stripe - FORMATO SIMPLIFICADO
+        console.log('3. Preparando datos para Stripe...');
         const stripeRequestData = {
-            items: cart.items.map(item => ({
-                id: item.id, // ID del producto (ej: 'hoodie-rider-1')
-                size: item.size, // Tamaño (ej: 'M')
-                quantity: item.quantity // Cantidad
-                // NOTA: Ya no enviamos price, name, image - Stripe ya los tiene
-            })),
+            items: cart.items.map(item => {
+                console.log('Processing cart item:', item);
+                return {
+                    size: item.size || 'M', // Tamaño (obligatorio)
+                    quantity: item.quantity || 1 // Cantidad
+                    // NOTA: No enviamos id, price, name - solo size y quantity
+                };
+            }),
             orderId: orderId,
             customerEmail: user ? user.email : null
         };
 
-        console.log('Enviando a Cloud Function:', stripeRequestData);
+        console.log('Datos a enviar a Cloud Function:', JSON.stringify(stripeRequestData, null, 2));
 
-        // Llamar a la Cloud Function
+        // 4. Llamar a la Cloud Function
+        console.log('4. Llamando a Cloud Function...');
         const createCheckoutSession = firebase.functions().httpsCallable('createStripeCheckoutSession');
         const result = await createCheckoutSession(stripeRequestData);
 
-        console.log('✅ Respuesta de Cloud Function:', result.data);
+        console.log('Respuesta de Cloud Function:', result.data);
 
         if (!result.data.success) {
             throw new Error(result.data.message || 'Error from Cloud Function');
@@ -1053,7 +1075,8 @@
             throw new Error('No session ID received from server');
         }
 
-        // Redirigir a Stripe
+        // 5. Redirigir a Stripe
+        console.log('5. Redirigiendo a Stripe...');
         const stripeInstance = Stripe('pk_live_51S2uv6DDOVogQ3MxIwiMdiRsP2qmw5IBCteXRIVhBVpSLGYY56G57pfYU1C5iF3xwUpk3gRuAYzag0uYTdCilVbV00fSt2ffPB');
         
         const { error } = await stripeInstance.redirectToCheckout({
@@ -1061,12 +1084,32 @@
         });
 
         if (error) {
+            console.error('Error de redirección Stripe:', error);
             throw new Error('Redirection error: ' + error.message);
         }
 
+        console.log('Redirección a Stripe exitosa');
+
     } catch (error) {
-        console.error('❌ ERROR en processOrderWithStripe:', error);
-        showToast('Error: ' + error.message, 'error');
+        console.error('ERROR en processOrderWithStripe:', error);
+        
+        // Remover loading
+        loadingOverlay.remove();
+        
+        // Mostrar error específico
+        let errorMessage = 'Error processing payment: ';
+        
+        if (error.message.includes('items must be an array')) {
+            errorMessage += 'Problem with cart items. Please refresh the page.';
+        } else if (error.message.includes('No valid items')) {
+            errorMessage += 'No valid products in cart.';
+        } else if (error.message.includes('No price found')) {
+            errorMessage += 'Product configuration error. Please contact support.';
+        } else {
+            errorMessage += error.message;
+        }
+        
+        showToast(errorMessage, 'error');
     }
 }
         // Function to update checkout summary
