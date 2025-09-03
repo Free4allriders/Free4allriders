@@ -1176,231 +1176,245 @@
         }
 
         // Initialization when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize cart
-            cart.init();
-            
-            // Verificar la estructura del carrito
-            console.log('Estructura del carrito:', cart);
-            console.log('Cart items:', cart.items);
-            console.log('Tipo de cart.items:', typeof cart.items);
-            console.log('Es array:', Array.isArray(cart.items));
+        // Initialization when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize cart
+    cart.init();
+    
+    // Verificar la estructura del carrito
+    console.log('Estructura del carrito:', cart);
+    console.log('Cart items:', cart.items);
+    console.log('Tipo de cart.items:', typeof cart.items);
+    console.log('Es array:', Array.isArray(cart.items));
 
-            // Si cart.items no es array, corrígelo:
-            if (!Array.isArray(cart.items)) {
-                console.warn('⚠️ cart.items no es un array, convirtiendo...');
-                if (cart.items && typeof cart.items === 'object') {
-                    // Convertir objeto a array si es necesario
-                    cart.items = Object.values(cart.items);
-                } else {
-                    cart.items = [];
-                }
-                cart.save();
-            }
-            
-            // Configure cart icon
-            const cartIcon = document.getElementById('cartIcon');
-            const cartDropdown = document.getElementById('cartDropdown');
-            
-            cartIcon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
+    // Si cart.items no es array, corrígelo:
+    if (!Array.isArray(cart.items)) {
+        console.warn('⚠️ cart.items no es un array, convirtiendo...');
+        if (cart.items && typeof cart.items === 'object') {
+            // Convertir objeto a array si es necesario
+            cart.items = Object.values(cart.items);
+        } else {
+            cart.items = [];
+        }
+        cart.save();
+    }
+    
+    // Configure cart icon
+    const cartIcon = document.getElementById('cartIcon');
+    const cartDropdown = document.getElementById('cartDropdown');
+    
+    cartIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+    
+    document.addEventListener('click', () => {
+        cartDropdown.style.display = 'none';
+    });
+    
+    // --- EVENT LISTENERS CORREGIDOS ---
+    
+    // 1. Add to Cart (Vista Normal) - CORREGIDO
+    document.getElementById('addToCartBtn').addEventListener('click', () => {
+        const selectedSize = document.querySelector('.size-option.selected').textContent;
+        
+        const product = {
+            id: 'hoodie-rider',
+            name: document.querySelector('.product-title').textContent,
+            price: 35,
+            size: selectedSize,
+            quantity: 1,
+            image: 'Hoodie-black.jpeg'
+        };
+        
+        console.log('Adding to cart:', product);
+        cart.addItem(product);
+    });
+    
+    // 2. Add to Cart (Vista 3D) - CORREGIDO  
+    document.getElementById('addToCartBtn3D').addEventListener('click', () => {
+        const selectedSize = document.querySelector('.size-option.selected').textContent;
+        
+        const product = {
+            id: 'hoodie-rider',
+            name: 'HOODIE FOR RIDER ONLY (3D)',
+            price: 35,
+            size: selectedSize,
+            quantity: 1,
+            image: 'hoodie.glb'
+        };
+        
+        console.log('Adding to cart:', product);
+        cart.addItem(product);
+    });
+    
+    // 3. Buy Now (Vista Normal) - CORREGIDO
+    document.getElementById('buyNowBtn').addEventListener('click', () => {
+        const selectedSize = document.querySelector('.size-option.selected').textContent;
+        
+        const product = {
+            id: 'hoodie-rider',
+            name: document.querySelector('.product-title').textContent,
+            price: 35,
+            size: selectedSize,
+            quantity: 1,
+            image: 'Hoodie-black.jpeg'
+        };
+        
+        cart.clear();
+        cart.addItem(product);
+        document.getElementById('checkoutModal').style.display = 'flex';
+        updateCheckoutSummary();
+    });
+    
+    // 4. Buy Now (Vista 3D) - CORREGIDO
+    document.getElementById('buyNowBtn3D').addEventListener('click', () => {
+        const selectedSize = document.querySelector('.size-option.selected').textContent;
+        
+        const product = {
+            id: 'hoodie-rider',
+            name: 'HOODIE FOR RIDER ONLY (3D)',
+            price: 35,
+            size: selectedSize,
+            quantity: 1,
+            image: 'hoodie.glb'
+        };
+        
+        cart.clear();
+        cart.addItem(product);
+        document.getElementById('checkoutModal').style.display = 'flex';
+        updateCheckoutSummary();
+    });
+    
+    // 5. Checkout button (from cart dropdown)
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+        if (cart.getTotalItems() === 0) {
+            showToast('Cart is empty', 'error');
+            return;
+        }
+        
+        document.getElementById('checkoutModal').style.display = 'flex';
+        updateCheckoutSummary();
+    });
+    
+    // 6. Confirm purchase button (in checkout modal)
+    document.getElementById('confirmCheckout').addEventListener('click', async () => {
+        try {
+            await processOrderWithStripe();
+        } catch (error) {
+            console.error("Checkout error:", error);
+            showToast('Error processing purchase: ' + error.message, 'error');
+        }
+    });
+    
+    // 7. Size selector
+    document.querySelectorAll('.size-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.size-option').forEach(opt => {
+                opt.classList.remove('selected');
             });
-            
-            document.addEventListener('click', () => {
-                cartDropdown.style.display = 'none';
+            this.classList.add('selected');
+            console.log('Tamaño seleccionado:', this.textContent);
+        });
+    });
+    
+    // Improved authentication system
+    const authLink = document.getElementById('authLink');
+    const loginModal = document.getElementById('loginModal');
+    const closeLogin = document.getElementById('closeLogin');
+    const loginForm = document.getElementById('loginForm');
+    const loginErrorMessage = document.getElementById('loginErrorMessage');
+    
+    function showLoginModal() {
+        loginModal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    authLink.addEventListener('click', (e) => {
+        if (auth.currentUser) {
+            e.preventDefault();
+            auth.signOut().then(() => {
+                showToast('Logged out successfully');
+            }).catch(error => {
+                showToast('Error logging out', 'error');
             });
-            
-            // Add to cart button (normal view)
-            document.getElementById('addToCartBtn').addEventListener('click', () => {
-                const product = {
-                    id: 'hoodie-rider-1',
-                    name: document.querySelector('.product-title').textContent,
-                    price: parseFloat(document.querySelector('.product-price').textContent.replace('$', '')),
-                    size: document.querySelector('.size-option.selected').textContent,
-                    quantity: 1,
-                    image: document.querySelector('.product-image').src
-                };
-                
-                cart.addItem(product);
-            });
-            
-            // Add to cart button (3D view)
-            document.getElementById('addToCartBtn3D').addEventListener('click', () => {
-                const product = {
-                    id: 'hoodie-rider-1',
-                    name: 'HOODIE FOR RIDER ONLY (3D)',
-                    price: parseFloat(document.querySelector('.product-price').textContent.replace('$', '')),
-                    size: document.querySelector('.size-option.selected').textContent,
-                    quantity: 1,
-                    image: 'hoodie.glb'
-                };
-                
-                cart.addItem(product);
-            });
-            
-            // Buy now button (normal view)
-            document.getElementById('buyNowBtn').addEventListener('click', () => {
-                const product = {
-                    id: 'hoodie-rider-1',
-                    name: document.querySelector('.product-title').textContent,
-                    price: parseFloat(document.querySelector('.product-price').textContent.replace('$', '')),
-                    size: document.querySelector('.size-option.selected').textContent,
-                    quantity: 1,
-                    image: document.querySelector('.product-image').src
-                };
-                
-                cart.clear();
-                cart.addItem(product);
-                document.getElementById('checkoutModal').style.display = 'flex';
-                updateCheckoutSummary();
-            });
-            
-            // Buy now button (3D view)
-            document.getElementById('buyNowBtn3D').addEventListener('click', () => {
-                const product = {
-                    id: 'hoodie-rider-1',
-                    name: 'HOODIE FOR RIDER ONLY (3D)',
-                    price: parseFloat(document.querySelector('.product-price').textContent.replace('$', '')),
-                    size: document.querySelector('.size-option.selected').textContent,
-                    quantity: 1,
-                    image: 'hoodie.glb'
-                };
-                
-                cart.clear();
-                cart.addItem(product);
-                document.getElementById('checkoutModal').style.display = 'flex';
-                updateCheckoutSummary();
-            });
-            
-            // Checkout button (from cart dropdown)
-            document.getElementById('checkoutBtn').addEventListener('click', () => {
-                if (cart.getTotalItems() === 0) {
-                    showToast('Cart is empty', 'error');
-                    return;
-                }
-                
-                document.getElementById('checkoutModal').style.display = 'flex';
-                updateCheckoutSummary();
-            });
-            
-            // Confirm purchase button (in checkout modal)
-            document.getElementById('confirmCheckout').addEventListener('click', async () => {
-                try {
-                    await processOrderWithStripe();
-                } catch (error) {
-                    console.error("Checkout error:", error);
-                    showToast('Error processing purchase: ' + error.message, 'error');
-                }
-            });
-            
-            // Size selector
-            document.querySelectorAll('.size-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    document.querySelectorAll('.size-option').forEach(opt => {
-                        opt.classList.remove('selected');
-                    });
-                    this.classList.add('selected');
-                });
-            });
-            
-            // Improved authentication system
-            const authLink = document.getElementById('authLink');
-            const loginModal = document.getElementById('loginModal');
-            const closeLogin = document.getElementById('closeLogin');
-            const loginForm = document.getElementById('loginForm');
-            const loginErrorMessage = document.getElementById('loginErrorMessage');
-            
-            function showLoginModal() {
-                loginModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            }
-            
-            authLink.addEventListener('click', (e) => {
-                if (auth.currentUser) {
-                    e.preventDefault();
-                    auth.signOut().then(() => {
-                        showToast('Logged out successfully');
-                    }).catch(error => {
-                        showToast('Error logging out', 'error');
-                    });
-                } else {
-                    e.preventDefault();
-                    showLoginModal();
-                }
-            });
-            
-            closeLogin.addEventListener('click', () => {
+        } else {
+            e.preventDefault();
+            showLoginModal();
+        }
+    });
+    
+    closeLogin.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    });
+    
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        auth.signInWithEmailAndPassword(email, password)
+            .then(() => {
                 loginModal.style.display = 'none';
                 document.body.style.overflow = 'auto';
+                loginErrorMessage.textContent = '';
+                showToast('Logged in successfully');
+            })
+            .catch(error => {
+                loginErrorMessage.textContent = getAuthErrorMessage(error.code);
             });
-            
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-                
-                auth.signInWithEmailAndPassword(email, password)
-                    .then(() => {
-                        loginModal.style.display = 'none';
-                        document.body.style.overflow = 'auto';
-                        loginErrorMessage.textContent = '';
-                        showToast('Logged in successfully');
-                    })
-                    .catch(error => {
-                        loginErrorMessage.textContent = getAuthErrorMessage(error.code);
-                    });
-            });
-            
-            function getAuthErrorMessage(errorCode) {
-                switch(errorCode) {
-                    case 'auth/invalid-email': return 'Invalid email';
-                    case 'auth/user-disabled': return 'Account disabled';
-                    case 'auth/user-not-found': return 'User not found';
-                    case 'auth/wrong-password': return 'Wrong password';
-                    default: return 'Login error';
-                }
-            }
-            
-            // Improved auth state observer
-            auth.onAuthStateChanged(user => {
-                const authLink = document.getElementById('authLink');
-                if (user) {
-                    authLink.textContent = 'Logout';
-                    authLink.href = '#';
-                } else {
-                    authLink.textContent = 'Login';
-                    authLink.href = 'login.html';
-                }
-            });
-            
-            // Photo gallery
-            const morePhotosBtn = document.getElementById('morePhotosBtn');
-            const photosModal = document.getElementById('photosModal');
-            const closeModal = document.getElementById('closeModal');
-            
-            morePhotosBtn.addEventListener('click', () => {
-                photosModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            });
-            
-            closeModal.addEventListener('click', () => {
-                photosModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-            
-            // View switching
-            const switchBtn = document.getElementById('switchBtn');
-            const productImage = document.getElementById('productImage');
-            let isMainImage = true;
-            const mainImage = 'Hoodie-black.jpeg';
-            const altImage = 'Hoodie-white.jpeg';
-            
-            switchBtn.addEventListener('click', () => {
-                productImage.src = isMainImage ? altImage : mainImage;
-                isMainImage = !isMainImage;
-            });
-        });
+    });
+    
+    function getAuthErrorMessage(errorCode) {
+        switch(errorCode) {
+            case 'auth/invalid-email': return 'Invalid email';
+            case 'auth/user-disabled': return 'Account disabled';
+            case 'auth/user-not-found': return 'User not found';
+            case 'auth/wrong-password': return 'Wrong password';
+            default: return 'Login error';
+        }
+    }
+    
+    // Improved auth state observer
+    auth.onAuthStateChanged(user => {
+        const authLink = document.getElementById('authLink');
+        if (user) {
+            authLink.textContent = 'Logout';
+            authLink.href = '#';
+        } else {
+            authLink.textContent = 'Login';
+            authLink.href = 'login.html';
+        }
+    });
+    
+    // Photo gallery
+    const morePhotosBtn = document.getElementById('morePhotosBtn');
+    const photosModal = document.getElementById('photosModal');
+    const closeModal = document.getElementById('closeModal');
+    
+    morePhotosBtn.addEventListener('click', () => {
+        photosModal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    });
+    
+    closeModal.addEventListener('click', () => {
+        photosModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    });
+    
+    // View switching
+    const switchBtn = document.getElementById('switchBtn');
+    const productImage = document.getElementById('productImage');
+    let isMainImage = true;
+    const mainImage = 'Hoodie-black.jpeg';
+    const altImage = 'Hoodie-white.jpeg';
+    
+    switchBtn.addEventListener('click', () => {
+        productImage.src = isMainImage ? altImage : mainImage;
+        isMainImage = !isMainImage;
+    });
+});
     </script>
 </body>
 </html>
