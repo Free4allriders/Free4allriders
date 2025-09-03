@@ -994,75 +994,118 @@
             }, 3000);
         }
 
-        // Function to process the order with Stripe
+        // Function to process the order with Stripe - CORREGIDA
         async function processOrderWithStripe() {
-    try {
-        console.log('Iniciando proceso de pago...');
-        
-        // Verificar que el carrito tiene items
-        if (!cart.items || cart.items.length === 0) {
-            throw new Error('El carrito está vacío');
-        }
-
-        // Crear orden en Firestore primero
-        const orderRef = db.collection('orders').doc();
-        const orderId = orderRef.id;
-        const user = auth.currentUser;
-
-        const orderData = {
-            orderId: orderId,
-            userId: user ? user.uid : 'anonymous',
-            userEmail: user ? user.email : null,
-            items: cart.items,
-            total: cart.getTotal(),
-            status: 'pending',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            paymentMethod: 'Stripe'
-        };
-        
-        await orderRef.set(orderData);
-        console.log('Orden creada en Firestore:', orderId);
-
-        // Preparar datos para Stripe
-        const stripeData = {
-            items: cart.items.map(item => ({
-                id: item.id,
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity,
-                image: item.image || ''
-            })),
-            orderId: orderId,
-            customerEmail: user ? user.email : null
-        };
-
-        console.log('Enviando a Stripe:', stripeData);
-
-        // Llamar a la Cloud Function
-        const createCheckoutSession = functions.httpsCallable('createStripeCheckoutSession');
-        const result = await createCheckoutSession(stripeData);
-        
-        console.log('Respuesta de Stripe:', result.data);
-
-        // Redirigir a Stripe
-        if (result.data.success && result.data.sessionId) {
-            const stripe = Stripe('pk_test_tu_clave_publica_aqui');
-            const { error } = await stripe.redirectToCheckout({
-                sessionId: result.data.sessionId
-            });
+            console.log('=== INICIANDO PROCESO DE PAGO STRIPE ===');
             
-            if (error) {
-                throw new Error(error.message);
+            try {
+                // 1. Validar carrito
+                if (!cart || !cart.items || !Array.isArray(cart.items) || cart.items.length === 0) {
+                    throw new Error('El carrito está vacío o no es válido');
+                }
+
+                console.log('Items en carrito:', cart.items);
+                console.log('Tipo de items:', Array.isArray(cart.items) ? 'array' : typeof cart.items);
+
+                // 2. Crear orden en Firestore primero
+                const orderRef = db.collection('orders').doc();
+                const orderId = orderRef.id;
+                const user = auth.currentUser;
+
+                // Preparar items para Firestore
+                const firestoreItems = cart.items.map(item => ({
+                    id: item.id || 'no-id',
+                    name: item.name || 'Producto sin nombre',
+                    price: item.price || 0,
+                    quantity: item.quantity || 1,
+                    image: item.image || ''
+                }));
+
+                const orderData = {
+                    orderId: orderId,
+                    userId: user ? user.uid : 'anonymous',
+                    userEmail: user ? user.email : null,
+                    items: firestoreItems,
+                    total: cart.getTotal(),
+                    status: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    paymentMethod: 'Stripe'
+                };
+
+                console.log('Creando orden en Firestore:', orderData);
+                await orderRef.set(orderData);
+                console.log('✅ Orden creada en Firestore:', orderId);
+
+                // 3. Preparar datos para Stripe - ¡ESTO ES LO MÁS IMPORTANTE!
+                const stripeRequestData = {
+                    items: cart.items.map(item => {
+                        // Asegurar que cada item tenga los campos requeridos
+                        return {
+                            name: String(item.name || 'Product'),
+                            price: parseFloat(item.price || 0),
+                            quantity: parseInt(item.quantity || 1),
+                            image: String(item.image || '')
+                        };
+                    }),
+                    orderId: orderId,
+                    customerEmail: user ? user.email : null
+                };
+
+                console.log('Enviando a Cloud Function:', JSON.stringify(stripeRequestData, null, 2));
+                console.log('Tipo de items enviado:', Array.isArray(stripeRequestData.items) ? 'array' : typeof stripeRequestData.items);
+
+                // 4. Llamar a la Cloud Function
+                const createCheckoutSession = firebase.functions().httpsCallable('createStripeCheckoutSession');
+                
+                console.log('Llamando a Cloud Function...');
+                const result = await createCheckoutSession(stripeRequestData);
+
+                console.log('✅ Respuesta de Cloud Function:', result.data);
+
+                if (!result.data.success) {
+                    throw new Error(result.data.message || 'Error from Cloud Function');
+                }
+
+                if (!result.data.sessionId) {
+                    throw new Error('No session ID received from server');
+                }
+
+                // 5. Redirigir a Stripe
+                if (typeof Stripe === 'undefined') {
+                    throw new Error('Stripe.js not loaded');
+                }
+
+                // REEMPLAZA CON TU CLAVE PÚBLICA REAL
+                const stripe = Stripe('pk_live_51S2uv6DDOVogQ3MxIwiMdiRsP2qmw5IBCteXRIVhBVpSLGYY56G57pfYU1C5iF3xwUpk3gRuAYzag0uYTdCilVbV00fSt2ffPB');
+                
+                const { error } = await stripe.redirectToCheckout({
+                    sessionId: result.data.sessionId
+                });
+
+                if (error) {
+                    console.error('Error de redirección Stripe:', error);
+                    throw new Error('Redirection error: ' + error.message);
+                }
+
+                console.log('✅ Redirección a Stripe exitosa');
+
+            } catch (error) {
+                console.error('❌ ERROR en processOrderWithStripe:', error);
+                
+                let errorMessage = 'Error: ';
+                
+                if (error.message.includes('items must be an array')) {
+                    errorMessage += 'Problema con los items del carrito. Por favor, recarga la página.';
+                } else if (error.message.includes('invalid-argument')) {
+                    errorMessage += 'Información de productos inválida.';
+                } else {
+                    errorMessage += error.message;
+                }
+                
+                showToast(errorMessage, 'error');
             }
-        } else {
-            throw new Error('No session ID received');
         }
-        
-    } catch (error) {
-        console.error('Error en el proceso de pago:', error);
-        showToast('Error: ' + error.message, 'error');
-    }
-}
+
         // Function to update checkout summary
         function updateCheckoutSummary() {
             const summaryElement = document.getElementById('checkoutSummary');
@@ -1092,10 +1135,62 @@
             totalElement.textContent = cart.getTotal().toFixed(2);
         }
 
+        // Función de prueba para diagnosticar el problema
+        async function testStripeConnection() {
+            try {
+                console.log('=== TESTING STRIPE CONNECTION ===');
+                
+                // Datos de prueba SIMPLES
+                const testData = {
+                    items: [
+                        {
+                            name: "Producto de Test",
+                            price: 10.99,
+                            quantity: 1,
+                            image: ""
+                        }
+                    ],
+                    orderId: "test_order_" + Date.now(),
+                    customerEmail: "test@example.com"
+                };
+
+                console.log('Enviando datos de test:', testData);
+                console.log('Items es array:', Array.isArray(testData.items));
+
+                const createCheckoutSession = firebase.functions().httpsCallable('createStripeCheckoutSession');
+                const result = await createCheckoutSession(testData);
+                
+                console.log('✅ Test exitoso:', result.data);
+                return result.data;
+                
+            } catch (error) {
+                console.error('❌ Test fallido:', error);
+                throw error;
+            }
+        }
+
         // Initialization when page loads
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize cart
             cart.init();
+            
+            // Verificar la estructura del carrito
+            console.log('Estructura del carrito:', cart);
+            console.log('Cart items:', cart.items);
+            console.log('Tipo de cart.items:', typeof cart.items);
+            console.log('Es array:', Array.isArray(cart.items));
+
+            // Si cart.items no es array, corrígelo:
+            if (!Array.isArray(cart.items)) {
+                console.warn('⚠️ cart.items no es un array, convirtiendo...');
+                if (cart.items && typeof cart.items === 'object') {
+                    // Convertir objeto a array si es necesario
+                    cart.items = Object.values(cart.items);
+                } else {
+                    cart.items = [];
+                }
+                cart.save();
+            }
             
             // Configure cart icon
             const cartIcon = document.getElementById('cartIcon');
