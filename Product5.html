@@ -583,6 +583,9 @@
             max-height: 400px;
             overflow-y: auto;
             margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
         }
         
         .checkout-item {
@@ -610,18 +613,6 @@
             
             model-viewer {
                 height: 300px;
-            }
-            
-            nav {
-                display: none;
-            }
-            
-            .confirmation-content {
-                padding: 20px;
-            }
-            
-            .confirmation-title {
-                font-size: 1.5rem;
             }
             
             .cart-dropdown {
@@ -994,6 +985,20 @@
             }, 3000);
         }
 
+        // Function to safely serialize objects with circular references
+        function safeStringify(obj) {
+            const seen = new WeakSet();
+            return JSON.stringify(obj, (key, value) => {
+                if (typeof value === "object" && value !== null) {
+                    if (seen.has(value)) {
+                        return "[Circular]";
+                    }
+                    seen.add(value);
+                }
+                return value;
+            });
+        }
+
         // Function to process the order with Stripe
         async function processOrderWithStripe() {
             console.log('=== INICIANDO PROCESO DE PAGO STRIPE ===');
@@ -1023,11 +1028,21 @@
                 const orderId = orderRef.id;
                 const user = auth.currentUser;
 
+                // Crear una copia simple de los items sin referencias circulares
+                const simpleItems = cart.items.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    size: item.size,
+                    quantity: item.quantity,
+                    image: item.image
+                }));
+
                 const orderData = {
                     orderId: orderId,
                     userId: user ? user.uid : 'anonymous',
                     userEmail: user ? user.email : null,
-                    items: cart.items,
+                    items: simpleItems,
                     total: cart.getTotal(),
                     status: 'pending',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -1040,8 +1055,7 @@
                 // 3. Preparar datos para Stripe
                 console.log('3. Preparando datos para Stripe...');
                 const stripeRequestData = {
-                    items: cart.items.map(item => {
-                        console.log('Processing cart item:', item);
+                    items: simpleItems.map(item => {
                         return {
                             name: item.name || 'HOODIE FOR RIDER',
                             size: item.size || 'M',
@@ -1052,7 +1066,7 @@
                     customerEmail: user ? user.email : null
                 };
 
-                console.log('Datos a enviar a Cloud Function:', JSON.stringify(stripeRequestData, null, 2));
+                console.log('Datos a enviar a Cloud Function:', safeStringify(stripeRequestData));
 
                 // 4. Llamar a la Cloud Function
                 console.log('4. Llamando a Cloud Function...');
@@ -1086,7 +1100,9 @@
                 console.error('ERROR en processOrderWithStripe:', error);
                 
                 // Remover loading
-                loadingOverlay.remove();
+                if (loadingOverlay && loadingOverlay.parentNode) {
+                    loadingOverlay.parentNode.removeChild(loadingOverlay);
+                }
                 
                 // Mostrar error específico
                 let errorMessage = 'Error processing payment: ';
@@ -1252,7 +1268,6 @@
                         opt.classList.remove('selected');
                     });
                     this.classList.add('selected');
-                    console.log('Tamaño seleccionado:', this.textContent);
                 });
             });
             
