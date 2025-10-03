@@ -1221,13 +1221,13 @@
                 const selectedSize = document.querySelector('.size-option.selected').textContent;
                 
                 const product = {
-                    id: 'tshirt-f4ar',
-                    name: 'T-SHIRT F4AR - WHITE EDITION',
-                    price: 25,
-                    size: selectedSize,
-                    quantity: 1,
-                    image: 'Camiseta.PNG'
-                };
+    id: 'tshirt-f4ar',
+    name: 'T-SHIRT F4AR - WHITE EDITION',
+    price: 25, // ← PRECIO CORRECTO
+    size: selectedSize,
+    quantity: 1,
+    image: 'Camiseta.PNG'
+};
                 
                 console.log('Adding to cart:', product);
                 cart.addItem(product);
