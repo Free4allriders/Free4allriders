@@ -1141,14 +1141,14 @@
             document.getElementById('addToCartBtn').addEventListener('click', () => {
                 const selectedSize = document.querySelector('.size-option.selected').textContent;
                 
-                const product = {
-                    id: 'hoodie-rider',
-                    name: 'RIDERS EXCLUSIVE HOODIE',
-                    price: 35,
-                    size: selectedSize,
-                    quantity: 1,
-                    image: 'Hoodie-white.jpeg'
-                };
+    const product = {
+    id: 'hoodie-rider',
+    name: 'RIDERS EXCLUSIVE HOODIE',
+    price: 35, // ← ¡AGREGAR ESTA LÍNEA!
+    size: selectedSize,
+    quantity: 1,
+    image: 'Hoodie-white.jpeg'
+};
                 
                 console.log('Adding to cart:', product);
                 cart.addItem(product);
@@ -1158,14 +1158,14 @@
             document.getElementById('buyNowBtn').addEventListener('click', () => {
                 const selectedSize = document.querySelector('.size-option.selected').textContent;
                 
-                const product = {
-                    id: 'hoodie-rider',
-                    name: 'RIDERS EXCLUSIVE HOODIE',
-                    price: 35,
-                    size: selectedSize,
-                    quantity: 1,
-                    image: 'Hoodie-white.jpeg'
-                };
+              const product = {
+    id: 'hoodie-rider',
+    name: 'RIDERS EXCLUSIVE HOODIE',
+    price: 35, // ← ¡AGREGAR ESTA LÍNEA!
+    size: selectedSize,
+    quantity: 1,
+    image: 'Hoodie-white.jpeg'
+};
                 
                 cart.clear();
                 cart.addItem(product);
