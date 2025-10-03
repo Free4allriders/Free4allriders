@@ -1,5 +1,4 @@
-
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,8 +12,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-functions-compat.js"></script>
-    <!-- PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=TU_CLIENT_ID_SANDBOX&currency=EUR"></script>
+    <!-- Stripe SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
         :root {
             --neon-pink: #ff00ff;
@@ -42,7 +41,7 @@
         /* Header Styles */
         header {
             background-color: rgba(0, 0, 0, 0.9);
-            padding: 8px 5%;
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -55,7 +54,7 @@
         }
         
         .logo {
-            height: 10px;
+            height: 40px;
             filter: drop-shadow(var(--glow-effect));
         }
         
@@ -443,27 +442,6 @@
             color: var(--neon-pink);
         }
         
-        /* PayPal Button Container */
-        .paypal-button-container {
-            margin-top: 20px;
-            width: 100%;
-        }
-        
-        .payment-options {
-            margin-top: 30px;
-            border-top: 1px solid var(--neon-purple);
-            padding-top: 20px;
-        }
-        
-        .payment-method {
-            display: none;
-        }
-        
-        .payment-method.active {
-            display: block;
-            animation: fadeIn 0.5s ease-out;
-        }
-        
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -600,6 +578,70 @@
             }
         }
         
+        /* Checkout Modal */
+        .checkout-summary {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+        
+        .checkout-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            flex-direction: column;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--neon-pink);
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: var(--neon-pink);
+            font-size: 18px;
+        }
+        
+        /* Gradient Title */
+        h1.gradient-title {
+            font-family: Arial;
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, #d800ff, #f77bff, #d800ff, #b300ff, #00f7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .tab {
@@ -617,18 +659,6 @@
             
             model-viewer {
                 height: 300px;
-            }
-            
-            nav {
-                display: none;
-            }
-            
-            .confirmation-content {
-                padding: 20px;
-            }
-            
-            .confirmation-title {
-                font-size: 1.5rem;
             }
             
             .cart-dropdown {
@@ -654,24 +684,14 @@
                         <p>Your cart is empty</p>
                     </div>
                     <div class="cart-total">
-                        Total: €<span id="cartTotal">0.00</span>
+                        Total: $<span id="cartTotal">0.00</span>
                     </div>
                     <button class="btn btn-primary checkout-btn" id="checkoutBtn">Checkout</button>
                 </div>
             </div>
         </nav>
     </header>
-        <style>
-        h1.gradient-title {
-               font-family: Arial;
-    font-size: 3.5rem;
-    background: linear-gradient(90deg, #d800ff, #f77bff, #d800ff, #b300ff, #00f7ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    display: inline-block;
-        }
-    </style>
+    
     <!-- Main Content -->
     <div class="main-container">
         <!-- Product Tabs -->
@@ -689,7 +709,7 @@
                     
                     <div class="details-section">
                         <h1 class="gradient-title">RIDERS EXCLUSIVE HOODIE</h1>
-                        <div class="product-price">35€</div>
+                        <div class="product-price">35$</div>
                         
                         <p class="product-description">
                             Premium hoodie designed specifically for riders. Made of high quality materials 
@@ -716,12 +736,12 @@
                 <!-- 3D View -->
                 <div class="tab">
                     <div class="image-section">
-                        <model-viewer src="hoodie.glb" alt="3D View of the hoodie" auto-rotate camera-controls></model-viewer>
+                        <model-viewer src="hoodie.glb" alt="3D View of the hoodie" auto-rotate camera-controls style="width: 100%; height: 400px; background-color: #000;"></model-viewer>
                     </div>
                     
                     <div class="details-section">
                         <h1 class="product-title">3D MODE ACTIVATED</h1>
-                        <div class="product-price">35€</div>
+                        <div class="product-price">35$</div>
                         
                         <p class="product-description">
                             Explore every detail of our hoodie in 360°.
@@ -757,9 +777,9 @@
             <span class="close-modal" id="closeModal">&times;</span>
             <h2 style="color: var(--neon-pink); text-align: center; margin-bottom: 20px;">PRODUCT GALLERY</h2>
             
-            <div class="gallery-grid">
-                <img src="Familly.jpeg" alt="Front view with the hoodie" class="gallery-img">
-                <img src="Back.jpeg" alt="Back view of the hoodie" class="gallery-img">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <img src="Familly.jpeg" alt="Front view with the hoodie" style="width: 100%; border-radius: 10px; border: 1px solid var(--neon-purple);">
+                <img src="Back.jpeg" alt="Back view of the hoodie" style="width: 100%; border-radius: 10px; border: 1px solid var(--neon-purple);">
             </div>
         </div>
     </div>
@@ -790,9 +810,8 @@
             <div class="order-details">
                 <p>Product: <strong>HOODIE FOR RIDER</strong></p>
                 <p>Size: <strong id="confirmedSize"></strong></p>
-                <p>Price: <strong id="confirmedPrice">35€</strong></p>
+                <p>Price: <strong id="confirmedPrice">35$</strong></p>
                 <p>Order ID: <span class="order-id" id="orderId"></span></p>
-                <p>Payment Method: <strong id="paymentMethod"></strong></p>
             </div>
             
             <button class="btn btn-primary" onclick="document.getElementById('orderConfirmation').style.display = 'none'">Close</button>
@@ -807,34 +826,10 @@
                 <!-- Cart items will be added here -->
             </div>
             <div class="cart-total" style="text-align: right; font-size: 1.2rem;">
-                Total: €<span id="checkoutTotal">0.00</span>
+                Total: $<span id="checkoutTotal">0.00</span>
             </div>
-            
-            <div class="payment-options">
-                <h3>Payment Method:</h3>
-                <div class="action-buttons" style="margin-bottom: 20px;">
-                    <button class="btn btn-primary" id="payWithCardBtn">Credit Card</button>
-                    <button class="btn btn-secondary" id="payWithPayPalBtn">PayPal</button>
-                </div>
-                
-                <div id="cardPayment" class="payment-method">
-                    <!-- Formulario de tarjeta (simulado) -->
-                    <div style="margin-bottom: 20px;">
-                        <input type="text" placeholder="Card Number" style="width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); color: white;">
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" placeholder="MM/YY" style="flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); color: white;">
-                            <input type="text" placeholder="CVV" style="flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-purple); color: white;">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" id="confirmCardPayment" style="width: 100%;">Pay with Card</button>
-                </div>
-                
-                <div id="paypalPayment" class="payment-method">
-                    <div class="paypal-button-container" id="paypalButtonContainer"></div>
-                </div>
-            </div>
-            
             <div class="action-buttons" style="margin-top: 20px;">
+                <button class="btn btn-primary" id="confirmCheckout">Confirm Purchase</button>
                 <button class="btn btn-secondary" onclick="document.getElementById('checkoutModal').style.display = 'none'">Cancel</button>
             </div>
         </div>
@@ -854,14 +849,15 @@
 
     <!-- Firebase Configuration -->
     <script>
-        // Firebase Configuration (replace with your real data)
+        // Firebase Configuration
         const firebaseConfig = {
-            apiKey: "TU_API_KEY",
-            authDomain: "TU_PROYECTO.firebaseapp.com",
-            projectId: "TU_PROYECTO",
-            storageBucket: "TU_PROYECTO.appspot.com",
-            messagingSenderId: "TU_SENDER_ID",
-            appId: "TU_APP_ID"
+            apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
+            authDomain: "free4allriders-51c5e.firebaseapp.com",
+            projectId: "free4allriders-51c5e",
+            storageBucket: "free4allriders-51c5e.firebasestorage.app",
+            messagingSenderId: "1082764494980",
+            appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
+            measurementId: "G-7KEGQPK3P0"
         };
 
         // Firebase Initialization
@@ -870,12 +866,16 @@
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Error initializing Firebase:", error);
+            alert("Error initializing the app. Please refresh the page.");
         }
+
+        // Stripe Initialization
+        const stripe = Stripe('pk_live_51S2uv6DDOVogQ3MxIwiMdiRsP2qmw5IBCteXRIVhBVpSLGYY56G57pfYU1C5iF3xwUpk3gRuAYzag0uYTdCilVbV00fSt2ffPB');
 
         const auth = firebase.auth();
         const db = firebase.firestore();
         const functions = firebase.functions();
-        const CART_STORAGE_KEY = 'free4all_cart_v3';
+        const CART_STORAGE_KEY = 'free4all_cart_v2';
 
         // Cart object
         const cart = {
@@ -966,7 +966,7 @@
                         <div class="cart-item-info">
                             <div class="cart-item-title">${item.name}</div>
                             <div class="cart-item-details">Size: ${item.size} | Quantity: ${item.quantity}</div>
-                            <div class="cart-item-details">€${(item.price * item.quantity).toFixed(2)}</div>
+                            <div class="cart-item-details">$${(item.price * item.quantity).toFixed(2)}</div>
                             <button class="remove-item" data-index="${index}">Remove</button>
                         </div>
                     `;
@@ -996,58 +996,97 @@
             }, 3000);
         }
 
-        // Function to process the order
-        async function processOrder(paymentMethod, paymentId = '') {
-            const user = auth.currentUser;
+        async function processOrderWithStripe() {
+            console.log('=== INICIANDO PROCESO DE PAGO STRIPE ===');
             
-            if (!user) {
-                showToast('Please log in to continue', 'error');
-                document.getElementById('loginModal').style.display = 'block';
-                return null;
-            }
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.className = 'loading-overlay';
+            loadingOverlay.innerHTML = `
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Processing your payment...</p>
+            `;
+            document.body.appendChild(loadingOverlay);
             
             try {
-                const batch = db.batch();
-                const ordersCollection = db.collection('orders');
-                const orderIds = [];
+                if (!cart || !cart.items || !Array.isArray(cart.items) || cart.items.length === 0) {
+                    throw new Error('El carrito está vacío');
+                }
+
+                console.log('Items en carrito:', cart.items);
+
+                const orderRef = db.collection('orders').doc();
+                const orderId = orderRef.id;
+                const user = auth.currentUser;
+
+                const simpleItems = cart.items.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    size: item.size,
+                    quantity: item.quantity,
+                    image: item.image
+                }));
+
+                const orderData = {
+                    orderId: orderId,
+                    userId: user ? user.uid : 'anonymous',
+                    userEmail: user ? user.email : null,
+                    items: simpleItems,
+                    total: cart.getTotal(),
+                    status: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    paymentMethod: 'Stripe'
+                };
                 
-                // Crear documentos para cada item en el carrito
-                cart.items.forEach(item => {
-                    const orderRef = ordersCollection.doc();
-                    orderIds.push(orderRef.id);
-                    
-                    batch.set(orderRef, {
-                        userId: user.uid,
-                        userEmail: user.email,
-                        productId: item.id,
-                        productName: item.name,
-                        size: item.size,
-                        quantity: item.quantity,
-                        price: item.price,
-                        total: item.price * item.quantity,
-                        status: 'paid',
-                        paymentMethod: paymentMethod,
-                        paymentId: paymentId,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                        shippingStatus: 'processing'
-                    });
+                await orderRef.set(orderData);
+                console.log('Orden creada:', orderId);
+
+                // CAMBIO AQUÍ: Nueva URL con nuevo nombre de función
+                const functionUrl = 'https://us-central1-free4allriders-51c5e.cloudfunctions.net/processStripePayment';
+                
+                const response = await fetch(functionUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        items: simpleItems.map(item => ({
+                            name: item.name || 'HOODIE FOR RIDER',
+                            size: item.size || 'M',
+                            quantity: item.quantity || 1
+                        })),
+                        orderId: orderId,
+                        customerEmail: user ? user.email : null
+                    })
                 });
-                
-                await batch.commit();
-                
-                // Enviar email de confirmación a través de Cloud Functions
-                const sendOrderEmail = functions.httpsCallable('sendOrderEmail');
-                await sendOrderEmail({
-                    orderIds: orderIds,
-                    customerEmail: user.email,
-                    total: cart.getTotal().toFixed(2)
+
+                const result = await response.json();
+                console.log('Respuesta:', result);
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Error from server');
+                }
+
+                if (!result.sessionId) {
+                    throw new Error('No session ID received');
+                }
+
+                const { error } = await stripe.redirectToCheckout({
+                    sessionId: result.sessionId
                 });
-                
-                return orderIds;
-                
+
+                if (error) {
+                    throw new Error('Redirection error: ' + error.message);
+                }
+
             } catch (error) {
-                console.error("Error processing order:", error);
-                throw error;
+                console.error('ERROR:', error);
+                
+                if (loadingOverlay && loadingOverlay.parentNode) {
+                    loadingOverlay.parentNode.removeChild(loadingOverlay);
+                }
+                
+                showToast('Error processing payment: ' + error.message, 'error');
             }
         }
 
@@ -1072,7 +1111,7 @@
                         <strong>${item.name}</strong> (${item.size})
                         <br><small>Quantity: ${item.quantity}</small>
                     </div>
-                    <div>€${(item.price * item.quantity).toFixed(2)}</div>
+                    <div>$${(item.price * item.quantity).toFixed(2)}</div>
                 `;
                 summaryElement.appendChild(itemElement);
             });
@@ -1080,131 +1119,118 @@
             totalElement.textContent = cart.getTotal().toFixed(2);
         }
 
-        // PayPal integration
-        let paypalButtons;
-        
-        function initPayPalButtons(total) {
-            if (paypalButtons) {
-                paypalButtons.close();
-            }
-            
-            paypalButtons = paypal.Buttons({
-                createOrder: function(data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: total.toString(),
-                                currency_code: "EUR"
-                            }
-                        }]
-                    });
-                },
-                onApprove: async function(data, actions) {
-                    try {
-                        const orderIds = await processOrder('paypal', data.orderID);
-                        
-                        if (orderIds) {
-                            document.getElementById('checkoutModal').style.display = 'none';
-                            document.getElementById('confirmedSize').textContent = 
-                            cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
-                            document.getElementById('orderId').textContent = orderIds.join(', ');
-                            document.getElementById('paymentMethod').textContent = 'PayPal';
-                            document.getElementById('orderConfirmation').style.display = 'flex';
-                            
-                            // Clear cart after successful purchase
-                            cart.clear();
-                        }
-                    } catch (error) {
-                        console.error("Error processing PayPal payment:", error);
-                        showToast('Error processing payment. Please try again.', 'error');
-                    }
-                },
-                onError: function(err) {
-                    console.error("PayPal error:", err);
-                    showToast('Error processing PayPal payment. Please try again.', 'error');
-                }
-            });
-            
-            paypalButtons.render('#paypalButtonContainer');
-        }
-
-        // DOM Content Loaded
-        document.addEventListener('DOMContentLoaded', function() {
+        // Initialization when page loads
+        document.addEventListener('DOMContentLoaded', () => {
             // Initialize cart
             cart.init();
             
-            // Switch between product views
-            const switchBtn = document.getElementById('switchBtn');
-            const tabs = document.getElementById('tabs');
+            // Configure cart icon
+            const cartIcon = document.getElementById('cartIcon');
+            const cartDropdown = document.getElementById('cartDropdown');
             
-            switchBtn.addEventListener('click', function() {
-                tabs.style.transform = tabs.style.transform === 'translateX(-50%)' ? 'translateX(0)' : 'translateX(-50%)';
+            cartIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
             });
             
-            // Photo gallery modal
-            const morePhotosBtn = document.getElementById('morePhotosBtn');
-            const photosModal = document.getElementById('photosModal');
-            const closeModal = document.getElementById('closeModal');
-            
-            morePhotosBtn.addEventListener('click', function() {
-                photosModal.style.display = 'block';
+            document.addEventListener('click', () => {
+                cartDropdown.style.display = 'none';
             });
             
-            closeModal.addEventListener('click', function() {
-                photosModal.style.display = 'none';
-            });
-            
-            // Login modal
-            const authLink = document.getElementById('authLink');
-            const loginModal = document.getElementById('loginModal');
-            const closeLogin = document.getElementById('closeLogin');
-            const loginForm = document.getElementById('loginForm');
-            
-            authLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                loginModal.style.display = 'block';
-            });
-            
-            closeLogin.addEventListener('click', function() {
-                loginModal.style.display = 'none';
-            });
-            
-            // Login form handler
-            loginForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-                const errorMessage = document.getElementById('loginErrorMessage');
+            // Add to Cart (Vista Normal)
+            document.getElementById('addToCartBtn').addEventListener('click', () => {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
                 
+                const product = {
+                    id: 'hoodie-rider',
+                    name: 'RIDERS EXCLUSIVE HOODIE',
+                    price: 35,
+                    size: selectedSize,
+                    quantity: 1,
+                    image: 'Hoodie-white.jpeg'
+                };
+                
+                console.log('Adding to cart:', product);
+                cart.addItem(product);
+            });
+            
+            // Buy Now (Vista Normal)
+            document.getElementById('buyNowBtn').addEventListener('click', () => {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
+                
+                const product = {
+                    id: 'hoodie-rider',
+                    name: 'RIDERS EXCLUSIVE HOODIE',
+                    price: 35,
+                    size: selectedSize,
+                    quantity: 1,
+                    image: 'Hoodie-white.jpeg'
+                };
+                
+                cart.clear();
+                cart.addItem(product);
+                document.getElementById('checkoutModal').style.display = 'flex';
+                updateCheckoutSummary();
+            });
+            
+            // Add to Cart (3D View)
+            document.getElementById('addToCartBtn3D').addEventListener('click', () => {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
+                
+                const product = {
+                    id: 'hoodie-rider',
+                    name: 'RIDERS EXCLUSIVE HOODIE',
+                    price: 35,
+                    size: selectedSize,
+                    quantity: 1,
+                    image: 'Hoodie-white.jpeg'
+                };
+                
+                console.log('Adding to cart from 3D view:', product);
+                cart.addItem(product);
+            });
+            
+            // Buy Now (3D View)
+            document.getElementById('buyNowBtn3D').addEventListener('click', () => {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
+                
+                const product = {
+                    id: 'hoodie-rider',
+                    name: 'RIDERS EXCLUSIVE HOODIE',
+                    price: 35,
+                    size: selectedSize,
+                    quantity: 1,
+                    image: 'Hoodie-white.jpeg'
+                };
+                
+                cart.clear();
+                cart.addItem(product);
+                document.getElementById('checkoutModal').style.display = 'flex';
+                updateCheckoutSummary();
+            });
+            
+            // Checkout button (from cart dropdown)
+            document.getElementById('checkoutBtn').addEventListener('click', () => {
+                if (cart.getTotalItems() === 0) {
+                    showToast('Cart is empty', 'error');
+                    return;
+                }
+                
+                document.getElementById('checkoutModal').style.display = 'flex';
+                updateCheckoutSummary();
+            });
+            
+            // Confirm purchase button (in checkout modal)
+            document.getElementById('confirmCheckout').addEventListener('click', async () => {
                 try {
-                    await auth.signInWithEmailAndPassword(email, password);
-                    loginModal.style.display = 'none';
-                    authLink.textContent = 'Logout';
-                    showToast('Login successful');
+                    await processOrderWithStripe();
                 } catch (error) {
-                    console.error("Login error:", error);
-                    errorMessage.textContent = error.message;
+                    console.error("Checkout error:", error);
+                    showToast('Error processing purchase: ' + error.message, 'error');
                 }
             });
             
-            // Auth state listener
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    authLink.textContent = 'Logout';
-                    authLink.onclick = function(e) {
-                        e.preventDefault();
-                        auth.signOut();
-                    };
-                } else {
-                    authLink.textContent = 'Login';
-                    authLink.onclick = function(e) {
-                        e.preventDefault();
-                        loginModal.style.display = 'block';
-                    };
-                }
-            });
-            
-            // Size selection
+            // Size selector
             document.querySelectorAll('.size-option').forEach(option => {
                 option.addEventListener('click', function() {
                     document.querySelectorAll('.size-option').forEach(opt => {
@@ -1214,107 +1240,97 @@
                 });
             });
             
-            // Add to cart buttons
-            function addToCartHandler() {
-                const selectedSize = document.querySelector('.size-option.selected').textContent;
-                const price = parseFloat(document.querySelector('.product-price').textContent.replace('€', ''));
-                
-                const product = {
-                    id: 'hoodie-rider',
-                    name: 'HOODIE FOR RIDER',
-                    image: 'Hoodie-white.jpeg',
-                    size: selectedSize,
-                    price: price,
-                    quantity: 1
-                };
-                
-                cart.addItem(product);
+            // Authentication system
+            const authLink = document.getElementById('authLink');
+            const loginModal = document.getElementById('loginModal');
+            const closeLogin = document.getElementById('closeLogin');
+            const loginForm = document.getElementById('loginForm');
+            const loginErrorMessage = document.getElementById('loginErrorMessage');
+            
+            function showLoginModal() {
+                loginModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
             }
             
-            document.getElementById('addToCartBtn').addEventListener('click', addToCartHandler);
-            document.getElementById('addToCartBtn3D').addEventListener('click', addToCartHandler);
+            authLink.addEventListener('click', (e) => {
+                if (auth.currentUser) {
+                    e.preventDefault();
+                    auth.signOut().then(() => {
+                        showToast('Logged out successfully');
+                    }).catch(error => {
+                        showToast('Error logging out', 'error');
+                    });
+                } else {
+                    e.preventDefault();
+                    showLoginModal();
+                }
+            });
             
-            // Buy now buttons
-            function buyNowHandler() {
-                addToCartHandler();
-                document.getElementById('checkoutModal').style.display = 'flex';
-                updateCheckoutSummary();
+            closeLogin.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(() => {
+                        loginModal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                        loginErrorMessage.textContent = '';
+                        showToast('Logged in successfully');
+                    })
+                    .catch(error => {
+                        loginErrorMessage.textContent = getAuthErrorMessage(error.code);
+                    });
+            });
+            
+            function getAuthErrorMessage(errorCode) {
+                switch(errorCode) {
+                    case 'auth/invalid-email': return 'Invalid email';
+                    case 'auth/user-disabled': return 'Account disabled';
+                    case 'auth/user-not-found': return 'User not found';
+                    case 'auth/wrong-password': return 'Wrong password';
+                    default: return 'Login error';
+                }
             }
             
-            document.getElementById('buyNowBtn').addEventListener('click', buyNowHandler);
-            document.getElementById('buyNowBtn3D').addEventListener('click', buyNowHandler);
-            
-            // Cart icon toggle
-            document.getElementById('cartIcon').addEventListener('click', function(e) {
-                e.stopPropagation();
-                const dropdown = document.getElementById('cartDropdown');
-                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-            });
-            
-            // Close cart dropdown when clicking outside
-            document.addEventListener('click', function() {
-                document.getElementById('cartDropdown').style.display = 'none';
-            });
-            
-            // Checkout button
-            document.getElementById('checkoutBtn').addEventListener('click', function() {
-                if (cart.getTotalItems() === 0) {
-                    showToast('Your cart is empty', 'error');
-                    return;
-                }
-                
-                document.getElementById('checkoutModal').style.display = 'flex';
-                updateCheckoutSummary();
-            });
-            
-            // Payment method selection
-            document.getElementById('payWithCardBtn').addEventListener('click', function() {
-                document.getElementById('cardPayment').classList.add('active');
-                document.getElementById('paypalPayment').classList.remove('active');
-            });
-            
-            document.getElementById('payWithPayPalBtn').addEventListener('click', function() {
-                document.getElementById('paypalPayment').classList.add('active');
-                document.getElementById('cardPayment').classList.remove('active');
-                initPayPalButtons(cart.getTotal().toFixed(2));
-            });
-            
-            // Simulate card payment
-            document.getElementById('confirmCardPayment').addEventListener('click', async function() {
-                try {
-                    const orderIds = await processOrder('credit_card');
-                    
-                    if (orderIds) {
-                        document.getElementById('checkoutModal').style.display = 'none';
-                        document.getElementById('confirmedSize').textContent = 
-                            cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
-                        document.getElementById('orderId').textContent = orderIds.join(', ');
-                        document.getElementById('paymentMethod').textContent = 'Credit Card';
-                        document.getElementById('orderConfirmation').style.display = 'flex';
-                        
-                        // Clear cart after successful purchase
-                        cart.clear();
-                    }
-                } catch (error) {
-                    console.error("Error processing card payment:", error);
-                    showToast('Error processing payment. Please try again.', 'error');
+            // Auth state observer
+            auth.onAuthStateChanged(user => {
+                const authLink = document.getElementById('authLink');
+                if (user) {
+                    authLink.textContent = 'Logout';
+                    authLink.href = '#';
+                } else {
+                    authLink.textContent = 'Login';
+                    authLink.href = 'login.html';
                 }
             });
             
-            // Close modals when clicking outside
-            window.addEventListener('click', function(event) {
-                if (event.target === document.getElementById('loginModal')) {
-                    document.getElementById('loginModal').style.display = 'none';
-                }
-                if (event.target === document.getElementById('photosModal')) {
-                    document.getElementById('photosModal').style.display = 'none';
-                }
-                if (event.target === document.getElementById('orderConfirmation')) {
-                    document.getElementById('orderConfirmation').style.display = 'none';
-                }
-                if (event.target === document.getElementById('checkoutModal')) {
-                    document.getElementById('checkoutModal').style.display = 'none';
-                }
+            // Photo gallery
+            const morePhotosBtn = document.getElementById('morePhotosBtn');
+            const photosModal = document.getElementById('photosModal');
+            const closeModal = document.getElementById('closeModal');
+            
+            morePhotosBtn.addEventListener('click', () => {
+                photosModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            closeModal.addEventListener('click', () => {
+                photosModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            // View switching
+            const switchBtn = document.getElementById('switchBtn');
+            const tabs = document.getElementById('tabs');
+            
+            switchBtn.addEventListener('click', () => {
+                tabs.style.transform = tabs.style.transform === 'translateX(-50%)' ? 'translateX(0)' : 'translateX(-50%)';
             });
         });
     </script>
