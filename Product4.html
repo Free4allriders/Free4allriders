@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,6 +11,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-functions-compat.js"></script>
+    <!-- Stripe SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
         :root {
             --neon-pink: #ff00ff;
@@ -36,7 +38,7 @@
             overflow-x: hidden;
         }
         
-        /* Header Estilo Neon */
+        /* Header Styles */
         header {
             background-color: rgba(0, 0, 0, 0.9);
             padding: 15px 5%;
@@ -75,7 +77,7 @@
             text-shadow: 0 0 10px var(--neon-pink);
         }
         
-        /* Contenedor Principal */
+        /* Main Container */
         .main-container {
             max-width: 1200px;
             margin: 100px auto 50px;
@@ -83,7 +85,7 @@
             animation: fadeIn 0.8s ease-out;
         }
         
-        /* Sistema de Pestañas */
+        /* Product Tabs */
         .tab-container {
             position: relative;
             width: 100%;
@@ -107,7 +109,7 @@
             background-color: rgba(0, 0, 0, 0.8);
         }
         
-        /* Sección de Imagen */
+        /* Image Section */
         .image-section {
             flex: 1;
             position: relative;
@@ -118,15 +120,6 @@
             border-radius: 10px;
             border: 1px solid var(--neon-pink);
             box-shadow: var(--glow-effect);
-        }
-        
-        model-viewer {
-            width: 100%;
-            height: 500px;
-            background-color: var(--black);
-            border-radius: 10px;
-            border: 1px solid var(--neon-purple);
-            --poster-color: transparent;
         }
         
         .image-buttons {
@@ -154,181 +147,6 @@
             background-color: var(--neon-pink);
             transform: translateY(-2px);
             box-shadow: 0 0 15px var(--neon-pink);
-        }
-        
-        /* Sección de Detalles */
-        .details-section {
-            flex: 1;
-            padding: 20px;
-        }
-        
-        .product-title {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            color: var(--neon-pink);
-            text-shadow: 0 0 10px var(--neon-pink);
-        }
-        
-        .product-price {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin: 20px 0;
-            color: var(--neon-purple);
-        }
-        
-        .product-description {
-            line-height: 1.6;
-            margin-bottom: 25px;
-            color: #ccc;
-        }
-        
-        .size-selector {
-            margin: 25px 0;
-        }
-        
-        .size-options {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .size-option {
-            padding: 8px 15px;
-            border: 1px solid var(--neon-purple);
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: var(--white);
-            background-color: transparent;
-        }
-        
-        .size-option:hover {
-            background-color: var(--neon-purple);
-            box-shadow: var(--glow-effect);
-        }
-        
-        .size-option.selected {
-            background-color: var(--neon-pink);
-            border-color: var(--neon-pink);
-            box-shadow: var(--glow-effect);
-        }
-        
-        /* Ghost Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-        }
-        
-        .btn {
-            padding: 12px 25px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            background-color: transparent;
-            color: var(--white);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--neon-pink);
-        }
-        
-        .btn:hover {
-            background-color: rgba(157, 0, 255, 0.2);
-            box-shadow: var(--glow-effect);
-            transform: translateY(-3px);
-        }
-        
-        .btn-primary {
-            border-color: var(--neon-pink);
-            color: var(--neon-pink);
-        }
-        
-        .btn-secondary {
-            border-color: var(--neon-purple);
-            color: var(--neon-purple);
-        }
-        
-        /* Navegación de Pestañas */
-        .tab-nav {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        
-        .tab-btn {
-            padding: 10px 30px;
-            background-color: transparent;
-            color: var(--white);
-            border: 1px solid var(--neon-purple);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .tab-btn:hover {
-            background-color: rgba(157, 0, 255, 0.1);
-            box-shadow: 0 0 10px rgba(157, 0, 255, 0.5);
-        }
-        
-        .tab-btn.active {
-            background-color: var(--neon-purple);
-            box-shadow: var(--glow-effect);
-            border-color: var(--neon-pink);
-        }
-        
-        .tab-btn:first-child {
-            border-radius: 5px 0 0 5px;
-        }
-        
-        .tab-btn:last-child {
-            border-radius: 0 5px 5px 0;
-        }
-        
-        /* Indicador de Deslizamiento */
-        .swipe-indicator {
-            text-align: center;
-            margin: 20px 0;
-            color: var(--neon-purple);
-            text-shadow: 0 0 5px var(--neon-pink);
-            font-size: 0.9rem;
-        }
-        
-        /* Footer Neon */
-        footer {
-            background-color: rgba(0, 0, 0, 0.9);
-            padding: 30px 5%;
-            text-align: center;
-            margin-top: 50px;
-            border-top: 1px solid var(--neon-purple);
-        }
-        
-        .footer-logo {
-            height: 30px;
-            margin-bottom: 20px;
-            filter: drop-shadow(var(--glow-effect));
-        }
-        
-        .social-links {
-            margin: 20px 0;
-        }
-        
-        .social-links a {
-            color: var(--white);
-            margin: 0 10px;
-            font-size: 1.2rem;
-            transition: all 0.3s;
-        }
-        
-        .social-links a:hover {
-            color: var(--neon-pink);
-            text-shadow: 0 0 10px var(--neon-pink);
-        }
-        
-        .copyright {
-            color: var(--neon-purple);
-            font-size: 0.9rem;
-            text-shadow: 0 0 5px var(--neon-pink);
         }
         
         /* Modal Styles */
@@ -441,6 +259,137 @@
             font-size: 14px;
         }
         
+        /* Product Details */
+        .details-section {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        .product-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: var(--neon-purple);
+        }
+        
+        .product-description {
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #ccc;
+        }
+        
+        .size-selector {
+            margin: 25px 0;
+        }
+        
+        .size-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .size-option {
+            padding: 8px 15px;
+            border: 1px solid var(--neon-purple);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--white);
+            background-color: transparent;
+        }
+        
+        .size-option:hover {
+            background-color: var(--neon-purple);
+            box-shadow: var(--glow-effect);
+        }
+        
+        .size-option.selected {
+            background-color: var(--neon-pink);
+            border-color: var(--neon-pink);
+            box-shadow: var(--glow-effect);
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: transparent;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--neon-pink);
+        }
+        
+        .btn:hover {
+            background-color: rgba(157, 0, 255, 0.2);
+            box-shadow: var(--glow-effect);
+            transform: translateY(-3px);
+        }
+        
+        .btn-primary {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+        }
+        
+        .btn-secondary {
+            border-color: var(--neon-purple);
+            color: var(--neon-purple);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 30px 5%;
+            text-align: center;
+            margin-top: 50px;
+            border-top: 1px solid var(--neon-purple);
+        }
+        
+        .footer-logo {
+            height: 30px;
+            margin-bottom: 20px;
+            filter: drop-shadow(var(--glow-effect));
+        }
+        
+        .social-links {
+            margin: 20px 0;
+        }
+        
+        .social-links a {
+            color: var(--white);
+            margin: 0 10px;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        .copyright {
+            color: var(--neon-purple);
+            font-size: 0.9rem;
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+        
         /* Order Confirmation Styles */
         .order-confirmation {
             position: fixed;
@@ -493,7 +442,13 @@
             color: var(--neon-pink);
         }
         
-        /* Estilos del Carrito */
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Cart Styles */
         .cart-icon {
             position: relative;
             cursor: pointer;
@@ -628,6 +583,9 @@
             max-height: 400px;
             overflow-y: auto;
             margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
         }
         
         .checkout-item {
@@ -657,33 +615,105 @@
                 height: 300px;
             }
             
-            nav {
-                display: none;
-            }
-            
-            .confirmation-content {
-                padding: 20px;
-            }
-            
-            .confirmation-title {
-                font-size: 1.5rem;
-            }
-            
             .cart-dropdown {
                 width: 300px;
                 right: -50px;
             }
         }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            flex-direction: column;
+        }
         
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--neon-pink);
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: var(--neon-pink);
+            font-size: 18px;
+        }
+        
+        /* Gradient Title */
+        h1.gradient-title {
+            font-family: Arial;
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, #d800ff, #f77bff, #d800ff, #b300ff, #00f7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .tab-btn {
+            padding: 10px 30px;
+            background-color: transparent;
+            color: var(--white);
+            border: 1px solid var(--neon-purple);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn:hover {
+            background-color: rgba(157, 0, 255, 0.1);
+            box-shadow: 0 0 10px rgba(157, 0, 255, 0.5);
+        }
+        
+        .tab-btn.active {
+            background-color: var(--neon-purple);
+            box-shadow: var(--glow-effect);
+            border-color: var(--neon-pink);
+        }
+        
+        .tab-btn:first-child {
+            border-radius: 5px 0 0 5px;
+        }
+        
+        .tab-btn:last-child {
+            border-radius: 0 5px 5px 0;
+        }
+        
+        /* Swipe Indicator */
+        .swipe-indicator {
+            text-align: center;
+            margin: 20px 0;
+            color: var(--neon-purple);
+            text-shadow: 0 0 5px var(--neon-pink);
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <!-- Header Estilo Cyberpunk -->
+    <!-- Header -->
     <header>
         <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="logo">
         <nav>
@@ -706,35 +736,23 @@
         </nav>
     </header>
     
-    <!-- Contenedor Principal -->
+    <!-- Main Content -->
     <div class="main-container">
-        <!-- Navegación de Pestañas -->
+        <!-- Tab Navigation -->
         <div class="tab-nav">
             <button class="tab-btn active" onclick="showTab(0)">VISTA CLÁSICA</button>
             <button class="tab-btn" onclick="showTab(1)">EXPERIENCIA 3D</button>
         </div>
 
-       <style>
-        h1.gradient-title {
-               font-family: Arial;
-    font-size: 3.5rem;
-    background: linear-gradient(90deg, #d800ff, #f77bff, #d800ff, #b300ff, #00f7ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    display: inline-block;
-        }
-    </style>
-
         <div class="swipe-indicator">← Desliza para cambiar entre vistas →</div>
         
-        <!-- Contenedor de Pestañas -->
+        <!-- Product Tabs -->
         <div class="tab-container" id="tabContainer">
             <div class="tabs" id="tabs">
-                <!-- Vista Normal -->
+                <!-- Classic View -->
                 <div class="tab">
                     <div class="image-section">
-                        <img src="Camiseta.PNG" alt="Chaqueta Épica" class="product-image" id="productImage">
+                        <img src="Camiseta.PNG" alt="T-SHIRT" class="product-image" id="productImage">
                         <div class="image-buttons">
                             <button class="img-btn" id="switchBtn">SWITCH</button>
                             <button class="img-btn" id="morePhotosBtn">MORE PHOTOS</button>
@@ -743,7 +761,7 @@
                     
                     <div class="details-section">
                         <h1 class="gradient-title">T-SHIRT</h1>
-                        <div class="product-price">25€</div>
+                        <div class="product-price">25$</div>
                         
                         <p class="product-description">
                             T-SHIRT F4AR - WHITE EDITION
@@ -766,18 +784,18 @@
                     </div>
                 </div>
                 
-                <!-- Vista 3D -->
+                <!-- 3D View -->
                 <div class="tab">
                     <div class="image-section">
-                        <model-viewer src="hoodie.glb" alt="Vista 3D de la Chaqueta" auto-rotate camera-controls></model-viewer>
+                        <model-viewer src="hoodie.glb" alt="3D View of the T-SHIRT" auto-rotate camera-controls style="width: 100%; height: 400px; background-color: #000;"></model-viewer>
                     </div>
                     
                     <div class="details-section">
                         <h1 class="product-title">MODO 3D ACTIVADO</h1>
-                        <div class="product-price">40€</div>
+                        <div class="product-price">25$</div>
                         
                         <p class="product-description">
-                            Explora cada detalle de nuestra chaqueta futurista en 360°.
+                            Explora cada detalle de nuestra T-SHIRT en 360°.
                             <br><br>
                             <strong>CONTROLES:</strong>
                             <br>Arrastra para rotar
@@ -810,9 +828,9 @@
             <span class="close-modal" id="closeModal">&times;</span>
             <h2 style="color: var(--neon-pink); text-align: center; margin-bottom: 20px;">GALERÍA DEL PRODUCTO</h2>
             
-            <div class="gallery-grid">
-                <img src="Familly.jpeg" alt="Modelo frontal con la chaqueta" class="gallery-img">
-                <img src="Back.jpeg" alt="Vista trasera de la chaqueta" class="gallery-img">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <img src="Familly.jpeg" alt="Front view with the T-SHIRT" style="width: 100%; border-radius: 10px; border: 1px solid var(--neon-purple);">
+                <img src="Back.jpeg" alt="Back view of the T-SHIRT" style="width: 100%; border-radius: 10px; border: 1px solid var(--neon-purple);">
             </div>
         </div>
     </div>
@@ -837,27 +855,17 @@
     <!-- Order Confirmation Modal -->
     <div id="orderConfirmation" class="order-confirmation">
         <div class="confirmation-content">
-            <h2 class="confirmation-title">¡Pedido Confirmado!</h2>
+            <h2 class="confirmation-title">¡Pedido Recibido!</h2>
             <p class="confirmation-message">Gracias por tu compra. Hemos recibido tu pedido correctamente.</p>
             
             <div class="order-details">
-                <p>Producto: <strong>CHAQUETA ÉPICA</strong></p>
+                <p>Producto: <strong>T-SHIRT</strong></p>
                 <p>Talla: <strong id="confirmedSize"></strong></p>
-                <p>Total: <strong id="confirmedPrice"></strong></p>
-                <p>Nº de pedido: <span class="order-id" id="orderId"></span></p>
-                <!-- Estos elementos se llenarán dinámicamente -->
-                <p id="customerName"></p>
-                <p id="customerEmail"></p>
-                <p id="orderDate"></p>
+                <p>Precio: <strong id="confirmedPrice">25$</strong></p>
+                <p>ID del pedido: <span class="order-id" id="orderId"></span></p>
             </div>
             
-            <p style="margin-top: 20px; color: var(--neon-purple);">
-                Te hemos enviado un correo con los detalles de tu compra.
-            </p>
-            
-            <button class="btn btn-primary" onclick="document.getElementById('orderConfirmation').style.display = 'none'">
-                Cerrar
-            </button>
+            <button class="btn btn-primary" onclick="document.getElementById('orderConfirmation').style.display = 'none'">Cerrar</button>
         </div>
     </div>
     
@@ -868,13 +876,8 @@
             <div class="checkout-summary" id="checkoutSummary">
                 <!-- Los items del carrito se añadirán aquí -->
             </div>
-            <div class="order-details">
-                <p>Subtotal: <span id="checkoutSubtotal">0.00</span>€</p>
-                <p>Envío: <span id="checkoutShipping">5.00</span>€</p>
-                <p>IVA (21%): <span id="checkoutTax">0.00</span>€</p>
-                <p class="cart-total" style="text-align: right; font-size: 1.2rem; margin-top: 10px;">
-                    Total: <span id="checkoutTotal">0.00</span>€
-                </p>
+            <div class="cart-total" style="text-align: right; font-size: 1.2rem;">
+                Total: $<span id="checkoutTotal">0.00</span>
             </div>
             <div class="action-buttons" style="margin-top: 20px;">
                 <button class="btn btn-primary" id="confirmCheckout">Confirmar Compra</button>
@@ -883,7 +886,7 @@
         </div>
     </div>
     
-    <!-- Footer Neon -->
+    <!-- Footer -->
     <footer>
         <img src="logo-imatge.PNG" alt="FREE4ALLRIDERS" class="footer-logo">
         <div class="social-links">
@@ -897,30 +900,35 @@
 
     <!-- Firebase Configuration -->
     <script>
-        // Configuración Firebase (reemplaza con tus datos reales)
-     const firebaseConfig = {
-    apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
-    authDomain: "free4allriders-51c5e.firebaseapp.com",
-    projectId: "free4allriders-51c5e",
-    storageBucket: "free4allriders-51c5e.firebasestorage.app",
-    messagingSenderId: "1082764494980",
-    appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
-    measurementId: "G-7KEGQPK3P0"
-  };
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAnhkZ3lkRpS8bBHI8OKYlYmpyRisahrdQ",
+            authDomain: "free4allriders-51c5e.firebaseapp.com",
+            projectId: "free4allriders-51c5e",
+            storageBucket: "free4allriders-51c5e.firebasestorage.app",
+            messagingSenderId: "1082764494980",
+            appId: "1:1082764494980:web:a124d3dfeed2c08d8b5ad1",
+            measurementId: "G-7KEGQPK3P0"
+        };
 
-        // Inicialización Firebase
+        // Firebase Initialization
         try {
             firebase.initializeApp(firebaseConfig);
             console.log("Firebase inicializado correctamente");
         } catch (error) {
             console.error("Error inicializando Firebase:", error);
+            alert("Error inicializando la aplicación. Por favor, recarga la página.");
         }
+
+        // Stripe Initialization
+        const stripe = Stripe('pk_live_51S2uv6DDOVogQ3MxIwiMdiRsP2qmw5IBCteXRIVhBVpSLGYY56G57pfYU1C5iF3xwUpk3gRuAYzag0uYTdCilVbV00fSt2ffPB');
 
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const functions = firebase.functions();
         const CART_STORAGE_KEY = 'free4all_cart_v2';
 
-        // Objeto del carrito
+        // Cart object
         const cart = {
             items: [],
             
@@ -1009,7 +1017,7 @@
                         <div class="cart-item-info">
                             <div class="cart-item-title">${item.name}</div>
                             <div class="cart-item-details">Talla: ${item.size} | Cantidad: ${item.quantity}</div>
-                            <div class="cart-item-details">${(item.price * item.quantity).toFixed(2)}€</div>
+                            <div class="cart-item-details">$${(item.price * item.quantity).toFixed(2)}</div>
                             <button class="remove-item" data-index="${index}">Eliminar</button>
                         </div>
                     `;
@@ -1027,7 +1035,7 @@
             }
         };
 
-        // Función para mostrar notificaciones
+        // Function to show notifications
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
             toast.className = `toast${type === 'error' ? ' toast-error' : ''}`;
@@ -1039,252 +1047,144 @@
             }, 3000);
         }
 
-        // Función para procesar la orden
-        async function processOrder() {
-            const user = auth.currentUser;
+        // Function to safely serialize objects with circular references
+        function safeStringify(obj) {
+            const seen = new WeakSet();
+            return JSON.stringify(obj, (key, value) => {
+                if (typeof value === "object" && value !== null) {
+                    if (seen.has(value)) {
+                        return "[Circular]";
+                    }
+                    seen.add(value);
+                }
+                return value;
+            });
+        }
+
+        async function processOrderWithStripe() {
+            console.log('=== INICIANDO PROCESO DE PAGO STRIPE ===');
             
-            if (!user) {
-                showToast('Por favor inicia sesión para continuar', 'error');
-                document.getElementById('loginModal').style.display = 'block';
-                return null;
-            }
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.className = 'loading-overlay';
+            loadingOverlay.innerHTML = `
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Procesando tu pago...</p>
+            `;
+            document.body.appendChild(loadingOverlay);
             
             try {
-                // Obtener datos del usuario
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                const userData = userDoc.data() || {};
-                
-                // Crear objeto de orden
-                const subtotal = cart.getTotal();
-                const shipping = 5.00;
-                const tax = subtotal * 0.21;
-                const total = subtotal + shipping + tax;
-                
+                if (!cart || !cart.items || !Array.isArray(cart.items) || cart.items.length === 0) {
+                    throw new Error('El carrito está vacío');
+                }
+
+                console.log('Items en carrito:', cart.items);
+
+                const orderRef = db.collection('orders').doc();
+                const orderId = orderRef.id;
+                const user = auth.currentUser;
+
+                const simpleItems = cart.items.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    size: item.size,
+                    quantity: item.quantity,
+                    image: item.image
+                }));
+
                 const orderData = {
-                    userId: user.uid,
-                    userEmail: user.email,
-                    userName: userData.name || 'Cliente',
-                    items: cart.items,
-                    subtotal: subtotal,
-                    shipping: shipping,
-                    tax: tax,
-                    total: total,
-                    status: 'completed',
-                    paymentMethod: 'credit_card',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    ip: await getClientIP()
+                    orderId: orderId,
+                    userId: user ? user.uid : 'anonymous',
+                    userEmail: user ? user.email : null,
+                    items: simpleItems,
+                    total: cart.getTotal(),
+                    status: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    paymentMethod: 'Stripe'
                 };
+                
+                await orderRef.set(orderData);
+                console.log('Orden creada:', orderId);
 
-                // Guardar en Firestore
-                const orderRef = await db.collection('orders').add(orderData);
+                // CAMBIO AQUÍ: Nueva URL con nuevo nombre de función
+                const functionUrl = 'https://us-central1-free4allriders-51c5e.cloudfunctions.net/processStripePayment';
                 
-                // Mostrar en consola (simulación de email)
-                console.log(`Enviando confirmación a ${user.email} para la orden ${orderRef.id}`);
-                console.log('Detalles del pedido:', orderData);
-                
-                return {
-                    orderId: orderRef.id,
-                    orderData: orderData
-                };
-                
+                const response = await fetch(functionUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        items: simpleItems.map(item => ({
+                            name: item.name || 'T-SHIRT',
+                            size: item.size || 'M',
+                            quantity: item.quantity || 1
+                        })),
+                        orderId: orderId,
+                        customerEmail: user ? user.email : null
+                    })
+                });
+
+                const result = await response.json();
+                console.log('Respuesta:', result);
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Error del servidor');
+                }
+
+                if (!result.sessionId) {
+                    throw new Error('No se recibió ID de sesión');
+                }
+
+                const { error } = await stripe.redirectToCheckout({
+                    sessionId: result.sessionId
+                });
+
+                if (error) {
+                    throw new Error('Error de redirección: ' + error.message);
+                }
+
             } catch (error) {
-                console.error("Error procesando orden:", error);
-                throw error;
+                console.error('ERROR:', error);
+                
+                if (loadingOverlay && loadingOverlay.parentNode) {
+                    loadingOverlay.parentNode.removeChild(loadingOverlay);
+                }
+                
+                showToast('Error procesando el pago: ' + error.message, 'error');
             }
         }
 
-        // Función auxiliar para obtener IP
-        async function getClientIP() {
-            try {
-                const response = await fetch('https://api.ipify.org?format=json');
-                const data = await response.json();
-                return data.ip;
-            } catch (error) {
-                console.error("Error obteniendo IP:", error);
-                return 'unknown';
-            }
-        }
-
-        // Función para actualizar el resumen de checkout
+        // Function to update checkout summary
         function updateCheckoutSummary() {
             const summaryElement = document.getElementById('checkoutSummary');
-            const subtotalElement = document.getElementById('checkoutSubtotal');
-            const shippingElement = document.getElementById('checkoutShipping');
-            const taxElement = document.getElementById('checkoutTax');
             const totalElement = document.getElementById('checkoutTotal');
-                    summaryElement.innerHTML = '';
-        
-        if (cart.items.length === 0) {
-            summaryElement.innerHTML = '<p>No hay productos en el carrito</p>';
-            subtotalElement.textContent = '0.00';
-            shippingElement.textContent = '0.00';
-            taxElement.textContent = '0.00';
-            totalElement.textContent = '0.00';
-            return;
-        }
-        
-        const subtotal = cart.getTotal();
-        const shipping = 5.00;
-        const tax = subtotal * 0.21;
-        const total = subtotal + shipping + tax;
-        
-        cart.items.forEach(item => {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'checkout-item';
-            itemElement.innerHTML = `
-                <div>
-                    <strong>${item.name}</strong> (${item.size})
-                    <br><small>Cantidad: ${item.quantity}</small>
-                </div>
-                <div>${(item.price * item.quantity).toFixed(2)}€</div>
-            `;
-            summaryElement.appendChild(itemElement);
-        });
-        
-        subtotalElement.textContent = subtotal.toFixed(2);
-        shippingElement.textContent = shipping.toFixed(2);
-        taxElement.textContent = tax.toFixed(2);
-        totalElement.textContent = total.toFixed(2);
-    }
-
-    // Inicialización al cargar la página
-    document.addEventListener('DOMContentLoaded', () => {
-        // Inicializar carrito
-        cart.init();
-        
-        // Configurar el icono del carrito
-        const cartIcon = document.getElementById('cartIcon');
-        const cartDropdown = document.getElementById('cartDropdown');
-        
-        cartIcon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
-        });
-        
-        document.addEventListener('click', () => {
-            cartDropdown.style.display = 'none';
-        });
-        
-        // Botón de añadir al carrito (vista normal)
-        document.getElementById('addToCartBtn').addEventListener('click', () => {
-            const product = {
-                id: 'chaqueta-epica-1',
-                name: document.querySelector('.product-title').textContent,
-                price: parseFloat(document.querySelector('.product-price').textContent.replace('€', '')),
-                size: document.querySelector('.size-option.selected').textContent,
-                quantity: 1,
-                image: document.querySelector('.product-image').src
-            };
             
-            cart.addItem(product);
-        });
-        
-        // Botón de añadir al carrito (vista 3D)
-        document.getElementById('addToCartBtn3D').addEventListener('click', () => {
-            const product = {
-                id: 'chaqueta-epica-1',
-                name: 'CHAQUETA ÉPICA (3D)',
-                price: parseFloat(document.querySelector('.product-price').textContent.replace('€', '')),
-                size: document.querySelector('.size-option.selected').textContent,
-                quantity: 1,
-                image: 'hoodie.glb'
-            };
+            summaryElement.innerHTML = '';
             
-            cart.addItem(product);
-        });
-        
-        // Botón de comprar ahora (vista normal)
-        document.getElementById('buyNowBtn').addEventListener('click', () => {
-            const product = {
-                id: 'chaqueta-epica-1',
-                name: document.querySelector('.product-title').textContent,
-                price: parseFloat(document.querySelector('.product-price').textContent.replace('€', '')),
-                size: document.querySelector('.size-option.selected').textContent,
-                quantity: 1,
-                image: document.querySelector('.product-image').src
-            };
-            
-            cart.clear();
-            cart.addItem(product);
-            document.getElementById('checkoutModal').style.display = 'flex';
-            updateCheckoutSummary();
-        });
-        
-        // Botón de comprar ahora (vista 3D)
-        document.getElementById('buyNowBtn3D').addEventListener('click', () => {
-            const product = {
-                id: 'chaqueta-epica-1',
-                name: 'CHAQUETA ÉPICA (3D)',
-                price: parseFloat(document.querySelector('.product-price').textContent.replace('€', '')),
-                size: document.querySelector('.size-option.selected').textContent,
-                quantity: 1,
-                image: 'hoodie.glb'
-            };
-            
-            cart.clear();
-            cart.addItem(product);
-            document.getElementById('checkoutModal').style.display = 'flex';
-            updateCheckoutSummary();
-        });
-        
-        // Botón de finalizar compra (desde el dropdown del carrito)
-        document.getElementById('checkoutBtn').addEventListener('click', () => {
-            if (cart.getTotalItems() === 0) {
-                showToast('El carrito está vacío', 'error');
+            if (cart.items.length === 0) {
+                summaryElement.innerHTML = '<p>No hay productos en el carrito</p>';
+                totalElement.textContent = '0.00';
                 return;
             }
             
-            document.getElementById('checkoutModal').style.display = 'flex';
-            updateCheckoutSummary();
-        });
-        
-        // Botón de confirmar compra (en el modal de checkout)
-        document.getElementById('confirmCheckout').addEventListener('click', async () => {
-            const confirmBtn = document.getElementById('confirmCheckout');
-            confirmBtn.disabled = true;
-            confirmBtn.textContent = 'Procesando...';
+            cart.items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'checkout-item';
+                itemElement.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong> (${item.size})
+                        <br><small>Cantidad: ${item.quantity}</small>
+                    </div>
+                    <div>$${(item.price * item.quantity).toFixed(2)}</div>
+                `;
+                summaryElement.appendChild(itemElement);
+            });
             
-            try {
-                const result = await processOrder();
-                
-                if (result) {
-                    // Ocultar modal de checkout
-                    document.getElementById('checkoutModal').style.display = 'none';
-                    
-                    // Mostrar datos en la confirmación
-                    document.getElementById('confirmedSize').textContent = 
-                        cart.items.map(item => `${item.size} (x${item.quantity})`).join(', ');
-                    document.getElementById('confirmedPrice').textContent = 
-                        `${result.orderData.total.toFixed(2)}€ (IVA incluido)`;
-                    document.getElementById('orderId').textContent = result.orderId;
-                    
-                    // Mostrar info del cliente
-                    document.getElementById('customerName').innerHTML = 
-                        `Cliente: <strong>${result.orderData.userName}</strong>`;
-                    document.getElementById('customerEmail').innerHTML = 
-                        `Email: <strong>${result.orderData.userEmail}</strong>`;
-                    document.getElementById('orderDate').innerHTML = 
-                        `Fecha: <strong>${new Date().toLocaleString()}</strong>`;
-                    
-                    // Mostrar modal de confirmación
-                    document.getElementById('orderConfirmation').style.display = 'flex';
-                    
-                    // Vaciar el carrito
-                    cart.clear();
-                    
-                    // Mostrar notificación
-                    showToast(`¡Compra realizada! ID: ${result.orderId}`, 'success');
-                }
-            } catch (error) {
-                showToast('Error al procesar la compra: ' + error.message, 'error');
-                console.error("Error en checkout:", error);
-            } finally {
-                confirmBtn.disabled = false;
-                confirmBtn.textContent = 'Confirmar Compra';
-            }
-        });
-        
-        // Sistema de pestañas
+            totalElement.textContent = cart.getTotal().toFixed(2);
+        }
+
+        // Function to show tabs
         function showTab(tabIndex) {
             const tabs = document.getElementById('tabs');
             tabs.style.transform = `translateX(-${tabIndex * 50}%)`;
@@ -1297,144 +1197,257 @@
                 }
             });
         }
-        
-        // Selector de tallas
-        document.querySelectorAll('.size-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.size-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                this.classList.add('selected');
+
+        // Initialization when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize cart
+            cart.init();
+            
+            // Configure cart icon
+            const cartIcon = document.getElementById('cartIcon');
+            const cartDropdown = document.getElementById('cartDropdown');
+            
+            cartIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
             });
-        });
-        
-        // Sistema de autenticación
-        const authLink = document.getElementById('authLink');
-        const loginModal = document.getElementById('loginModal');
-        const closeLogin = document.getElementById('closeLogin');
-        const loginForm = document.getElementById('loginForm');
-        const loginErrorMessage = document.getElementById('loginErrorMessage');
-        
-        function showLoginModal() {
-            loginModal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-        
-        authLink.addEventListener('click', (e) => {
-            if (auth.currentUser) {
-                e.preventDefault();
-                auth.signOut().then(() => {
-                    showToast('Sesión cerrada correctamente');
-                }).catch(error => {
-                    showToast('Error al cerrar sesión', 'error');
-                });
-            } else {
-                e.preventDefault();
-                showLoginModal();
-            }
-        });
-        
-        closeLogin.addEventListener('click', () => {
-            loginModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-        
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
             
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    loginModal.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                    loginErrorMessage.textContent = '';
-                    showToast('Sesión iniciada correctamente');
-                })
-                .catch(error => {
-                    loginErrorMessage.textContent = getAuthErrorMessage(error.code);
+            document.addEventListener('click', () => {
+                cartDropdown.style.display = 'none';
+            });
+            
+            // Add to Cart (Vista Normal)
+            document.getElementById('addToCartBtn').addEventListener('click', () => {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
+                
+                const product = {
+                    id: 'tshirt-f4ar',
+                    name: 'T-SHIRT F4AR - WHITE EDITION',
+                    price: 25,
+                    size: selectedSize,
+                    quantity: 1,
+                    image: 'Camiseta.PNG'
+                };
+                
+                console.log('Adding to cart:', product);
+                cart.addItem(product);
+            });
+            
+            // Buy Now (Vista Normal)
+            document.getElementById('buyNowBtn').addEventListener('click', () => {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
+                
+                const product = {
+                    id: 'tshirt-f4ar',
+                    name: 'T-SHIRT F4AR - WHITE EDITION',
+                    price: 25,
+                    size: selectedSize,
+                    quantity: 1,
+                    image: 'Camiseta.PNG'
+                };
+                
+                cart.clear();
+                cart.addItem(product);
+                document.getElementById('checkoutModal').style.display = 'flex';
+                updateCheckoutSummary();
+            });
+            
+            // Add to Cart (3D View)
+            document.getElementById('addToCartBtn3D').addEventListener('click', () => {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
+                
+                const product = {
+                    id: 'tshirt-f4ar',
+                    name: 'T-SHIRT F4AR - WHITE EDITION',
+                    price: 25,
+                    size: selectedSize,
+                    quantity: 1,
+                    image: 'Camiseta.PNG'
+                };
+                
+                console.log('Adding to cart from 3D view:', product);
+                cart.addItem(product);
+            });
+            
+            // Buy Now (3D View)
+            document.getElementById('buyNowBtn3D').addEventListener('click', () => {
+                const selectedSize = document.querySelector('.size-option.selected').textContent;
+                
+                const product = {
+                    id: 'tshirt-f4ar',
+                    name: 'T-SHIRT F4AR - WHITE EDITION',
+                    price: 25,
+                    size: selectedSize,
+                    quantity: 1,
+                    image: 'Camiseta.PNG'
+                };
+                
+                cart.clear();
+                cart.addItem(product);
+                document.getElementById('checkoutModal').style.display = 'flex';
+                updateCheckoutSummary();
+            });
+            
+            // Checkout button (from cart dropdown)
+            document.getElementById('checkoutBtn').addEventListener('click', () => {
+                if (cart.getTotalItems() === 0) {
+                    showToast('El carrito está vacío', 'error');
+                    return;
+                }
+                
+                document.getElementById('checkoutModal').style.display = 'flex';
+                updateCheckoutSummary();
+            });
+            
+            // Confirm purchase button (in checkout modal)
+            document.getElementById('confirmCheckout').addEventListener('click', async () => {
+                try {
+                    await processOrderWithStripe();
+                } catch (error) {
+                    console.error("Checkout error:", error);
+                    showToast('Error procesando la compra: ' + error.message, 'error');
+                }
+            });
+            
+            // Size selector
+            document.querySelectorAll('.size-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.size-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
                 });
-        });
-        
-        function getAuthErrorMessage(errorCode) {
-            switch(errorCode) {
-                case 'auth/invalid-email': return 'Email inválido';
-                case 'auth/user-disabled': return 'Cuenta deshabilitada';
-                case 'auth/user-not-found': return 'Usuario no encontrado';
-                case 'auth/wrong-password': return 'Contraseña incorrecta';
-                default: return 'Error al iniciar sesión';
-            }
-        }
-        
-        // Observador de estado de autenticación
-        auth.onAuthStateChanged(user => {
+            });
+            
+            // Authentication system
             const authLink = document.getElementById('authLink');
-            if (user) {
-                authLink.textContent = 'Cerrar sesión';
-                authLink.href = '#';
-            } else {
-                authLink.textContent = 'Login';
-                authLink.href = 'login.html';
+            const loginModal = document.getElementById('loginModal');
+            const closeLogin = document.getElementById('closeLogin');
+            const loginForm = document.getElementById('loginForm');
+            const loginErrorMessage = document.getElementById('loginErrorMessage');
+            
+            function showLoginModal() {
+                loginModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
             }
-        });
-        
-        // Galería de fotos
-        const morePhotosBtn = document.getElementById('morePhotosBtn');
-        const photosModal = document.getElementById('photosModal');
-        const closeModal = document.getElementById('closeModal');
-        
-        morePhotosBtn.addEventListener('click', () => {
-            photosModal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        });
-        
-        closeModal.addEventListener('click', () => {
-            photosModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-        
-        // Cambio de vista de imagen
-        const switchBtn = document.getElementById('switchBtn');
-        const productImage = document.getElementById('productImage');
-        let isMainImage = true;
-        const mainImage = 'Jaket.PNG';
-        const altImage = 'Jaket-back.PNG'; // Asegúrate de tener esta imagen
-        
-        switchBtn.addEventListener('click', () => {
-            productImage.src = isMainImage ? altImage : mainImage;
-            isMainImage = !isMainImage;
-        });
-        
-        // Deslizamiento con Touch
-        const tabContainer = document.getElementById('tabContainer');
-        let startX = 0;
-        let isDragging = false;
-        
-        tabContainer.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            isDragging = true;
-        });
-        
-        tabContainer.addEventListener('touchmove', (e) => {
-            if(!isDragging) return;
-            e.preventDefault();
-        });
-        
-        tabContainer.addEventListener('touchend', (e) => {
-            if(!isDragging) return;
             
-            const endX = e.changedTouches[0].clientX;
-            const diffX = startX - endX;
-            
-            if(Math.abs(diffX) > 50) {
-                if(diffX > 0) {
-                    showTab(1);
+            authLink.addEventListener('click', (e) => {
+                if (auth.currentUser) {
+                    e.preventDefault();
+                    auth.signOut().then(() => {
+                        showToast('Sesión cerrada correctamente');
+                    }).catch(error => {
+                        showToast('Error cerrando sesión', 'error');
+                    });
                 } else {
-                    showTab(0);
+                    e.preventDefault();
+                    showLoginModal();
+                }
+            });
+            
+            closeLogin.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(() => {
+                        loginModal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                        loginErrorMessage.textContent = '';
+                        showToast('Sesión iniciada correctamente');
+                    })
+                    .catch(error => {
+                        loginErrorMessage.textContent = getAuthErrorMessage(error.code);
+                    });
+            });
+            
+            function getAuthErrorMessage(errorCode) {
+                switch(errorCode) {
+                    case 'auth/invalid-email': return 'Email inválido';
+                    case 'auth/user-disabled': return 'Cuenta deshabilitada';
+                    case 'auth/user-not-found': return 'Usuario no encontrado';
+                    case 'auth/wrong-password': return 'Contraseña incorrecta';
+                    default: return 'Error al iniciar sesión';
                 }
             }
             
-            isDragging = false;
+            // Auth state observer
+            auth.onAuthStateChanged(user => {
+                const authLink = document.getElementById('authLink');
+                if (user) {
+                    authLink.textContent = 'Cerrar sesión';
+                    authLink.href = '#';
+                } else {
+                    authLink.textContent = 'Login';
+                    authLink.href = 'login.html';
+                }
+            });
+            
+            // Photo gallery
+            const morePhotosBtn = document.getElementById('morePhotosBtn');
+            const photosModal = document.getElementById('photosModal');
+            const closeModal = document.getElementById('closeModal');
+            
+            morePhotosBtn.addEventListener('click', () => {
+                photosModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            closeModal.addEventListener('click', () => {
+                photosModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            // View switching
+            const switchBtn = document.getElementById('switchBtn');
+            const productImage = document.getElementById('productImage');
+            let isMainImage = true;
+            const mainImage = 'Camiseta.PNG';
+            const altImage = 'Camiseta-back.PNG';
+            
+            switchBtn.addEventListener('click', () => {
+                productImage.src = isMainImage ? altImage : mainImage;
+                isMainImage = !isMainImage;
+            });
+            
+            // Touch swipe for tabs
+            const tabContainer = document.getElementById('tabContainer');
+            let startX = 0;
+            let isDragging = false;
+            
+            tabContainer.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+            });
+            
+            tabContainer.addEventListener('touchmove', (e) => {
+                if(!isDragging) return;
+                e.preventDefault();
+            });
+            
+            tabContainer.addEventListener('touchend', (e) => {
+                if(!isDragging) return;
+                
+                const endX = e.changedTouches[0].clientX;
+                const diffX = startX - endX;
+                
+                if(Math.abs(diffX) > 50) {
+                    if(diffX > 0) {
+                        showTab(1);
+                    } else {
+                        showTab(0);
+                    }
+                }
+                
+                isDragging = false;
+            });
         });
-    });
-</script>
+    </script>
+</body>
+</html>
