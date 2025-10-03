@@ -997,6 +997,13 @@
                 showToast('Payment error: ' + error.message, 'error');
             }
         }
+        const product = {
+    id: 'wool-hat', // ← DEBE SER ESTE ID
+    name: 'RIDER\'S WOOL HAT',
+    size: 'One Size',
+    quantity: 1,
+    image: 'hat-image.jpg'
+};
 
         function updateCheckoutSummary() {
             const summaryElement = document.getElementById('checkoutSummary');
