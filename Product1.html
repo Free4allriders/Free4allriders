@@ -1131,14 +1131,14 @@
             document.getElementById('addToCartBtn').addEventListener('click', () => {
                 const selectedSize = document.querySelector('.size-option.selected').textContent;
                 
-                const product = {
-                    id: 'jacket-baklava',
-                    name: 'EXCLUSIVE BAKLAVA JACKET',
-                    price: 40,
-                    size: selectedSize,
-                    quantity: 1,
-                    image: 'Jaket.PNG'
-                };
+               const product = {
+    id: 'jacket-baklava',
+    name: 'EXCLUSIVE BAKLAVA JACKET',
+    price: 40, // ← PRECIO CORRECTO
+    size: selectedSize,
+    quantity: 1,
+    image: 'Jaket.PNG'
+};
                 
                 console.log('Adding to cart:', product);
                 cart.addItem(product);
@@ -1148,14 +1148,14 @@
             document.getElementById('buyNowBtn').addEventListener('click', () => {
                 const selectedSize = document.querySelector('.size-option.selected').textContent;
                 
-                const product = {
-                    id: 'jacket-baklava',
-                    name: 'EXCLUSIVE BAKLAVA JACKET',
-                    price: 40,
-                    size: selectedSize,
-                    quantity: 1,
-                    image: 'Jaket.PNG'
-                };
+              const product = {
+    id: 'jacket-baklava',
+    name: 'EXCLUSIVE BAKLAVA JACKET',
+    price: 40, // ← PRECIO CORRECTO
+    size: selectedSize,
+    quantity: 1,
+    image: 'Jaket.PNG'
+};
                 
                 cart.clear();
                 cart.addItem(product);
