@@ -999,8 +999,7 @@
             });
         }
 
-        // Function to process the order with Stripe
-        async function processOrderWithStripe() {
+async function processOrderWithStripe() {
     console.log('=== INICIANDO PROCESO DE PAGO STRIPE ===');
     
     const loadingOverlay = document.createElement('div');
@@ -1018,7 +1017,6 @@
 
         console.log('Items en carrito:', cart.items);
 
-        // Crear orden en Firestore
         const orderRef = db.collection('orders').doc();
         const orderId = orderRef.id;
         const user = auth.currentUser;
@@ -1046,8 +1044,8 @@
         await orderRef.set(orderData);
         console.log('Orden creada:', orderId);
 
-        // Llamar a la Cloud Function via HTTP
-        const functionUrl = 'https://us-central1-free4allriders-51c5e.cloudfunctions.net/createStripeCheckoutSession';
+        // CAMBIO AQUÍ: Nueva URL con nuevo nombre de función
+        const functionUrl = 'https://us-central1-free4allriders-51c5e.cloudfunctions.net/processStripePayment';
         
         const response = await fetch(functionUrl, {
             method: 'POST',
@@ -1076,7 +1074,6 @@
             throw new Error('No session ID received');
         }
 
-        // Redirigir a Stripe
         const { error } = await stripe.redirectToCheckout({
             sessionId: result.sessionId
         });
