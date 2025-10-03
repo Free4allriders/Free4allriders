@@ -1381,7 +1381,7 @@
             auth.onAuthStateChanged(user => {
                 const authLink = document.getElementById('authLink');
                 if (user) {
-                    authLink.textContent = 'Cerrar sesión';
+                    authLink.textContent = 'Logout';
                     authLink.href = '#';
                 } else {
                     authLink.textContent = 'Login';
